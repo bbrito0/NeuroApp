@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:ui';
 import 'dart:math' show pi, sin;
+import 'package:flutter/material.dart' show Colors;
 
 class ArticleDetailScreen extends StatefulWidget {
   final String title;
@@ -40,171 +41,214 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = const Color(0xFF0C99B3);
+    
     return CupertinoPageScaffold(
-      backgroundColor: const Color(0xFFE8E8EA),
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: const Color(0xFFE8E8EA).withOpacity(0.8),
-        border: null,
-        middle: const Text(
-          'Article',
-          style: TextStyle(
-            fontFamily: '.SF Pro Text',
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
-            letterSpacing: -0.41,
-            color: Color(0xFF1A1A1A),
-          ),
-        ),
-      ),
+      backgroundColor: Colors.transparent,
       child: Stack(
         children: [
-          // Wave Background
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: WavePainter(
-                  animation: _controller,
-                  color: const Color(0xFFE5E5E7),
-                ),
-                child: Container(),
-              );
-            },
+          // Premium Gradient Background with Frosted Glass Effect
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: const Alignment(-1.0, 1.0), // bottom-left
+                end: const Alignment(1.0, -1.0),   // top-right
+                colors: [
+                  const Color(0xFF3c5e68).withOpacity(0.9),
+                  const Color(0xFFADC3C8).withOpacity(0.9),
+                  const Color(0xFFE8F5F8).withOpacity(0.9),
+                ],
+                stops: const [0.15, 0.6, 1.0],
+              ),
+            ),
           ),
-          // Content
-          SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Article Header
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                CupertinoColors.systemBackground.withOpacity(0.5),
-                                CupertinoColors.secondarySystemBackground.withOpacity(0.5),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: primaryColor.withOpacity(0.1),
-                              width: 0.5,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: CupertinoColors.systemFill.withOpacity(0.04),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          primaryColor.withOpacity(0.2),
-                                          primaryColor.withOpacity(0.1),
-                                        ],
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      'Featured',
-                                      style: TextStyle(
-                                        fontFamily: '.SF Pro Text',
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    widget.readTime,
-                                    style: const TextStyle(
-                                      fontFamily: '.SF Pro Text',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                      color: CupertinoColors.secondaryLabel,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                widget.title,
-                                style: const TextStyle(
-                                  fontFamily: '.SF Pro Text',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
-                                  letterSpacing: -0.41,
-                                  color: Color(0xFF1A1A1A),
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                widget.description,
-                                style: TextStyle(
-                                  fontFamily: '.SF Pro Text',
-                                  fontSize: 15,
-                                  letterSpacing: -0.24,
-                                  color: CupertinoColors.secondaryLabel.withOpacity(0.9),
-                                  height: 1.3,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Article Content
-                    _buildArticleSection(
-                      'Introduction',
-                      'Memory is a fundamental aspect of cognitive function that plays a crucial role in our daily lives. Whether you\'re studying for an exam, learning a new skill, or simply trying to remember where you left your keys, having a strong memory can make a significant difference.',
-                    ),
-                    _buildArticleSection(
-                      'Key Techniques',
-                      '1. Active Recall: Test yourself regularly instead of passively reviewing information.\n\n'
-                      '2. Spaced Repetition: Review information at increasing intervals.\n\n'
-                      '3. Mind Mapping: Create visual representations of information.\n\n'
-                      '4. The Memory Palace: Associate information with familiar locations.',
-                    ),
-                    _buildArticleSection(
-                      'Practice Tips',
-                      '• Start with small chunks of information\n'
-                      '• Use multiple senses when learning\n'
-                      '• Create meaningful associations\n'
-                      '• Get adequate sleep and exercise\n'
-                      '• Stay mentally active with puzzles and games',
-                    ),
-                    const SizedBox(height: 32),
+          // Frosted Glass Overlay
+          BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: const Alignment(-1.0, 1.0),
+                  end: const Alignment(1.0, -1.0),
+                  colors: [
+                    Colors.white.withOpacity(0.1),
+                    Colors.white.withOpacity(0.2),
                   ],
                 ),
               ),
             ),
+          ),
+          // Content
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: const Text(
+                  'Article',
+                  style: TextStyle(
+                    fontFamily: '.SF Pro Text',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.41,
+                    color: CupertinoColors.label,
+                  ),
+                ),
+                middle: const Text(
+                  'Article',
+                  style: TextStyle(
+                    fontFamily: '.SF Pro Text',
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.41,
+                    color: CupertinoColors.label,
+                  ),
+                ),
+                alwaysShowMiddle: false,
+                backgroundColor: Colors.transparent,
+                border: null,
+                stretch: false,
+                automaticallyImplyLeading: false,
+                leading: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Icon(
+                    CupertinoIcons.back,
+                    color: primaryColor,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Article Header
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  CupertinoColors.systemBackground.withOpacity(0.5),
+                                  CupertinoColors.secondarySystemBackground.withOpacity(0.5),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: primaryColor.withOpacity(0.1),
+                                width: 0.5,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: CupertinoColors.systemFill.withOpacity(0.04),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            primaryColor.withOpacity(0.2),
+                                            primaryColor.withOpacity(0.1),
+                                          ],
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        'Featured',
+                                        style: TextStyle(
+                                          fontFamily: '.SF Pro Text',
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                          color: primaryColor,
+                                        ),
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      widget.readTime,
+                                      style: const TextStyle(
+                                        fontFamily: '.SF Pro Text',
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
+                                        color: CupertinoColors.secondaryLabel,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  widget.title,
+                                  style: const TextStyle(
+                                    fontFamily: '.SF Pro Text',
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.41,
+                                    color: Color(0xFF1A1A1A),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  widget.description,
+                                  style: TextStyle(
+                                    fontFamily: '.SF Pro Text',
+                                    fontSize: 15,
+                                    letterSpacing: -0.24,
+                                    color: CupertinoColors.secondaryLabel.withOpacity(0.9),
+                                    height: 1.3,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      // Article Content
+                      _buildArticleSection(
+                        'Introduction',
+                        'Memory is a fundamental aspect of cognitive function that plays a crucial role in our daily lives. Whether you\'re studying for an exam, learning a new skill, or simply trying to remember where you left your keys, having a strong memory can make a significant difference.',
+                      ),
+                      _buildArticleSection(
+                        'Key Techniques',
+                        '1. Active Recall: Test yourself regularly instead of passively reviewing information.\n\n'
+                        '2. Spaced Repetition: Review information at increasing intervals.\n\n'
+                        '3. Mind Mapping: Create visual representations of information.\n\n'
+                        '4. The Memory Palace: Associate information with familiar locations.',
+                      ),
+                      _buildArticleSection(
+                        'Practice Tips',
+                        '• Start with small chunks of information\n'
+                        '• Use multiple senses when learning\n'
+                        '• Create meaningful associations\n'
+                        '• Get adequate sleep and exercise\n'
+                        '• Stay mentally active with puzzles and games',
+                      ),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
