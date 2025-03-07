@@ -59,59 +59,64 @@ class _CommunityScreenState extends State<CommunityScreen> {
               ),
             ),
           ),
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(
-                  'Community',
-                  style: AppTextStyles.withColor(
-                    AppTextStyles.heading1,
-                    AppColors.textPrimary,
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'Community',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.heading1,
+                      AppColors.textPrimary,
+                    ),
+                  ),
+                  backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: AppColors.separator.withOpacity(0.2),
+                      width: 0.5,
+                    ),
+                  ),
+                  trailing: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      _showNewTopicSheet(context);
+                    },
+                    child: SFIcon(
+                      SFIcons.sf_square_and_pencil,
+                      fontSize: 22,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-                backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
-                border: Border(
-                  bottom: BorderSide(
-                    color: AppColors.separator.withOpacity(0.2),
-                    width: 0.5,
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildSearchBar(),
+                        const SizedBox(height: 16),
+                        _buildPopularTags(),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
                 ),
-                trailing: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    _showNewTopicSheet(context);
-                  },
-                  child: SFIcon(
-                    SFIcons.sf_square_and_pencil,
-                    fontSize: 22,
-                    color: AppColors.primary,
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => _buildTopicCard(_topics[index]),
+                    childCount: _topics.length,
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      _buildSearchBar(),
-                      const SizedBox(height: 16),
-                      _buildPopularTags(),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
+                const SliverPadding(
+                  padding: EdgeInsets.only(bottom: 100),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => _buildTopicCard(_topics[index]),
-                  childCount: _topics.length,
-                ),
-              ),
-              const SliverPadding(
-                padding: EdgeInsets.only(bottom: 100),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

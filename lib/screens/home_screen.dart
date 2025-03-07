@@ -14,6 +14,7 @@ import 'package:neural_app/screens/meditation_screen.dart';
 import 'package:neural_app/screens/ai_coach_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -38,6 +39,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       viewportFraction: 1.0,
       initialPage: 0,
     );
+    
+    // Initialize completed days for the 5-day streak
+    final now = DateTime.now();
+    for (int i = 1; i <= 5; i++) {
+      _completedDays.add(now.day - i);
+    }
+    
     // Show medication reminder after a short delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -74,7 +82,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
           ),
           // Main Content
-          CustomScrollView(
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
               CupertinoSliverRefreshControl(
@@ -103,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     // Welcome Message with Enhanced Glass Effect
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -136,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                     Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
-                                        color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
+                                          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Row(
@@ -156,9 +168,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                       ),
                                     ),
                                     const Spacer(),
-                                    Text(
-                                      'Hi, John',
-                                      style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                                      CupertinoButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          Navigator.of(context, rootNavigator: true).push(
+                                            CupertinoPageRoute(
+                                              builder: (context) => ProfileScreen(
+                                                tabController: widget.tabController,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: SFIcon(
+                                          SFIcons.sf_person_circle_fill,
+                                          fontSize: 28,
+                                          color: AppColors.primary,
+                                        ),
                                     ),
                                   ],
                                 ),
@@ -461,6 +486,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
               ),
             ],
+            ),
           ),
         ],
       ),
@@ -614,7 +640,100 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     VoidCallback onTap,
   ) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        showCupertinoDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext dialogContext) => BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: CupertinoAlertDialog(
+              title: Column(
+                children: [
+                  SFIcon(
+                    icon,
+                    color: const Color(0xFF0D5A71),
+                    fontSize: 24,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Start $title?',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w500),
+                      AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              content: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Text(
+                    'Are you ready to begin this challenge? Make sure you have enough time to complete it without interruptions.',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.getPrimaryWithOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SFIcon(
+                          SFIcons.sf_clock,
+                          color: AppColors.primary,
+                          fontSize: 14,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Estimated time: 10-15 min',
+                          style: AppTextStyles.withColor(
+                            AppTextStyles.bodySmall,
+                            AppColors.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                CupertinoDialogAction(
+                  child: Text(
+                    'Not Now',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.secondaryLabel,
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(dialogContext),
+                ),
+                CupertinoDialogAction(
+                  isDefaultAction: true,
+                  child: Text(
+                    'Start Challenge',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.primary,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(dialogContext);
+                    onTap();
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: BackdropFilter(
@@ -742,49 +861,60 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       context: context,
       barrierDismissible: true,
       builder: (BuildContext dialogContext) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: CupertinoAlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          title: Column(
             children: [
               SFIcon(
                 SFIcons.sf_pills,
                 color: AppColors.primary,
-                fontSize: 20,
+                fontSize: 24,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(height: 8),
               Text(
                 'Daily Reminder',
-                style: AppTextStyles.withWeight(AppTextStyles.heading3, FontWeight.w600),
+                textAlign: TextAlign.center,
+                style: AppTextStyles.withColor(
+                  AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w500),
+                  AppColors.textPrimary,
+                ),
               ),
             ],
           ),
           content: Column(
             children: [
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Text(
                 'Have you taken your ChronoWell today?',
-                style: AppTextStyles.withWeight(AppTextStyles.bodySmall, FontWeight.w400),
+                textAlign: TextAlign.center,
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 16),
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 decoration: BoxDecoration(
                   color: AppColors.getPrimaryWithOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SFIcon(
                       SFIcons.sf_clock,
                       color: AppColors.primary,
                       fontSize: 14,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 6),
                     Text(
                       'Recommended time: 8:00 AM',
-                      style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodySmall,
+                        AppColors.primary,
+                      ),
                     ),
                   ],
                 ),
@@ -795,26 +925,104 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             CupertinoDialogAction(
               child: Text(
                 'Skip Today',
-                style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.secondaryLabel,
+                ),
               ),
               onPressed: () {
                 Navigator.pop(dialogContext);
-                // Reset streak if skipped
-                _resetStreak();
+                _showSkipWarning();
               },
             ),
             CupertinoDialogAction(
               isDefaultAction: true,
               child: Text(
                 'Yes, Taken',
-                style: AppTextStyles.bodyMedium,
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.primary,
+                ),
               ),
               onPressed: () {
                 Navigator.pop(dialogContext);
-                // Show streak calendar
                 if (mounted) {
                   _showStreakCalendar();
                 }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showSkipWarning() {
+    if (!mounted) return;
+    showCupertinoDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext dialogContext) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: CupertinoAlertDialog(
+          title: Column(
+            children: [
+              SFIcon(
+                SFIcons.sf_exclamationmark_circle,
+                color: const Color(0xFFFF9500),
+                fontSize: 24,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Important Reminder',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.withColor(
+                  AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w600),
+                  AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            children: [
+              const SizedBox(height: 12),
+              Text(
+                'Taking ChronoWell daily is crucial for optimal results. Regular use helps maintain cognitive improvement and builds lasting benefits.',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              child: Text(
+                'I\'ll Take It Now',
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.primary,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _updateStreak();
+                _showStreakCalendar();
+              },
+            ),
+            CupertinoDialogAction(
+              child: Text(
+                'Skip Anyway',
+                style: AppTextStyles.withColor(
+                  AppTextStyles.bodyMedium,
+                  AppColors.secondaryLabel,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                _resetStreak();
               },
             ),
           ],
@@ -829,16 +1037,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
     
-    // Get current date
     final now = DateTime.now();
     final currentMonth = now.month;
     final currentYear = now.year;
     final daysInMonth = DateTime(currentYear, currentMonth + 1, 0).day;
     final firstDayOfMonth = DateTime(currentYear, currentMonth, 1);
     final firstWeekday = firstDayOfMonth.weekday;
-    
-    // Update streak
-    _updateStreak();
     
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -884,6 +1088,15 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Keep Going! Almost hitting a new 7 day streak!',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.primary,
+                        ),
                       ),
                       const SizedBox(height: 20),
                       // Month name
@@ -1014,7 +1227,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   }
 
   // Streak management
-  int _currentStreak = 0;
+  int _currentStreak = 5; // Initialize with 5-day streak
   final Set<int> _completedDays = {};
 
   void _updateStreak() {

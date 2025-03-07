@@ -12,19 +12,16 @@ import 'screens/my_hub_screen.dart';
 import 'screens/ai_coach_screen.dart';
 import 'screens/medical_screen.dart';
 import 'screens/activities_screen.dart';
+import 'screens/onboarding_screen.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'theme/app_colors.dart';
 
 void main() {
-  // Force portrait orientation
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFFF7F6F9), // Light background
+      statusBarColor: CupertinoColors.systemBackground,
+      statusBarBrightness: Brightness.light,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
@@ -37,59 +34,15 @@ class NeuralApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      title: 'NeuroApp',
+      title: 'Neural',
+      debugShowCheckedModeBanner: false,
       theme: const CupertinoThemeData(
         primaryColor: AppColors.primary,
         brightness: Brightness.light,
         scaffoldBackgroundColor: CupertinoColors.systemGroupedBackground,
         barBackgroundColor: CupertinoColors.systemBackground,
-        textTheme: CupertinoTextThemeData(
-          // Primary text style (body)
-          textStyle: TextStyle(
-            fontFamily: '.SF Pro Text',
-            fontSize: 17,
-            letterSpacing: -0.41,
-            color: AppColors.textPrimary,
-            height: 1.294,
-          ),
-          // Navigation bar title
-          navTitleTextStyle: TextStyle(
-            fontFamily: '.SF Pro Display',
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.41,
-            color: AppColors.textPrimary,
-          ),
-          // Large navigation bar title
-          navLargeTitleTextStyle: TextStyle(
-            fontFamily: '.SF Pro Display',
-            fontSize: 34,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.41,
-            color: AppColors.textPrimary,
-          ),
-          // Tab bar items
-          tabLabelTextStyle: TextStyle(
-            fontFamily: '.SF Pro Text',
-            fontSize: 11,
-            letterSpacing: -0.24,
-            color: AppColors.textPrimary,
-          ),
-          actionTextStyle: TextStyle(
-            fontFamily: '.SF Pro Text',
-            fontSize: 17,
-            letterSpacing: -0.41,
-            color: AppColors.primary,
-          ),
-          pickerTextStyle: TextStyle(
-            fontFamily: '.SF Pro Text',
-            fontSize: 21,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.31,
-          ),
-        ),
       ),
-      home: const MainScreen(),
+      home: const OnboardingScreen(),
     );
   }
 }
@@ -102,13 +55,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
   late final CupertinoTabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = CupertinoTabController(initialIndex: 0);
+    // Ensure HomeScreen is built after the MainScreen is fully initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
@@ -123,16 +81,32 @@ class _MainScreenState extends State<MainScreen> {
       controller: _tabController,
       tabBar: CupertinoTabBar(
         height: 50,
-        backgroundColor: AppColors.getSurfaceWithOpacity(0.5),
+        iconSize: 20,
+        backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
         activeColor: AppColors.primary,
         inactiveColor: AppColors.inactive.withOpacity(AppColors.inactiveOpacity),
         border: null,
-        items: [
-          _buildTabItem(SFIcons.sf_house_fill, 'Home'),
-          _buildTabItem(SFIcons.sf_square_grid_2x2_fill, 'My Hub'),
-          _buildTabItem(SFIcons.sf_brain_head_profile, 'AI Coach'),
-          _buildTabItem(SFIcons.sf_square_stack_3d_up_fill, 'Activities'),
-          _buildTabItem(SFIcons.sf_cross_case, 'Medical'),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(SFIcons.sf_house_fill),
+            label: 'Home'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(SFIcons.sf_square_grid_2x2_fill),
+            label: 'My Hub'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(SFIcons.sf_brain_head_profile),
+            label: 'AI Coach'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(SFIcons.sf_square_stack_3d_up_fill),
+            label: 'Activities'
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(SFIcons.sf_cross_case),
+            label: 'Medical'
+          ),
         ],
       ),
       tabBuilder: (context, index) {
@@ -155,16 +129,6 @@ class _MainScreenState extends State<MainScreen> {
           },
         );
       },
-    );
-  }
-
-  BottomNavigationBarItem _buildTabItem(IconData icon, String label) {
-    return BottomNavigationBarItem(
-      icon: Icon(
-        icon,
-        size: 20,
-      ),
-      label: label,
     );
   }
 } 

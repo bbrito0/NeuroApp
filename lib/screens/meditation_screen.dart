@@ -28,79 +28,84 @@ class MeditationScreen extends StatelessWidget {
               ),
             ),
           ),
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(
-                  'Meditation',
-                  style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
-                ),
-                middle: Text(
-                  'Meditation',
-                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                ),
-                alwaysShowMiddle: false,
-                backgroundColor: Colors.transparent,
-                border: null,
-                stretch: false,
-                automaticallyImplyLeading: false,
-                leading: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    CupertinoIcons.back,
-                    color: AppColors.primary,
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'Meditation',
+                    style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
+                  ),
+                  middle: Text(
+                    'Meditation',
+                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                  ),
+                  alwaysShowMiddle: false,
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  stretch: false,
+                  automaticallyImplyLeading: false,
+                  leading: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Icon(
+                      CupertinoIcons.back,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Featured Meditations This Week',
-                    style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Featured Meditations This Week',
+                      style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                    ),
                   ),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  _MeditationCard(
-                    title: 'Mindful Breathing',
-                    description: 'A gentle introduction to mindful breathing techniques for relaxation and focus.',
-                    duration: '10 min',
-                    icon: SFIcons.sf_leaf,
-                  ),
-                  _MeditationCard(
-                    title: 'Body Scan',
-                    description: 'Progressive relaxation through a guided body awareness meditation.',
-                    duration: '15 min',
-                    icon: SFIcons.sf_figure_walk,
-                  ),
-                  _MeditationCard(
-                    title: 'Mental Clarity',
-                    description: 'Clear your mind and enhance focus with this guided meditation session.',
-                    duration: '12 min',
-                    icon: SFIcons.sf_brain_head_profile,
-                  ),
-                  _MeditationCard(
-                    title: 'Stress Relief',
-                    description: 'Release tension and find inner peace with calming visualization techniques.',
-                    duration: '20 min',
-                    icon: SFIcons.sf_heart,
-                  ),
-                  _MeditationCard(
-                    title: 'Deep Focus',
-                    description: 'Enhance concentration and mental clarity for improved productivity.',
-                    duration: '15 min',
-                    icon: SFIcons.sf_scope,
-                  ),
-                ]),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(height: 32),
-              ),
-            ],
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    _MeditationCard(
+                      title: 'Mindful Breathing',
+                      description: 'A gentle introduction to mindful breathing techniques for relaxation and focus.',
+                      duration: '10 min',
+                      icon: SFIcons.sf_leaf,
+                    ),
+                    _MeditationCard(
+                      title: 'Body Scan',
+                      description: 'Progressive relaxation through a guided body awareness meditation.',
+                      duration: '15 min',
+                      icon: SFIcons.sf_figure_walk,
+                    ),
+                    _MeditationCard(
+                      title: 'Mental Clarity',
+                      description: 'Clear your mind and enhance focus with this guided meditation session.',
+                      duration: '12 min',
+                      icon: SFIcons.sf_brain_head_profile,
+                    ),
+                    _MeditationCard(
+                      title: 'Stress Relief',
+                      description: 'Release tension and find inner peace with calming visualization techniques.',
+                      duration: '20 min',
+                      icon: SFIcons.sf_heart,
+                    ),
+                    _MeditationCard(
+                      title: 'Deep Focus',
+                      description: 'Enhance concentration and mental clarity for improved productivity.',
+                      duration: '15 min',
+                      icon: SFIcons.sf_scope,
+                    ),
+                  ]),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 32),
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -33,7 +33,7 @@ class AppColors {
   static const backgroundOpacity = 0.9;
   static const surfaceOpacity = 0.8;
   static const borderOpacity = 0.2;
-  static const inactiveOpacity = 0.3;
+  static const inactiveOpacity = 0.5;
   
   // Gradient Presets
   static final primaryGradient = LinearGradient(

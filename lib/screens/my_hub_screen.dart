@@ -63,468 +63,486 @@ class _MyHubScreenState extends State<MyHubScreen> {
             ),
           ),
           // Main Content
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(
-                  'My Hub',
-                  style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
-                ),
-                middle: Text(
-                  'My Hub',
-                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                ),
-                alwaysShowMiddle: false,
-                backgroundColor: Colors.transparent,
-                border: null,
-                stretch: false,
-                automaticallyImplyLeading: false,
-                leading: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => widget.tabController.index = 0,
-                  child: Icon(
-                    CupertinoIcons.back,
-                    color: AppColors.primary,
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'My Hub',
+                    style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
+                  ),
+                  middle: Text(
+                    'My Hub',
+                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                  ),
+                  alwaysShowMiddle: false,
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  stretch: false,
+                  automaticallyImplyLeading: false,
+                  leading: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => widget.tabController.index = 0,
+                    child: Icon(
+                      CupertinoIcons.back,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Score Overview Section
-                      Center(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.65,
-                          margin: const EdgeInsets.only(bottom: 24),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                      AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                    ],
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Overall Score',
-                                            style: AppTextStyles.secondaryText,
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '73',
-                                                style: AppTextStyles.withColor(
-                                                  AppTextStyles.heading1,
-                                                  AppColors.primary,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(top: 8),
-                                                child: Text(
-                                                  '/100',
-                                                  style: AppTextStyles.withColor(
-                                                    AppTextStyles.heading3,
-                                                    AppColors.getPrimaryWithOpacity(0.7),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          _buildCategoryScore(
-                                            'Memory',
-                                            75,
-                                            SFIcons.sf_brain,
-                                            AppColors.primary,
-                                          ),
-                                          Container(
-                                            width: 0.5,
-                                            height: 40,
-                                            color: AppColors.separator,
-                                          ),
-                                          _buildCategoryScore(
-                                            'Focus',
-                                            68,
-                                            SFIcons.sf_scope,
-                                            AppColors.primary,
-                                          ),
-                                          Container(
-                                            width: 0.5,
-                                            height: 40,
-                                            color: AppColors.separator,
-                                          ),
-                                          _buildCategoryScore(
-                                            'Problem',
-                                            76,
-                                            SFIcons.sf_puzzlepiece,
-                                            AppColors.primary,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      // Goals Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'My Goals',
-                            style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                          ),
-                          CupertinoButton(
-                            padding: EdgeInsets.zero,
-                            child: Row(
-                              children: [
-                                Text(
-                                  'Edit Goals',
-                                  style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                                ),
-                                const SizedBox(width: 4),
-                                SFIcon(
-                                  SFIcons.sf_square_and_pencil,
-                                  fontSize: 14,
-                                  color: AppColors.primary,
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              // Show edit goals modal
-                              _showEditGoalsModal(context);
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Score Overview Section
+                        Center(
                           child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                ],
-                              ),
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            margin: const EdgeInsets.only(bottom: 24),
+                            child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                width: 0.5,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                _buildGoalItem(
-                                  'Memory',
-                                  'Improve short-term memory by 20%',
-                                  'Target Score: 85',
-                                  SFIcons.sf_brain,
-                                  0.75,
-                                ),
-                                Container(
-                                  height: 0.5,
-                                  color: AppColors.separator.withOpacity(0.2),
-                                ),
-                                _buildGoalItem(
-                                  'Focus',
-                                  'Maintain focus for longer periods',
-                                  'Target Score: 80',
-                                  SFIcons.sf_scope,
-                                  0.68,
-                                ),
-                                Container(
-                                  height: 0.5,
-                                  color: AppColors.separator.withOpacity(0.2),
-                                ),
-                                _buildGoalItem(
-                                  'Problem Solving',
-                                  'Master complex pattern recognition',
-                                  'Target Score: 90',
-                                  SFIcons.sf_puzzlepiece,
-                                  0.76,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      // Progress Overview Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Progress Overview',
-                            style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                          ),
-                          CupertinoButton(
-                            padding: EdgeInsets.zero,
-                            child: Row(
-                              children: [
-                                Text(
-                                  'See Details',
-                                  style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                                ),
-                                const SizedBox(width: 4),
-                                SFIcon(
-                                  SFIcons.sf_chevron_right,
-                                  fontSize: 14,
-                                  color: AppColors.primary,
-                                ),
-                              ],
-                            ),
-                            onPressed: () {
-                              Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute(
-                                  builder: (context) => ProgressScreen(
-                                    tabController: widget.tabController,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 260,
-                        child: Stack(
-                          children: [
-                            PageView.builder(
-                              itemCount: 3,
-                              physics: const BouncingScrollPhysics(),
-                              padEnds: false,
-                              controller: _pageController,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentPage = index;
-                                });
-                              },
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                  child: ClipRRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                      ],
+                                    ),
                                     borderRadius: BorderRadius.circular(20),
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                            ],
-                                          ),
-                                          borderRadius: BorderRadius.circular(20),
-                                          border: Border.all(
-                                            color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                            width: 0.5,
-                                          ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: AppColors.getSurfaceWithOpacity(0.04),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                    border: Border.all(
+                                      color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      children: [
+                                        Column(
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(16),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        index == 0 ? 'Memory' : index == 1 ? 'Focus' : 'Problem Solving',
-                                                        style: AppTextStyles.withColor(
-                                                          AppTextStyles.bodyMedium,
-                                                          AppColors.secondaryLabel,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(height: 4),
-                                                      Text(
-                                                        index == 0 ? '+15%' : index == 1 ? '+8%' : '+12%',
-                                                        style: AppTextStyles.withColor(
-                                                          AppTextStyles.heading3,
-                                                          AppColors.getPrimaryWithOpacity(0.7),
-                                                        ),
-                                                      ),
-                                                    ],
+                                            Text(
+                                              'Overall Score',
+                                              style: AppTextStyles.secondaryText,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  '73',
+                                                  style: AppTextStyles.withColor(
+                                                    AppTextStyles.heading1,
+                                                    AppColors.primary,
                                                   ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.only(top: 2),
-                                                    child: SFIcon(
-                                                      index == 0 ? SFIcons.sf_brain : 
-                                                      index == 1 ? SFIcons.sf_scope : 
-                                                      SFIcons.sf_puzzlepiece,
-                                                      fontSize: 16,
-                                                      color: AppColors.primary,
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 8),
+                                                  child: Text(
+                                                    '/100',
+                                                    style: AppTextStyles.withColor(
+                                                      AppTextStyles.heading3,
+                                                      AppColors.getPrimaryWithOpacity(0.7),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Padding(
-                                                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                                                child: LineChart(
-                                                  LineChartData(
-                                                    gridData: FlGridData(show: false),
-                                                    titlesData: FlTitlesData(show: false),
-                                                    borderData: FlBorderData(show: false),
-                                                    lineBarsData: [
-                                                      LineChartBarData(
-                                                        spots: List.generate(12, (i) {
-                                                          final progress = index == 0 ? 0.65 : index == 1 ? 0.55 : 0.60;
-                                                          final baseValue = progress * 100;
-                                                          final wave = sin(i * 0.5) * 20;
-                                                          final variance = Random().nextDouble() * 12 - 6;
-                                                          return FlSpot(
-                                                            i.toDouble(),
-                                                            (baseValue + wave + variance).clamp(0, 100),
-                                                          );
-                                                        }),
-                                                        isCurved: true,
-                                                        curveSmoothness: 0.35,
-                                                        color: AppColors.primary,
-                                                        barWidth: 2.5,
-                                                        isStrokeCapRound: true,
-                                                        dotData: FlDotData(show: false),
-                                                        belowBarData: BarAreaData(
-                                                          show: true,
-                                                          gradient: LinearGradient(
-                                                            begin: Alignment.topCenter,
-                                                            end: Alignment.bottomCenter,
-                                                            colors: [
-                                                              AppColors.getPrimaryWithOpacity(0.15),
-                                                              AppColors.getPrimaryWithOpacity(0.02),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ),
+                                        const SizedBox(height: 20),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            _buildCategoryScore(
+                                              'Memory',
+                                              75,
+                                              SFIcons.sf_brain,
+                                              AppColors.primary,
+                                            ),
+                                            Container(
+                                              width: 0.5,
+                                              height: 40,
+                                              color: AppColors.separator,
+                                            ),
+                                            _buildCategoryScore(
+                                              'Focus',
+                                              68,
+                                              SFIcons.sf_scope,
+                                              AppColors.primary,
+                                            ),
+                                            Container(
+                                              width: 0.5,
+                                              height: 40,
+                                              color: AppColors.separator,
+                                            ),
+                                            _buildCategoryScore(
+                                              'Problem',
+                                              76,
+                                              SFIcons.sf_puzzlepiece,
+                                              AppColors.primary,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Progress Overview Section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Progress Overview',
+                              style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                            ),
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'See Details',
+                                    style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  SFIcon(
+                                    SFIcons.sf_chevron_right,
+                                    fontSize: 14,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                              onPressed: () {
+                                Navigator.of(context, rootNavigator: true).push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => ProgressScreen(
+                                      tabController: widget.tabController,
                                     ),
                                   ),
                                 );
                               },
                             ),
-                            // Page Indicators
-                            Positioned(
-                              bottom: 16,
-                              left: 0,
-                              right: 0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: List.generate(3, (index) {
-                                  return Container(
-                                    width: 6,
-                                    height: 6,
-                                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: AppColors.getPrimaryWithOpacity(index == _currentPage ? 0.9 : AppColors.inactiveOpacity),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        SizedBox(
+                          height: 260,
+                          child: Stack(
+                            children: [
+                              PageView.builder(
+                                itemCount: 3,
+                                physics: const BouncingScrollPhysics(),
+                                padEnds: false,
+                                controller: _pageController,
+                                onPageChanged: (index) {
+                                  setState(() {
+                                    _currentPage = index;
+                                  });
+                                },
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                              colors: [
+                                                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                              ],
+                                            ),
+                                            borderRadius: BorderRadius.circular(20),
+                                            border: Border.all(
+                                              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                              width: 0.5,
+                                            ),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: AppColors.getSurfaceWithOpacity(0.04),
+                                                blurRadius: 10,
+                                                offset: const Offset(0, 4),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(16),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          index == 0 ? 'Memory' : index == 1 ? 'Focus' : 'Problem Solving',
+                                                          style: AppTextStyles.withColor(
+                                                            AppTextStyles.bodyMedium,
+                                                            AppColors.secondaryLabel,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(height: 4),
+                                                        Text(
+                                                          index == 0 ? '+15%' : index == 1 ? '+8%' : '+12%',
+                                                          style: AppTextStyles.withColor(
+                                                            AppTextStyles.heading3,
+                                                            AppColors.getPrimaryWithOpacity(0.7),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(top: 2),
+                                                      child: SFIcon(
+                                                        index == 0 ? SFIcons.sf_brain : 
+                                                        index == 1 ? SFIcons.sf_scope : 
+                                                        SFIcons.sf_puzzlepiece,
+                                                        fontSize: 16,
+                                                        color: AppColors.primary,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                                                  child: LineChart(
+                                                    LineChartData(
+                                                      gridData: FlGridData(show: false),
+                                                      titlesData: FlTitlesData(show: false),
+                                                      borderData: FlBorderData(show: false),
+                                                      lineBarsData: [
+                                                        LineChartBarData(
+                                                          spots: List.generate(12, (i) {
+                                                            final progress = index == 0 ? 0.65 : index == 1 ? 0.55 : 0.60;
+                                                            final baseValue = progress * 100;
+                                                            final wave = sin(i * 0.5) * 20;
+                                                            final variance = Random().nextDouble() * 12 - 6;
+                                                            return FlSpot(
+                                                              i.toDouble(),
+                                                              (baseValue + wave + variance).clamp(0, 100),
+                                                            );
+                                                          }),
+                                                          isCurved: true,
+                                                          curveSmoothness: 0.35,
+                                                          color: AppColors.primary,
+                                                          barWidth: 2.5,
+                                                          isStrokeCapRound: true,
+                                                          dotData: FlDotData(show: false),
+                                                          belowBarData: BarAreaData(
+                                                            show: true,
+                                                            gradient: LinearGradient(
+                                                              begin: Alignment.topCenter,
+                                                              end: Alignment.bottomCenter,
+                                                              colors: [
+                                                                AppColors.getPrimaryWithOpacity(0.15),
+                                                                AppColors.getPrimaryWithOpacity(0.02),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   );
-                                }),
+                                },
+                              ),
+                              // Page Indicators
+                              Positioned(
+                                bottom: 16,
+                                left: 0,
+                                right: 0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: List.generate(3, (index) {
+                                    return Container(
+                                      width: 6,
+                                      height: 6,
+                                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.getPrimaryWithOpacity(index == _currentPage ? 0.9 : AppColors.inactiveOpacity),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        // Community and Profile Section
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Community\nHub',
+                                SFIcon(
+                                  SFIcons.sf_person_2,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => const CommunityScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Profile\nSettings',
+                                SFIcon(
+                                  SFIcons.sf_person_circle,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => ProfileScreen(
+                                        tabController: widget.tabController,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      // Community Card
-                      _buildHubCard(
-                        context,
-                        'Community',
-                        'Connect with others on similar journeys',
-                        SFIcons.sf_person_2,
-                        AppColors.primary,
-                        () {
-                          Navigator.of(context, rootNavigator: true).push(
-                            CupertinoPageRoute(
-                              builder: (context) => const CommunityScreen(),
+                        const SizedBox(height: 24),
+                        // Goals Section
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'My Goals',
+                              style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
                             ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      // Profile Card
-                      _buildHubCard(
-                        context,
-                        'Profile',
-                        'Manage your personal settings and data',
-                        SFIcons.sf_person_circle,
-                        AppColors.primary,
-                        () {
-                          Navigator.of(context, rootNavigator: true).push(
-                            CupertinoPageRoute(
-                              builder: (context) => ProfileScreen(
-                                tabController: widget.tabController,
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Edit Goals',
+                                    style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  SFIcon(
+                                    SFIcons.sf_square_and_pencil,
+                                    fontSize: 14,
+                                    color: AppColors.primary,
+                                  ),
+                                ],
+                              ),
+                              onPressed: () {
+                                // Show edit goals modal
+                                _showEditGoalsModal(context);
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildGoalItem(
+                                    'Memory',
+                                    'Improve short-term memory by 20%',
+                                    'Target Score: 85',
+                                    SFIcons.sf_brain,
+                                    0.75,
+                                  ),
+                                  Container(
+                                    height: 0.5,
+                                    color: AppColors.separator.withOpacity(0.2),
+                                  ),
+                                  _buildGoalItem(
+                                    'Focus',
+                                    'Maintain focus for longer periods',
+                                    'Target Score: 80',
+                                    SFIcons.sf_scope,
+                                    0.68,
+                                  ),
+                                  Container(
+                                    height: 0.5,
+                                    color: AppColors.separator.withOpacity(0.2),
+                                  ),
+                                  _buildGoalItem(
+                                    'Problem Solving',
+                                    'Master complex pattern recognition',
+                                    'Target Score: 90',
+                                    SFIcons.sf_puzzlepiece,
+                                    0.76,
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      // Add bottom padding to prevent cut-off
-                      SizedBox(height: MediaQuery.of(context).padding.bottom + 100),
-                    ],
+                          ),
+                        ),
+                        // Add bottom padding to prevent cut-off
+                        SizedBox(height: MediaQuery.of(context).padding.bottom + 100),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -869,6 +887,62 @@ class _MyHubScreenState extends State<MyHubScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessCard(
+    BuildContext context,
+    String title,
+    SFIcon icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.5, endOpacity: 0.5),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: AppColors.getPrimaryWithOpacity(0.15),
+            width: 0.5,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.getSurfaceWithOpacity(0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            icon,
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: AppTextStyles.withColor(AppTextStyles.bodyLarge, AppColors.textPrimary),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Text(
+                  'Explore',
+                  style: AppTextStyles.secondaryText,
+                ),
+                const SizedBox(width: 4),
+                SFIcon(
+                  SFIcons.sf_chevron_right,
+                  fontSize: 12,
+                  color: AppColors.secondaryLabel,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -37,48 +37,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(
-                  'Profile',
-                  style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
-                ),
-                middle: Text(
-                  'Profile',
-                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                ),
-                alwaysShowMiddle: false,
-                backgroundColor: Colors.transparent,
-                border: null,
-                stretch: false,
-                automaticallyImplyLeading: false,
-                leading: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    CupertinoIcons.back,
-                    color: AppColors.primary,
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'Profile',
+                    style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
+                  ),
+                  middle: Text(
+                    'Profile',
+                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                  ),
+                  alwaysShowMiddle: false,
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  stretch: false,
+                  automaticallyImplyLeading: false,
+                  leading: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Icon(
+                      CupertinoIcons.back,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      _buildProfileHeader(),
-                      const SizedBox(height: 20),
-                      _buildStats(),
-                      const SizedBox(height: 20),
-                      _buildSettings(),
-                      const SizedBox(height: 32),
-                    ],
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildProfileHeader(),
+                        const SizedBox(height: 20),
+                        _buildStats(),
+                        const SizedBox(height: 20),
+                        _buildSettings(),
+                        const SizedBox(height: 32),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

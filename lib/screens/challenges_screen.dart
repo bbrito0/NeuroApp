@@ -38,133 +38,138 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             ),
           ),
           // Main Content
-          CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverNavigationBar(
-                largeTitle: Text(
-                  'Cognitive Assessment',
-                  style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
-                ),
-                middle: Text(
-                  'Cognitive Assessment',
-                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                ),
-                backgroundColor: Colors.transparent,
-                border: null,
-                alwaysShowMiddle: false,
-                stretch: false,
-                automaticallyImplyLeading: false,
-                leading: CupertinoButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Icon(
-                    CupertinoIcons.back,
-                    color: AppColors.primary,
+          CupertinoScrollbar(
+            thickness: 3.0,
+            radius: const Radius.circular(1.5),
+            mainAxisMargin: 2.0,
+            child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverNavigationBar(
+                  largeTitle: Text(
+                    'Cognitive Assessment',
+                    style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
+                  ),
+                  middle: Text(
+                    'Cognitive Assessment',
+                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  alwaysShowMiddle: false,
+                  stretch: false,
+                  automaticallyImplyLeading: false,
+                  leading: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Icon(
+                      CupertinoIcons.back,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
-              ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-                      Text(
-                        'Lets Train That Brain',
-                        style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        Text(
+                          'Lets Train That Brain',
+                          style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.85,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final challenge = challenges[index];
-                      return GestureDetector(
-                        onTap: () => _navigateToChallenge(context, challenge.name),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SFIcon(
-                                    challenge.icon,
-                                    fontSize: 28,
-                                    color: AppColors.primary,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    challenge.name,
-                                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    challenge.description,
-                                    textAlign: TextAlign.center,
-                                    style: AppTextStyles.secondaryText,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Start',
-                                        style: AppTextStyles.withColor(
-                                          AppTextStyles.bodySmall,
-                                          AppColors.primary,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      SFIcon(
-                                        SFIcons.sf_chevron_right,
-                                        fontSize: 12,
-                                        color: AppColors.primary,
-                                      ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(16),
+                  sliver: SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.85,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final challenge = challenges[index];
+                        return GestureDetector(
+                          onTap: () => _navigateToChallenge(context, challenge.name),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                              child: Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                      AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
                                     ],
                                   ),
-                                ],
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SFIcon(
+                                      challenge.icon,
+                                      fontSize: 28,
+                                      color: AppColors.primary,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      challenge.name,
+                                      style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      challenge.description,
+                                      textAlign: TextAlign.center,
+                                      style: AppTextStyles.secondaryText,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Start',
+                                          style: AppTextStyles.withColor(
+                                            AppTextStyles.bodySmall,
+                                            AppColors.primary,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        SFIcon(
+                                          SFIcons.sf_chevron_right,
+                                          fontSize: 12,
+                                          color: AppColors.primary,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                    childCount: challenges.length,
+                        );
+                      },
+                      childCount: challenges.length,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
