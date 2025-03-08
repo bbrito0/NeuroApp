@@ -87,405 +87,406 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              CupertinoSliverRefreshControl(
-                onRefresh: () async {
-                  await Future.delayed(const Duration(seconds: 2));
-                },
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    // Logo
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Center(
-                        child: Container(
-                          height:180,
-                          width: 180,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(
-                              'assets/images/ChronoWell_logo-25[3].png',
-                              fit: BoxFit.contain,
+              primary: true,
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(seconds: 2));
+                  },
+                ),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      // Logo
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Center(
+                          child: Container(
+                            height:180,
+                            width: 180,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.asset(
+                                'assets/images/ChronoWell_logo-25[3].png',
+                                fit: BoxFit.contain,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    // Welcome Message with Enhanced Glass Effect
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                ],
+                      const SizedBox(height: 2),
+                      // Welcome Message with Enhanced Glass Effect
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                  width: 0.5,
+                                ),
                               ),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                width: 0.5,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                            gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SFIcon(
+                                              SFIcons.sf_sparkles,
+                                              fontSize: 14,
+                                              color: AppColors.primary,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'AI Coach',
+                                              style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                        CupertinoButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            Navigator.of(context, rootNavigator: true).push(
+                                              CupertinoPageRoute(
+                                                builder: (context) => ProfileScreen(
+                                                  tabController: widget.tabController,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: SFIcon(
+                                            SFIcons.sf_person_circle_fill,
+                                            fontSize: 28,
+                                            color: AppColors.primary,
+                                          ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    'You\'re making great progress!',
+                                    style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Your memory skills improved by 15% this week. Ready to start your daily check-in?',
+                                    style: AppTextStyles.secondaryText,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  CupertinoButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => AICoachScreen(
+                                            tabController: widget.tabController,
+                                          ),
+                                          title: 'AI Coach',
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                                       decoration: BoxDecoration(
-                                          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                                        borderRadius: BorderRadius.circular(8),
+                                        gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          SFIcon(
-                                            SFIcons.sf_sparkles,
-                                            fontSize: 14,
-                                            color: AppColors.primary,
+                                          Text(
+                                            'Daily Check-in',
+                                            style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
                                           ),
                                           const SizedBox(width: 4),
-                                          Text(
-                                            'AI Coach',
-                                            style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                                          SFIcon(
+                                            SFIcons.sf_chevron_right,
+                                            fontSize: 14,
+                                            color: AppColors.primary,
                                           ),
                                         ],
                                       ),
                                     ),
-                                    const Spacer(),
-                                      CupertinoButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          Navigator.of(context, rootNavigator: true).push(
-                                            CupertinoPageRoute(
-                                              builder: (context) => ProfileScreen(
-                                                tabController: widget.tabController,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: SFIcon(
-                                          SFIcons.sf_person_circle_fill,
-                                          fontSize: 28,
-                                          color: AppColors.primary,
-                                        ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'You\'re making great progress!',
-                                  style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Your memory skills improved by 15% this week. Ready to start your daily check-in?',
-                                  style: AppTextStyles.secondaryText,
-                                ),
-                                const SizedBox(height: 16),
-                                CupertinoButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => AICoachScreen(
-                                          tabController: widget.tabController,
-                                        ),
-                                        title: 'AI Coach',
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Daily Check-in',
-                                          style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        SFIcon(
-                                          SFIcons.sf_chevron_right,
-                                          fontSize: 14,
-                                          color: AppColors.primary,
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Daily Challenges Section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Daily Challenges',
-                                style: AppTextStyles.heading1,
-                              ),
-                              CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'View All',
-                                      style: AppTextStyles.actionButton,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    SFIcon(
-                                      SFIcons.sf_chevron_right,
-                                      fontSize: 14,
-                                      color: AppColors.primary,
-                                    ),
-                                  ],
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context, rootNavigator: true).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) => const ChallengesScreen(),
-                                      title: 'Challenges',
-                                      fullscreenDialog: true,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          SizedBox(
-                            height: 250,
-                            child: PageView(
-                              controller: _pageController,
-                              onPageChanged: (int page) {
-                                setState(() {
-                                  _currentPage = page;
-                                });
-                              },
+                      const SizedBox(height: 24),
+                      // Daily Challenges Section
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildChallengeCard(
-                                  context,
-                                  'Memory Master',
-                                  'Enhance your memory skills',
-                                  0.65,
-                                  [
-                                    'Complete Memory Match Game',
-                                    'Read Memory Enhancement Article',
-                                    'Practice Visualization Exercise',
-                                  ],
-                                  SFIcons.sf_brain,
-                                  AppColors.primary,
-                                  () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => const MemoryMatchGame(),
-                                      ),
-                                    );
-                                  },
+                                Text(
+                                  'Daily Challenges',
+                                  style: AppTextStyles.heading1,
                                 ),
-                                _buildChallengeCard(
-                                  context,
-                                  'Focus Champion',
-                                  'Improve your concentration',
-                                  0.45,
-                                  [
-                                    'Complete 10min Meditation',
-                                    'Practice Mindful Reading',
-                                    'Do a Focus Exercise',
-                                  ],
-                                  SFIcons.sf_rays,
-                                  AppColors.primary,
-                                  () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => const MeditationScreen(),
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'View All',
+                                        style: AppTextStyles.actionButton,
                                       ),
-                                    );
-                                  },
-                                ),
-                                _buildChallengeCard(
-                                  context,
-                                  'Problem Solver',
-                                  'Boost analytical thinking',
-                                  0.30,
-                                  [
-                                    'Complete Pattern Recognition',
-                                    'Solve Daily Puzzle',
-                                    'Read Logic Article',
-                                  ],
-                                  SFIcons.sf_puzzlepiece,
-                                  AppColors.primary,
-                                  () {
+                                      const SizedBox(width: 4),
+                                      SFIcon(
+                                        SFIcons.sf_chevron_right,
+                                        fontSize: 14,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {
                                     Navigator.of(context, rootNavigator: true).push(
                                       CupertinoPageRoute(
-                                        builder: (context) => const PatternRecallGame(),
+                                        builder: (context) => const ChallengesScreen(),
+                                        title: 'Challenges',
+                                        fullscreenDialog: true,
                                       ),
                                     );
                                   },
                                 ),
                               ],
                             ),
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(
-                              3,
-                              (index) => Container(
-                                width: 8,
-                                height: 8,
-                                margin: const EdgeInsets.symmetric(horizontal: 4),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _currentPage == index
-                                      ? AppColors.primary
-                                      : AppColors.getPrimaryWithOpacity(0.2),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    // Quick Actions
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildQuickAccessCard(
-                              context,
-                              'Cognitive\nAssessment',
-                              SFIcon(
-                                SFIcons.sf_puzzlepiece,
-                                fontSize: 20,
-                                color: const Color(0xFF0D5A71),
-                              ),
-                              AppColors.primary,
-                              () {
-                                Navigator.of(context, rootNavigator: true).push(
-                                  CupertinoPageRoute(
-                                    builder: (context) => const ChallengesScreen(),
-                                    title: 'Cognitive Assessment',
-                                    fullscreenDialog: true,
-                                    maintainState: true,
-                                    allowSnapshotting: true,
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              height: 250,
+                              child: PageView(
+                                controller: _pageController,
+                                onPageChanged: (int page) {
+                                  setState(() {
+                                    _currentPage = page;
+                                  });
+                                },
+                                children: [
+                                  _buildChallengeCard(
+                                    context,
+                                    'Memory Master',
+                                    'Enhance your memory skills',
+                                    0.65,
+                                    [
+                                      'Complete Memory Match Game',
+                                      'Read Memory Enhancement Article',
+                                      'Practice Visualization Exercise',
+                                    ],
+                                    SFIcons.sf_brain,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const MemoryMatchGame(),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _buildQuickAccessCard(
-                              context,
-                              'Learning\nResources',
-                              SFIcon(
-                                SFIcons.sf_book,
-                                fontSize: 20,
-                                color: const Color(0xFF0D5A71),
+                                  _buildChallengeCard(
+                                    context,
+                                    'Focus Champion',
+                                    'Improve your concentration',
+                                    0.45,
+                                    [
+                                      'Complete 10min Meditation',
+                                      'Practice Mindful Reading',
+                                      'Do a Focus Exercise',
+                                    ],
+                                    SFIcons.sf_rays,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const MeditationScreen(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  _buildChallengeCard(
+                                    context,
+                                    'Problem Solver',
+                                    'Boost analytical thinking',
+                                    0.30,
+                                    [
+                                      'Complete Pattern Recognition',
+                                      'Solve Daily Puzzle',
+                                      'Read Logic Article',
+                                    ],
+                                    SFIcons.sf_puzzlepiece,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const PatternRecallGame(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
-                              AppColors.primary,
-                              () {
-                                widget.tabController.index = 3;
-                              },
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    // News and Updates
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Latest Updates',
-                                style: AppTextStyles.heading2,
-                              ),
-                              CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      'View All',
-                                      style: AppTextStyles.actionButton,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    SFIcon(
-                                      SFIcons.sf_chevron_right,
-                                      fontSize: 14,
-                                      color: AppColors.primary,
-                                    ),
-                                  ],
+                            const SizedBox(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                3,
+                                (index) => Container(
+                                  width: 8,
+                                  height: 8,
+                                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _currentPage == index
+                                        ? AppColors.primary
+                                        : AppColors.getPrimaryWithOpacity(0.2),
+                                  ),
                                 ),
-                                onPressed: () {},
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 16),
-                          _buildNewsItem(
-                            context,
-                            'New Challenge Available',
-                            'Pattern Recognition Master',
-                            'Try our latest cognitive exercise designed to enhance your pattern recognition abilities.',
-                            '2h ago',
-                            AppColors.primary,
-                          ),
-                          const SizedBox(height: 12),
-                          _buildNewsItem(
-                            context,
-                            'Weekly Report Ready',
-                            'Performance Insights',
-                            'Your personalized cognitive performance report for this week is now available.',
-                            '1d ago',
-                            AppColors.primary,
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Add safe area bottom padding
-                    SizedBox(height: MediaQuery.of(context).padding.bottom + 70),
-                  ],
+                      const SizedBox(height: 24),
+                      // Quick Actions
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Cognitive\nAssessment',
+                                SFIcon(
+                                  SFIcons.sf_puzzlepiece,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => const ChallengesScreen(),
+                                      title: 'Cognitive Assessment',
+                                      fullscreenDialog: true,
+                                      maintainState: true,
+                                      allowSnapshotting: true,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Learning\nResources',
+                                SFIcon(
+                                  SFIcons.sf_book,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  widget.tabController.index = 3;
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      // News and Updates
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Latest Updates',
+                                  style: AppTextStyles.heading2,
+                                ),
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'View All',
+                                        style: AppTextStyles.actionButton,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      SFIcon(
+                                        SFIcons.sf_chevron_right,
+                                        fontSize: 14,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            _buildNewsItem(
+                              context,
+                              'New Challenge Available',
+                              'Pattern Recognition Master',
+                              'Try our latest cognitive exercise designed to enhance your pattern recognition abilities.',
+                              '2h ago',
+                              AppColors.primary,
+                            ),
+                            const SizedBox(height: 12),
+                            _buildNewsItem(
+                              context,
+                              'Weekly Report Ready',
+                              'Performance Insights',
+                              'Your personalized cognitive performance report for this week is now available.',
+                              '1d ago',
+                              AppColors.primary,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      // Add safe area bottom padding
+                      SizedBox(height: MediaQuery.of(context).padding.bottom + 70),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
             ),
           ),
         ],

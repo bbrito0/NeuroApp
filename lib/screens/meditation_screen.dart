@@ -33,6 +33,7 @@ class MeditationScreen extends StatelessWidget {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
+              primary: true,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
