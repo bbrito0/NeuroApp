@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' show Colors;
 import 'dart:ui';
 import 'dart:math';
 import 'dart:async';
-import 'package:flutter_sficon/flutter_sficon.dart';
 
 class ReactionGame extends StatefulWidget {
   const ReactionGame({super.key});
@@ -337,7 +336,7 @@ class _ReactionGameState extends State<ReactionGame> {
                                   child: _buildShape(shape),
                                 ),
                               ),
-                            )).toList(),
+                            )),
                           ],
                         ),
                       ),

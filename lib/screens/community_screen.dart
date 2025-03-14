@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -40,6 +41,42 @@ class _CommunityScreenState extends State<CommunityScreen> {
     ),
   ];
 
+  late ScrollController _scrollController;
+
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey searchKey = GlobalKey();
+  final GlobalKey tagsKey = GlobalKey();
+  final GlobalKey topicKey = GlobalKey();
+  final GlobalKey newPostKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled and not shown before
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.COMMUNITY_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.COMMUNITY_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createCommunityTutorial(
+      context,
+      [searchKey, tagsKey, topicKey, newPostKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -64,7 +101,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -83,6 +121,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     ),
                   ),
                   trailing: CupertinoButton(
+                    key: newPostKey,
                     padding: EdgeInsets.zero,
                     onPressed: () {
                       _showNewTopicSheet(context);
@@ -99,9 +138,73 @@ class _CommunityScreenState extends State<CommunityScreen> {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                        _buildSearchBar(),
+                        Container(
+                          key: searchKey,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: AppColors.getSurfaceWithOpacity(0.5),
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: AppColors.separator.withOpacity(0.2),
+                              width: 0.5,
+                            ),
+                          ),
+                          child: CupertinoTextField.borderless(
+                            prefix: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: SFIcon(
+                                SFIcons.sf_magnifyingglass,
+                                fontSize: 16,
+                                color: AppColors.secondaryLabel,
+                              ),
+                            ),
+                            placeholder: 'Search topics',
+                            placeholderStyle: AppTextStyles.withColor(
+                              AppTextStyles.bodyMedium,
+                              AppColors.secondaryLabel,
+                            ),
+                            style: AppTextStyles.withColor(
+                              AppTextStyles.bodyMedium,
+                              AppColors.textPrimary,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                        ),
                         const SizedBox(height: 16),
-                        _buildPopularTags(),
+                        SizedBox(
+                          key: tagsKey,
+                          height: 32,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: ["Memory", "Training", "Health", "Tips", "Progress"].length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: index == 0 ? 0 : 8,
+                                  right: index == ["Memory", "Training", "Health", "Tips", "Progress"].length - 1 ? 0 : 0,
+                                ),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.getPrimaryWithOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: AppColors.getPrimaryWithOpacity(0.1),
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    ["Memory", "Training", "Health", "Tips", "Progress"][index],
+                                    style: AppTextStyles.withColor(
+                                      AppTextStyles.bodySmall,
+                                      AppColors.primary,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                         const SizedBox(height: 24),
                       ],
                     ),
@@ -109,7 +212,10 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ),
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildTopicCard(_topics[index]),
+                    (context, index) => Container(
+                      key: index == 0 ? topicKey : null,
+                      child: _buildTopicCard(_topics[index]),
+                    ),
                     childCount: _topics.length,
                   ),
                 ),
@@ -120,77 +226,6 @@ class _CommunityScreenState extends State<CommunityScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      height: 36,
-      decoration: BoxDecoration(
-        color: AppColors.getSurfaceWithOpacity(0.5),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: AppColors.separator.withOpacity(0.2),
-          width: 0.5,
-        ),
-      ),
-      child: CupertinoTextField.borderless(
-        prefix: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: SFIcon(
-            SFIcons.sf_magnifyingglass,
-            fontSize: 16,
-            color: AppColors.secondaryLabel,
-          ),
-        ),
-        placeholder: 'Search topics',
-        placeholderStyle: AppTextStyles.withColor(
-          AppTextStyles.bodyMedium,
-          AppColors.secondaryLabel,
-        ),
-        style: AppTextStyles.withColor(
-          AppTextStyles.bodyMedium,
-          AppColors.textPrimary,
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-      ),
-    );
-  }
-
-  Widget _buildPopularTags() {
-    final tags = ["Memory", "Training", "Health", "Tips", "Progress"];
-    return SizedBox(
-      height: 32,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: tags.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(
-              left: index == 0 ? 0 : 8,
-              right: index == tags.length - 1 ? 0 : 0,
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.getPrimaryWithOpacity(0.1),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.getPrimaryWithOpacity(0.1),
-                  width: 0.5,
-                ),
-              ),
-              child: Text(
-                tags[index],
-                style: AppTextStyles.withColor(
-                  AppTextStyles.bodySmall,
-                  AppColors.primary,
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

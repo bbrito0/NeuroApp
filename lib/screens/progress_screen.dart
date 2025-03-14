@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 // Data Models
 class ProgressDataPoint {
@@ -123,6 +124,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
   String _selectedCategory = 'Memory';
   String _selectedTimeRange = 'Week';
   late ProgressDataSet _currentData;
+  late ScrollController _scrollController;
+
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey aiInsightKey = GlobalKey();
+  final GlobalKey progressChartKey = GlobalKey();
+  final GlobalKey statsGridKey = GlobalKey();
 
   @override
   void initState() {
@@ -131,6 +138,29 @@ class _ProgressScreenState extends State<ProgressScreen> {
       category: _selectedCategory,
       timeRange: _selectedTimeRange,
     );
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.PROGRESS_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.PROGRESS_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createProgressTutorial(
+      context,
+      [aiInsightKey, progressChartKey, statsGridKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _updateData() {
@@ -306,7 +336,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -341,63 +372,69 @@ class _ProgressScreenState extends State<ProgressScreen> {
                         const SizedBox(height: 16),
                         
                         // AI Progress Comment Card
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                    AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                  ],
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SFIcon(
-                                          SFIcons.sf_sparkles,
-                                          fontSize: 14,
-                                          color: AppColors.primary,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          'AI Insight',
-                                          style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
-                                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: Container(
+                            key: aiInsightKey,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                                child: Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
                                       ],
                                     ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                                      width: 0.5,
+                                    ),
                                   ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Great progress in memory exercises!',
-                                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SFIcon(
+                                              SFIcons.sf_sparkles,
+                                              fontSize: 14,
+                                              color: AppColors.primary,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              'AI Insight',
+                                              style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Great progress in memory exercises!',
+                                        style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Your consistent practice is showing results. Focus on pattern recognition exercises to maximize improvement.',
+                                        style: AppTextStyles.secondaryText,
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Your consistent practice is showing results. Focus on pattern recognition exercises to maximize improvement.',
-                                    style: AppTextStyles.secondaryText,
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
@@ -409,11 +446,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 20),
                 ),
-                // Graph Card
+                // Graph Card with key
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: ClipRRect(
+                      key: progressChartKey,
                       borderRadius: BorderRadius.circular(20),
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -594,11 +632,12 @@ class _ProgressScreenState extends State<ProgressScreen> {
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 20),
                 ),
-                // Stats Grid
+                // Stats Grid with key
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: GridView.count(
+                      key: statsGridKey,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       crossAxisCount: 2,

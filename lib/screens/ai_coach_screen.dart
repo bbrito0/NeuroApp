@@ -5,14 +5,19 @@ import 'dart:math' show sin, pi;
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
+import 'tavus_call_screen.dart';
+import '../services/tavus_service.dart';
 
 class AICoachScreen extends StatefulWidget {
   const AICoachScreen({
     super.key,
     required this.tabController,
+    this.fromDailyCheckIn = false,
   });
 
   final CupertinoTabController tabController;
+  final bool fromDailyCheckIn;
 
   @override
   State<AICoachScreen> createState() => _AICoachScreenState();
@@ -22,10 +27,12 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNode = FocusNode();
-  bool _isVoiceMode = false;
   bool _isTyping = false;
-  bool _isListening = false;
   bool _showTooltip = true;
+  
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey _chatInputKey = GlobalKey();
+  final GlobalKey _videoChatKey = GlobalKey();
   
   late AnimationController _typingDotsController;
   late AnimationController _tooltipController;
@@ -34,6 +41,8 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
   final List<ChatMessage> _messages = [];
   final String _userName = "John"; // This should come from user profile
   
+  final TavusService _tavusService = TavusService();
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +80,43 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
     Future.delayed(const Duration(milliseconds: 500), () {
       _addAIMessage("Hello $_userName, how can I help you today?");
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Show tutorial after the widget is fully built and dependencies are available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.AI_COACH_TUTORIAL) && mounted) {
+        try {
+          _showTutorial();
+          TutorialService.markTutorialAsShown(TutorialService.AI_COACH_TUTORIAL);
+        } catch (e) {
+          print('Error showing tutorial: $e');
+        }
+      }
+    });
+  }
+
+  void _showTutorial() {
+    if (!mounted) return;
+    
+    try {
+      final tutorial = TutorialService.createAICoachTutorial(
+        context,
+        [_videoChatKey, _chatInputKey],
+        _scrollController,
+      );
+      
+      // Add a small delay to ensure the widget tree is stable
+      Future.delayed(const Duration(milliseconds: 300), () {
+        if (mounted) {
+          tutorial.show(context: context);
+        }
+      });
+    } catch (e) {
+      print('Error showing tutorial: $e');
+    }
   }
 
   @override
@@ -133,19 +179,52 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
     });
   }
 
-  void _toggleVoiceMode() {
-    setState(() {
-      _isVoiceMode = !_isVoiceMode;
-      if (_isVoiceMode) {
-        _isListening = false;
-      }
-    });
+  void _handleBackPress() {
+    if (widget.fromDailyCheckIn) {
+      Navigator.of(context, rootNavigator: true).pop();
+    } else {
+      widget.tabController.index = 0;
+    }
   }
 
-  void _toggleListening() {
-    setState(() {
-      _isListening = !_isListening;
-    });
+  Future<void> _startTavusCall(BuildContext context) async {
+    try {
+      // End any existing conversations first
+      await _tavusService.endAllActiveConversations();
+
+      final conversation = await _tavusService.createConversation(
+        conversationName: 'AI Coach Video Call',
+        conversationalContext: 'You are having a video call with your AI health coach who helps you with mental wellness and cognitive training.',
+        customGreeting: 'Hello! I\'m excited to have this video chat with you. How can I help you today?',
+      );
+
+      if (!mounted) return;
+
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (context) => TavusCallScreen(
+            conversationUrl: conversation.conversationUrl,
+            conversationId: conversation.conversationId,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      
+      showCupertinoDialog(
+        context: context,
+        builder: (context) => CupertinoAlertDialog(
+          title: const Text('Error'),
+          content: Text('Failed to start video call: $e'),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text('OK'),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -170,10 +249,7 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
           ),
           leading: CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () {
-              Navigator.of(context).pop();
-              widget.tabController.index = 0;
-            },
+            onPressed: _handleBackPress,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -189,57 +265,15 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
               ],
             ),
           ),
-          trailing: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              CupertinoButton(
-                padding: EdgeInsets.zero,
-                onPressed: _toggleVoiceMode,
-                child: SFIcon(
-                  _isVoiceMode ? SFIcons.sf_keyboard : SFIcons.sf_mic,
-                  fontSize: 20,
-                  color: AppColors.primary,
-                ),
-              ),
-              if (_showTooltip)
-                Positioned(
-                  right: 30,
-                  top: 0,
-                  child: FadeTransition(
-                    opacity: _tooltipAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.getSurfaceWithOpacity(0.9),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: AppColors.getPrimaryWithOpacity(0.1),
-                          width: 0.5,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.getSurfaceWithOpacity(0.1),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Toggle voice input',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodySmall,
-                              AppColors.textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-            ],
+          trailing: CupertinoButton(
+            key: _videoChatKey,
+            padding: EdgeInsets.zero,
+            onPressed: () => _startTavusCall(context),
+            child: SFIcon(
+              SFIcons.sf_video_fill,
+              fontSize: 20,
+              color: AppColors.primary,
+            ),
           ),
         ),
         child: Stack(
@@ -259,69 +293,13 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
             ),
             Column(
               children: [
-                // AI Avatar Section
-                Container(
-                  padding: const EdgeInsets.only(top: 48, bottom: 24),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 160,
-                        height: 160,
-                        decoration: BoxDecoration(
-                          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.1, endOpacity: 0.15),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.getPrimaryWithOpacity(0.1),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            'assets/images/openart-image_ayfupyiH_1741280793391_raw.jpg',
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: AppColors.getSurfaceWithOpacity(0.5),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.getPrimaryWithOpacity(0.1),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: AppColors.success,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                      Text(
-                              'Online',
-                              style: AppTextStyles.withColor(
-                                AppTextStyles.bodySmall,
-                                AppColors.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.only(top: 16, bottom: 100),
+                    padding: const EdgeInsets.only(
+                      top: 90,
+                      bottom: 100
+                    ),
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       final message = _messages[index];
@@ -352,13 +330,12 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
                       child: SafeArea(
                         top: false,
                         child: Padding(
+                          key: _chatInputKey,
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           child: Row(
                             children: [
                               Expanded(
-                                child: _isVoiceMode
-                                    ? _buildVoiceButton()
-                                    : _buildTextInput(),
+                                child: _buildTextInput(),
                               ),
                               CupertinoButton(
                                 padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -391,8 +368,8 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
   Widget _buildMessageBubble(ChatMessage message) {
     final isUser = message.isUser;
     final bubbleColor = isUser
-        ? AppColors.getPrimaryWithOpacity(0.1)
-        : AppColors.getSurfaceWithOpacity(0.5);
+        ? CupertinoColors.white
+        : CupertinoColors.white;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -406,16 +383,17 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
           if (!isUser) _buildAvatar(),
           Flexible(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: bubbleColor,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: isUser
-                      ? AppColors.getPrimaryWithOpacity(0.1)
-                      : AppColors.separator.withOpacity(0.1),
-                  width: 0.5,
-                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.getPrimaryWithOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: Text(
                 message.text,
@@ -433,9 +411,20 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
 
   Widget _buildAvatar() {
     return Container(
-      width: 28,
-      height: 28,
+      width: 32,
+      height: 32,
       margin: const EdgeInsets.only(right: 8),
+      decoration: BoxDecoration(
+        color: CupertinoColors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.getPrimaryWithOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Center(
         child: SFIcon(
           SFIcons.sf_brain,
@@ -448,14 +437,17 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
 
   Widget _buildTypingIndicator() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.getSurfaceWithOpacity(0.5),
+        color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.separator.withOpacity(0.1),
-          width: 0.5,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.getPrimaryWithOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -490,14 +482,17 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
       focusNode: _focusNode,
       placeholder: 'Message',
       placeholderStyle: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.getSurfaceWithOpacity(0.5),
+        color: CupertinoColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.systemGrey4,
-          width: 0.5,
-        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.getPrimaryWithOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       onTap: () {
         _focusNode.requestFocus();
@@ -514,39 +509,6 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
       textInputAction: TextInputAction.send,
       style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
       cursorColor: AppColors.primary,
-    );
-  }
-
-  Widget _buildVoiceButton() {
-    return GestureDetector(
-      onTapDown: (_) => _toggleListening(),
-      onTapUp: (_) => _toggleListening(),
-      onTapCancel: () => _toggleListening(),
-      child: Container(
-        height: 36,
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        decoration: BoxDecoration(
-          color: _isListening
-              ? AppColors.getPrimaryWithOpacity(0.15)
-              : AppColors.getSurfaceWithOpacity(0.5),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: _isListening
-                ? AppColors.getPrimaryWithOpacity(0.2)
-                : AppColors.systemGrey4,
-            width: 0.5,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            _isListening ? 'Listening...' : 'Hold to speak',
-            style: AppTextStyles.withColor(
-              AppTextStyles.bodySmall,
-              _isListening ? AppColors.primary : AppColors.secondaryLabel,
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

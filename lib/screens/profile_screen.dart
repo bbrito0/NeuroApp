@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -18,6 +19,39 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late ScrollController _scrollController;
+
+  // Single key for the tutorial
+  final GlobalKey profileOverviewKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.PROFILE_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.PROFILE_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createProfileTutorial(
+      context,
+      [profileOverviewKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -42,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -69,18 +103,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        _buildProfileHeader(),
-                        const SizedBox(height: 20),
-                        _buildStats(),
-                        const SizedBox(height: 20),
-                        _buildSettings(),
-                        const SizedBox(height: 32),
-                      ],
-                    ),
+                  child: Column(
+                    children: [
+                      _buildProfileHeader(),
+                      const SizedBox(height: 20),
+                      _buildStats(),
+                      const SizedBox(height: 20),
+                      _buildSettings(),
+                      const SizedBox(height: 32),
+                    ],
                   ),
                 ),
               ],
@@ -92,45 +123,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              children: [
+                SFIcon(
+                  SFIcons.sf_person_circle,
+                  fontSize: 48,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'John Doe',
+                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Training since Jan 2024',
+                  style: AppTextStyles.secondaryText,
+                ),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            children: [
-              SFIcon(
-                SFIcons.sf_person_circle,
-                fontSize: 64,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'John Doe',
-                style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Training since Jan 2024',
-                style: AppTextStyles.secondaryText,
-              ),
-            ],
           ),
         ),
       ),
@@ -138,46 +172,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildStats() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Statistics',
-                style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildStatItem('Total Games', '156'),
-                  const SizedBox(width: 12),
-                  _buildStatItem('Best Score', '98'),
-                  const SizedBox(width: 12),
-                  _buildStatItem('Streak', '7 days'),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
                 ],
               ),
-            ],
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Statistics',
+                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildStatItem('Total Games', '156'),
+                    const SizedBox(width: 8),
+                    _buildStatItem('Best Score', '98'),
+                    const SizedBox(width: 8),
+                    _buildStatItem('Streak', '7 days'),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -187,10 +224,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildStatItem(String label, String value) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
           color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           children: [
@@ -198,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               value,
               style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.primary),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 2),
             Text(
               label,
               style: AppTextStyles.secondaryText,
@@ -211,56 +248,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettings() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              key: profileOverviewKey,
+              children: [
+                _buildSettingItem(
+                  'Notifications',
+                  SFIcons.sf_bell,
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  'Dark Mode',
+                  SFIcons.sf_moon,
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  'Language',
+                  SFIcons.sf_globe,
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  'Privacy',
+                  SFIcons.sf_lock,
+                  onTap: () {},
+                ),
+                _buildSettingItem(
+                  'Help & Support',
+                  SFIcons.sf_questionmark_circle,
+                  onTap: () {},
+                  showBorder: false,
+                ),
               ],
             ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            children: [
-              _buildSettingItem(
-                'Notifications',
-                SFIcons.sf_bell,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                'Dark Mode',
-                SFIcons.sf_moon,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                'Language',
-                SFIcons.sf_globe,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                'Privacy',
-                SFIcons.sf_lock,
-                onTap: () {},
-              ),
-              _buildSettingItem(
-                'Help & Support',
-                SFIcons.sf_questionmark_circle,
-                onTap: () {},
-                showBorder: false,
-              ),
-            ],
           ),
         ),
       ),
@@ -276,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           border: showBorder
               ? Border(
@@ -291,18 +332,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             SFIcon(
               icon,
-              fontSize: 20,
+              fontSize: 18,
               color: AppColors.primary,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Text(
               title,
-              style: AppTextStyles.withColor(AppTextStyles.bodyLarge, AppColors.textPrimary),
+              style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
             ),
             const Spacer(),
             SFIcon(
               SFIcons.sf_chevron_right,
-              fontSize: 14,
+              fontSize: 12,
               color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
             ),
           ],

@@ -31,8 +31,49 @@
 
   <title>neural_app</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    * {
+      cursor: none !important;
+    }
+    
+    #custom-cursor {
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(103, 80, 164, 0.15);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.2s ease;
+      transform-origin: center;
+    }
+
+    #custom-cursor.active {
+      transform: scale(0.8);
+      background-color: rgba(103, 80, 164, 0.05);
+    }
+  </style>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
+  <div id="custom-cursor"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const cursor = document.getElementById('custom-cursor');
+      
+      document.addEventListener('mousemove', function(e) {
+        cursor.style.left = e.clientX - 10 + 'px';
+        cursor.style.top = e.clientY - 10 + 'px';
+      });
+
+      document.addEventListener('mousedown', function() {
+        cursor.classList.add('active');
+      });
+
+      document.addEventListener('mouseup', function() {
+        cursor.classList.remove('active');
+      });
+    });
+  </script>
 </body>
 </html>

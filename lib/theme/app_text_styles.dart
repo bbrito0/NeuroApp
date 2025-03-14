@@ -7,8 +7,8 @@ class AppTextStyles {
   // Headings
   static const TextStyle heading1 = TextStyle(
     fontFamily: _fontFamily,
-    fontSize: 22,
-    fontWeight: FontWeight.w400,
+    fontSize: 18,
+    fontWeight: FontWeight.w300,
     letterSpacing: 0.38,
   );
 
@@ -38,14 +38,14 @@ class AppTextStyles {
   static const TextStyle bodyMedium = TextStyle(
     fontFamily: _fontFamily,
     fontSize: 15,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w300,
     letterSpacing: -0.24,
   );
 
   static const TextStyle bodySmall = TextStyle(
     fontFamily: _fontFamily,
-    fontSize: 13,
-    fontWeight: FontWeight.w400,
+    fontSize: 14,
+    fontWeight: FontWeight.w300,
     letterSpacing: -0.08,
   );
 

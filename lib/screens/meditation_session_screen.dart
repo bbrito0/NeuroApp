@@ -33,7 +33,7 @@ class MeditationSessionScreen extends StatefulWidget {
 
 class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
   bool _isPlaying = false;
-  double _progress = 0.0;
+  final double _progress = 0.0;
 
   void _togglePlayPause() {
     setState(() {
@@ -50,23 +50,23 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final uiColor = const Color(0xFFADB5BD); // Lighter grey tone
+    final uiColor = const Color(0xFF8E9EAB); // Softer grey tone
     
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
-          // Animated Wave Background
+          // Animated Wave Background with lighter colors
           WaveWidget(
             config: CustomConfig(
               gradients: [
                 [
-                  const Color(0xFF33576e).withOpacity(0.3),
-                  const Color(0xFF5085a7 ).withOpacity(0.7),
+                  const Color(0xFFE0E5EC).withOpacity(0.4),  // Much lighter grey
+                  const Color(0xFFCFD9DF).withOpacity(0.6),   // Soft grey-blue
                 ],
                 [
-                  const Color(0xFF33576e).withOpacity(0.25),
-                  const Color(0xFF33576e).withOpacity(0.65),
+                  const Color(0xFFD3DCE3).withOpacity(0.3),   // Another light grey
+                  const Color(0xFFE5E9F0).withOpacity(0.5),   // Very light grey-blue
                 ],
               ],
               durations: [19440, 10800],
@@ -78,7 +78,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
             waveAmplitude: 0,
             size: const Size(double.infinity, double.infinity),
           ),
-          // Frosted Glass Overlay
+          // Frosted Glass Overlay with lighter opacity
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
             child: Container(
@@ -87,8 +87,8 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                   begin: const Alignment(-1.0, 1.0),
                   end: const Alignment(1.0, -1.0),
                   colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.white.withOpacity(0.25),
+                    Colors.white.withOpacity(0.2),
+                    Colors.white.withOpacity(0.3),
                   ],
                 ),
               ),
@@ -129,7 +129,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                   ),
                 ),
                 const Spacer(),
-                // Play/Pause Button
+                // Play/Pause Button with updated colors
                 Center(
                   child: GestureDetector(
                     onTap: _togglePlayPause,
@@ -141,14 +141,14 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            uiColor.withOpacity(0.5),
-                            uiColor.withOpacity(0.5),
+                            const Color(0xFF8E9EAB).withOpacity(0.7),  // Lighter control color
+                            const Color(0xFFA1ADC0).withOpacity(0.7),  // Slightly lighter variant
                           ],
                         ),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: uiColor.withOpacity(0.4),
+                            color: const Color(0xFF8E9EAB).withOpacity(0.3),
                             blurRadius: 20,
                             offset: const Offset(0, 4),
                           ),
@@ -171,13 +171,13 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                                 SFIcons.sf_pause,
                                 key: const ValueKey('pause'),
                                 fontSize: 40,
-                                color: const Color(0xFF2C3E50).withOpacity(0.6),
+                                color: const Color(0xFF4A5568),  // Darker grey for contrast
                               )
                             : SFIcon(
                                 SFIcons.sf_play,
                                 key: const ValueKey('play'),
                                 fontSize: 40,
-                                color: const Color(0xFF2C3E50).withOpacity(0.6),
+                                color: const Color(0xFF4A5568),  // Darker grey for contrast
                               ),
                         ),
                       ),
@@ -185,7 +185,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                   ),
                 ),
                 const SizedBox(height: 48),
-                // Progress Bar and Time Labels
+                // Progress Bar with updated colors
                 Padding(
                   padding: const EdgeInsets.fromLTRB(32.0, 0, 32.0, 48.0),
                   child: Column(
@@ -198,14 +198,14 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  color: uiColor.withOpacity(0.3),
+                                  color: const Color(0xFF8E9EAB).withOpacity(0.2),  // Lighter background
                                 ),
                               ),
                               FractionallySizedBox(
                                 widthFactor: _progress,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF2C3E50),
+                                    color: const Color(0xFF4A5568),  // Darker progress color for contrast
                                   ),
                                 ),
                               ),
@@ -223,7 +223,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                               fontFamily: '.SF Pro Text',
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF2C3E50),
+                              color: Color(0xFF4A5568),  // Darker text for contrast
                             ),
                           ),
                           Text(
@@ -232,7 +232,7 @@ class _MeditationSessionScreenState extends State<MeditationSessionScreen> {
                               fontFamily: '.SF Pro Text',
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF2C3E50),
+                              color: Color(0xFF4A5568),  // Darker text for contrast
                             ),
                           ),
                         ],

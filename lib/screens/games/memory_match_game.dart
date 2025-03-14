@@ -11,10 +11,10 @@ class MemoryMatchGame extends StatefulWidget {
 
 class _MemoryMatchGameState extends State<MemoryMatchGame> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  List<bool> _flippedCards = List.generate(16, (index) => false);
+  final List<bool> _flippedCards = List.generate(16, (index) => false);
   int _score = 0;
   int _moves = 0;
-  List<int> _matchedPairs = [];
+  final List<int> _matchedPairs = [];
   List<int>? _currentPair;
 
   final List<IconData> _icons = [

@@ -6,9 +6,9 @@ class AppColors {
   static const primaryAlt = Color(0xFF30B0C7);
   
   // Background Gradient Colors
-  static const backgroundGradientStart = Color(0xFF6a8d97);
-  static const backgroundGradientMiddle = Color(0xFFbdd1d5);
-  static const backgroundGradientEnd = Color(0xFFE8F5F8);
+  static const backgroundGradientStart = Color(0xFFc3d8df);
+  static const backgroundGradientMiddle = Color(0xFFc3d8df);
+  static const backgroundGradientEnd = Color(0xFFc3d8df);
   
   // Status Colors
   static const success = Color(0xFF34C759);
@@ -30,7 +30,7 @@ class AppColors {
   static const systemGrey6 = CupertinoColors.systemGrey6;
   
   // Common Opacity Values
-  static const backgroundOpacity = 0.9;
+  static const backgroundOpacity = 1.0;
   static const surfaceOpacity = 0.8;
   static const borderOpacity = 0.2;
   static const inactiveOpacity = 0.5;
@@ -51,8 +51,8 @@ class AppColors {
     begin: const Alignment(-1.0, 1.0),
     end: const Alignment(1.0, -1.0),
     colors: [
-      surface.withOpacity(0.1),
-      surface.withOpacity(0.2),
+      surface.withOpacity(0.0),
+      surface.withOpacity(0.0),
     ],
   );
 

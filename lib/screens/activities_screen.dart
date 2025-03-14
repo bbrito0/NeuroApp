@@ -161,10 +161,15 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             ),
             child: Row(
               children: [
-                SFIcon(
-                  icon,
-                  fontSize: 22,
-                  color: AppColors.primary,
+                Container(
+                  width: 24,
+                  height: 24,
+                  alignment: Alignment.center,
+                  child: SFIcon(
+                    icon,
+                    fontSize: 20,
+                    color: AppColors.primary,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

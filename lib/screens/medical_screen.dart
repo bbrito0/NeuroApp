@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class MedicalScreen extends StatefulWidget {
   const MedicalScreen({
@@ -18,6 +19,14 @@ class MedicalScreen extends StatefulWidget {
 }
 
 class _MedicalScreenState extends State<MedicalScreen> {
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey _medicalReportsKey = GlobalKey();
+  final GlobalKey _caregiverPortalKey = GlobalKey();
+  final GlobalKey _upcomingMeetingsKey = GlobalKey();
+  final GlobalKey _medicalHistoryKey = GlobalKey();
+  
+  final ScrollController _scrollController = ScrollController();
+
   final List<Map<String, dynamic>> _caregivers = [
     {
       'name': 'Dr. Sarah Johnson',
@@ -50,6 +59,33 @@ class _MedicalScreenState extends State<MedicalScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.MEDICAL_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.MEDICAL_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createMedicalScreenTutorial(
+      context,
+      [_medicalReportsKey, _caregiverPortalKey, _upcomingMeetingsKey, _medicalHistoryKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
@@ -72,6 +108,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
           ),
           // Main Content
           CustomScrollView(
+            controller: _scrollController,
             physics: const BouncingScrollPhysics(),
             slivers: [
               CupertinoSliverNavigationBar(
@@ -113,13 +150,17 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       // Medical Reports Section
                       _buildSectionTitle('Medical Reports'),
                       const SizedBox(height: 12),
-                      _buildMedicalReportsCard(),
+                      Container(
+                        key: _medicalReportsKey,
+                        child: _buildMedicalReportsCard(),
+                      ),
                       const SizedBox(height: 24),
 
                       // Caregiver Portal Section
                       _buildSectionTitle('Caregiver Portal'),
                       const SizedBox(height: 12),
                       SizedBox(
+                        key: _caregiverPortalKey,
                         height: 220,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -132,17 +173,23 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       // Upcoming Meetings Section
                       _buildSectionTitle('Upcoming Meetings'),
                       const SizedBox(height: 12),
-                      Column(
-                        children: _upcomingMeetings
-                            .map((meeting) => _buildMeetingCard(meeting))
-                            .toList(),
+                      Container(
+                        key: _upcomingMeetingsKey,
+                        child: Column(
+                          children: _upcomingMeetings
+                              .map((meeting) => _buildMeetingCard(meeting))
+                              .toList(),
+                        ),
                       ),
                       const SizedBox(height: 24),
 
                       // Medical History Form Section
                       _buildSectionTitle('Medical History'),
                       const SizedBox(height: 12),
-                      _buildMedicalHistoryForm(),
+                      Container(
+                        key: _medicalHistoryKey,
+                        child: _buildMedicalHistoryForm(),
+                      ),
                       const SizedBox(height: 32),
                       // Add safe area bottom padding
                       SizedBox(height: MediaQuery.of(context).padding.bottom + 70),

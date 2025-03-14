@@ -7,6 +7,7 @@ import 'games/pattern_recall_game.dart';
 import 'games/reaction_game.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class ChallengesScreen extends StatefulWidget {
   const ChallengesScreen({super.key});
@@ -16,6 +17,39 @@ class ChallengesScreen extends StatefulWidget {
 }
 
 class _ChallengesScreenState extends State<ChallengesScreen> {
+  late ScrollController _scrollController;
+
+  // Single GlobalKey for tutorial target
+  final GlobalKey challengesOverviewKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.COGNITIVE_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.COGNITIVE_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createChallengesTutorial(
+      context,
+      [challengesOverviewKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -43,7 +77,8 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -70,19 +105,42 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8),
-                        Text(
-                          'Lets Train That Brain',
-                          style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                  child: Column(
+                    key: challengesOverviewKey,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 8),
+                            Text(
+                              'Lets Train That Brain',
+                              style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          height: 180,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _buildChallengeCard(0, context),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _buildChallengeCard(1, context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SliverPadding(
@@ -197,6 +255,77 @@ class _ChallengesScreenState extends State<ChallengesScreen> {
       CupertinoPageRoute(
         builder: (context) => screen,
         title: challengeName,
+      ),
+    );
+  }
+
+  Widget _buildChallengeCard(int index, BuildContext context) {
+    final challenge = challenges[index];
+    return GestureDetector(
+      onTap: () => _navigateToChallenge(context, challenge.name),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                width: 0.5,
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SFIcon(
+                  challenge.icon,
+                  fontSize: 28,
+                  color: AppColors.primary,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  challenge.name,
+                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  challenge.description,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.secondaryText,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Start',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodySmall,
+                        AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    SFIcon(
+                      SFIcons.sf_chevron_right,
+                      fontSize: 12,
+                      color: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

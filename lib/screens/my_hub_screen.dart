@@ -9,6 +9,7 @@ import 'profile_screen.dart';
 import 'community_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class MyHubScreen extends StatefulWidget {
   const MyHubScreen({
@@ -24,7 +25,14 @@ class MyHubScreen extends StatefulWidget {
 
 class _MyHubScreenState extends State<MyHubScreen> {
   late PageController _pageController;
+  late ScrollController _scrollController;
   int _currentPage = 0;
+  
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey overallScoreKey = GlobalKey();
+  final GlobalKey progressKey = GlobalKey();
+  final GlobalKey goalsKey = GlobalKey();
+  final GlobalKey communityKey = GlobalKey();
 
   @override
   void initState() {
@@ -33,11 +41,29 @@ class _MyHubScreenState extends State<MyHubScreen> {
       viewportFraction: 1.0,
       initialPage: 0,
     );
+    _scrollController = ScrollController();
+    
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.MY_HUB_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.MY_HUB_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createMyHubTutorial(
+      context,
+      [overallScoreKey, progressKey, goalsKey, communityKey],
+      _scrollController,
+    ).show(context: context);
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -68,7 +94,8 @@ class _MyHubScreenState extends State<MyHubScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -100,9 +127,10 @@ class _MyHubScreenState extends State<MyHubScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Score Overview Section
+                        // Score Overview Section with key
                         Center(
                           child: Container(
+                            key: overallScoreKey,
                             width: MediaQuery.of(context).size.width * 0.65,
                             margin: const EdgeInsets.only(bottom: 24),
                             child: ClipRRect(
@@ -241,6 +269,7 @@ class _MyHubScreenState extends State<MyHubScreen> {
                         ),
                         const SizedBox(height: 12),
                         SizedBox(
+                          key: progressKey,
                           height: 260,
                           child: Stack(
                             children: [
@@ -401,53 +430,6 @@ class _MyHubScreenState extends State<MyHubScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        // Community and Profile Section
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildQuickAccessCard(
-                                context,
-                                'Community\nHub',
-                                SFIcon(
-                                  SFIcons.sf_person_2,
-                                  fontSize: 20,
-                                  color: const Color(0xFF0D5A71),
-                                ),
-                                AppColors.primary,
-                                () {
-                                  Navigator.of(context, rootNavigator: true).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) => const CommunityScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildQuickAccessCard(
-                                context,
-                                'Profile\nSettings',
-                                SFIcon(
-                                  SFIcons.sf_person_circle,
-                                  fontSize: 20,
-                                  color: const Color(0xFF0D5A71),
-                                ),
-                                AppColors.primary,
-                                () {
-                                  Navigator.of(context, rootNavigator: true).push(
-                                    CupertinoPageRoute(
-                                      builder: (context) => ProfileScreen(
-                                        tabController: widget.tabController,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
                         // Goals Section
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,7 +455,6 @@ class _MyHubScreenState extends State<MyHubScreen> {
                                 ],
                               ),
                               onPressed: () {
-                                // Show edit goals modal
                                 _showEditGoalsModal(context);
                               },
                             ),
@@ -481,6 +462,7 @@ class _MyHubScreenState extends State<MyHubScreen> {
                         ),
                         const SizedBox(height: 16),
                         ClipRRect(
+                          key: goalsKey,
                           borderRadius: BorderRadius.circular(20),
                           child: BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -536,6 +518,56 @@ class _MyHubScreenState extends State<MyHubScreen> {
                             ),
                           ),
                         ),
+                        // Add spacing before Community and Profile Section
+                        const SizedBox(height: 32),
+                        // Community and Profile Section
+                        Row(
+                          key: communityKey,
+                          children: [
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Community\nHub',
+                                SFIcon(
+                                  SFIcons.sf_person_2,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => const CommunityScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildQuickAccessCard(
+                                context,
+                                'Profile\nSettings',
+                                SFIcon(
+                                  SFIcons.sf_person_circle,
+                                  fontSize: 20,
+                                  color: const Color(0xFF0D5A71),
+                                ),
+                                AppColors.primary,
+                                () {
+                                  Navigator.of(context, rootNavigator: true).push(
+                                    CupertinoPageRoute(
+                                      builder: (context) => ProfileScreen(
+                                        tabController: widget.tabController,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
                         // Add bottom padding to prevent cut-off
                         SizedBox(height: MediaQuery.of(context).padding.bottom + 100),
                       ],
@@ -868,7 +900,7 @@ class _MyHubScreenState extends State<MyHubScreen> {
                 style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
               ),
               const SizedBox(width: 12),
-              Container(
+              SizedBox(
                 width: 80,
                 child: CupertinoTextField(
                   placeholder: '0-100',

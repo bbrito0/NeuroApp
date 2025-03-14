@@ -5,6 +5,7 @@ import 'package:flutter_sficon/flutter_sficon.dart';
 import 'article_detail_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
 class ResourcesScreen extends StatefulWidget {
   const ResourcesScreen({
@@ -19,6 +20,41 @@ class ResourcesScreen extends StatefulWidget {
 }
 
 class _ResourcesScreenState extends State<ResourcesScreen> {
+  late ScrollController _scrollController;
+
+  // Add GlobalKeys for tutorial targets
+  final GlobalKey searchKey = GlobalKey();
+  final GlobalKey categoriesContainerKey = GlobalKey();
+  final GlobalKey articlesContainerKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.RESOURCES_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.RESOURCES_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createResourcesTutorial(
+      context,
+      [searchKey, categoriesContainerKey, articlesContainerKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -43,7 +79,8 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -73,6 +110,7 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 16.0),
                     child: ClipRRect(
+                      key: searchKey,
                       borderRadius: BorderRadius.circular(20),
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -120,6 +158,7 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
                     child: ScrollConfiguration(
                       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
                       child: ListView(
+                        key: categoriesContainerKey,
                         padding: const EdgeInsets.all(16),
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
@@ -128,15 +167,15 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
                             title: 'Memory',
                             icon: SFIcons.sf_brain_head_profile,
                           ),
-                          _CategoryCard(
+                          const _CategoryCard(
                             title: 'Focus',
                             icon: SFIcons.sf_scope,
                           ),
-                          _CategoryCard(
+                          const _CategoryCard(
                             title: 'Speed',
                             icon: SFIcons.sf_gauge_with_needle,
                           ),
-                          _CategoryCard(
+                          const _CategoryCard(
                             title: 'Problem Solving',
                             icon: SFIcons.sf_puzzlepiece,
                           ),
@@ -180,7 +219,22 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      return _ArticleCard(
+                      if (index >= 2) {
+                        return _ArticleCard(
+                        title: 'How to Improve Memory - Part ${index + 1}',
+                        description: 'Learn effective techniques to enhance your memory capacity and retention.',
+                        readTime: '${5 + index} min read',
+                      );
+                      }
+                      
+                      return index == 0 ? Container(
+                        key: articlesContainerKey,
+                        child: _ArticleCard(
+                          title: 'How to Improve Memory - Part ${index + 1}',
+                          description: 'Learn effective techniques to enhance your memory capacity and retention.',
+                          readTime: '${5 + index} min read',
+                        ),
+                      ) : _ArticleCard(
                         title: 'How to Improve Memory - Part ${index + 1}',
                         description: 'Learn effective techniques to enhance your memory capacity and retention.',
                         readTime: '${5 + index} min read',

@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 
 // Add MainScreen import
 import '../main.dart';
+import '../services/tutorial_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -22,6 +23,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
   @override
   void initState() {
     super.initState();
+    // Initialize tutorial state to false by default
+    TutorialService.disableTutorials();
+    
     _controller = AnimationController(
       duration: const Duration(seconds: 20),
       vsync: this,
@@ -85,7 +89,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
             left: 0,
             right: 0,
             child: Center(
-              child: Container(
+              child: SizedBox(
                 height: 260,
                 width: 260,
                 child: ClipRRect(
@@ -105,6 +109,44 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  // Tutorial toggle button
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 16, right: 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: CupertinoColors.systemBackground.withOpacity(0.1),
+                          border: Border.all(
+                            color: CupertinoColors.systemBackground.withOpacity(0.2),
+                            width: 0.5,
+                          ),
+                        ),
+                        child: CupertinoButton(
+                          padding: const EdgeInsets.all(8),
+                          onPressed: () {
+                            setState(() {
+                              if (TutorialService.areTutorialsEnabled()) {
+                                TutorialService.disableTutorials();
+                              } else {
+                                TutorialService.enableTutorials();
+                              }
+                            });
+                          },
+                          child: Icon(
+                            TutorialService.areTutorialsEnabled()
+                                ? CupertinoIcons.lightbulb_fill
+                                : CupertinoIcons.lightbulb,
+                            color: TutorialService.areTutorialsEnabled()
+                                ? AppColors.primary
+                                : AppColors.secondaryLabel,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   const Spacer(),
                   // Login Button
                   ClipRRect(
@@ -115,8 +157,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
                         width: double.infinity,
                         height: 56,
                         decoration: BoxDecoration(
-                          gradient: AppColors.primaryGradient,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.getPrimaryWithOpacity(0.3),
+                              AppColors.getPrimaryWithOpacity(0.2),
+                            ],
+                          ),
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.2),
+                            width: 0.5,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.getPrimaryWithOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                         child: CupertinoButton(
                           padding: EdgeInsets.zero,
@@ -131,12 +191,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
                               ),
                             );
                           },
-                          child: Text(
-                            'Login',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.heading3,
-                              AppColors.surface,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Login',
+                                style: AppTextStyles.withColor(
+                                  AppTextStyles.heading3,
+                                  AppColors.surface,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Icon(
+                                CupertinoIcons.arrow_right,
+                                color: AppColors.surface,
+                                size: 20,
+                              ),
+                            ],
                           ),
                         ),
                       ),

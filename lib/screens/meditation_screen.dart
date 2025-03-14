@@ -5,9 +5,48 @@ import 'package:flutter_sficon/flutter_sficon.dart';
 import 'meditation_session_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../services/tutorial_service.dart';
 
-class MeditationScreen extends StatelessWidget {
+class MeditationScreen extends StatefulWidget {
   const MeditationScreen({super.key});
+
+  @override
+  State<MeditationScreen> createState() => _MeditationScreenState();
+}
+
+class _MeditationScreenState extends State<MeditationScreen> {
+  late ScrollController _scrollController;
+
+  // Single key for the tutorial
+  final GlobalKey meditationTitleKey = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    // Show tutorial when the screen is first built if enabled
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (TutorialService.shouldShowTutorial(TutorialService.MEDITATION_TUTORIAL)) {
+        _showTutorial();
+        TutorialService.markTutorialAsShown(TutorialService.MEDITATION_TUTORIAL);
+      }
+    });
+  }
+
+  void _showTutorial() {
+    TutorialService.createMeditationTutorial(
+      context,
+      [meditationTitleKey],
+      _scrollController,
+    ).show(context: context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +72,8 @@ class MeditationScreen extends StatelessWidget {
             radius: const Radius.circular(1.5),
             mainAxisMargin: 2.0,
             child: CustomScrollView(
-              primary: true,
+              controller: _scrollController,
+              primary: false,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 CupertinoSliverNavigationBar(
@@ -52,7 +92,7 @@ class MeditationScreen extends StatelessWidget {
                   automaticallyImplyLeading: false,
                   leading: CupertinoButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                     child: Icon(
                       CupertinoIcons.back,
                       color: AppColors.primary,
@@ -60,41 +100,46 @@ class MeditationScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Featured Meditations This Week',
-                      style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                    ),
+                  child: Column(
+                    key: meditationTitleKey,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          'Featured Meditations This Week',
+                          style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                        ),
+                      ),
+                      _MeditationCard(
+                        title: 'Mindful Breathing',
+                        description: 'A gentle introduction to mindful breathing techniques for relaxation and focus.',
+                        duration: '10 min',
+                        icon: SFIcons.sf_leaf,
+                      ),
+                      _MeditationCard(
+                        title: 'Body Scan',
+                        description: 'Progressive relaxation through a guided body awareness meditation.',
+                        duration: '15 min',
+                        icon: SFIcons.sf_figure_walk,
+                      ),
+                    ],
                   ),
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate([
-                    _MeditationCard(
-                      title: 'Mindful Breathing',
-                      description: 'A gentle introduction to mindful breathing techniques for relaxation and focus.',
-                      duration: '10 min',
-                      icon: SFIcons.sf_leaf,
-                    ),
-                    _MeditationCard(
-                      title: 'Body Scan',
-                      description: 'Progressive relaxation through a guided body awareness meditation.',
-                      duration: '15 min',
-                      icon: SFIcons.sf_figure_walk,
-                    ),
                     _MeditationCard(
                       title: 'Mental Clarity',
                       description: 'Clear your mind and enhance focus with this guided meditation session.',
                       duration: '12 min',
                       icon: SFIcons.sf_brain_head_profile,
                     ),
-                    _MeditationCard(
+                    const _MeditationCard(
                       title: 'Stress Relief',
                       description: 'Release tension and find inner peace with calming visualization techniques.',
                       duration: '20 min',
                       icon: SFIcons.sf_heart,
                     ),
-                    _MeditationCard(
+                    const _MeditationCard(
                       title: 'Deep Focus',
                       description: 'Enhance concentration and mental clarity for improved productivity.',
                       duration: '15 min',
