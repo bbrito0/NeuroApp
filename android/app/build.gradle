@@ -30,12 +30,12 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.neural_app"
     
-    compileSdkVersion 35
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -48,8 +48,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.neural_app"
-        minSdkVersion flutter.minSdkVersion  // Required for WebView
-        targetSdkVersion 35
+        minSdkVersion 21  // Updated for mobile_scanner
+        targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

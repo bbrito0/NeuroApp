@@ -7,10 +7,11 @@ import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
 import 'dart:html' as html;
-import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
-import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
 
 class TavusCallScreen extends StatefulWidget {
   final String conversationUrl;
@@ -60,23 +61,26 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
 
   void _registerWebView() {
     // Register the view factory only once
-    ui.platformViewRegistry.registerViewFactory(_viewType, (int viewId) {
-      final iframeElement = html.IFrameElement()
-        ..style.border = 'none'
-        ..style.height = '100%'
-        ..style.width = '100%'
-        ..src = widget.conversationUrl
-        ..allow = 'camera; microphone; fullscreen; display-capture; autoplay';
+    if (kIsWeb) {
+      // ignore: undefined_prefixed_name
+      ui.platformViewRegistry.registerViewFactory(_viewType, (int viewId) {
+        final iframeElement = html.IFrameElement()
+          ..style.border = 'none'
+          ..style.height = '100%'
+          ..style.width = '100%'
+          ..src = widget.conversationUrl
+          ..allow = 'camera; microphone; fullscreen; display-capture; autoplay';
 
-      // Listen for iframe load event
-      iframeElement.onLoad.listen((_) {
-        if (mounted) {
-          setState(() => _isLoading = false);
-        }
+        // Listen for iframe load event
+        iframeElement.onLoad.listen((_) {
+          if (mounted) {
+            setState(() => _isLoading = false);
+          }
+        });
+
+        return iframeElement;
       });
-
-      return iframeElement;
-    });
+    }
   }
 
   @override

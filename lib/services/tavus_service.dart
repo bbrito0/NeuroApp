@@ -5,9 +5,9 @@ import '../utils/logging.dart';
 
 class TavusService {
   static const String _baseUrl = 'https://tavusapi.com/v2';
-  static const String _apiKey = '8e2064849935438eba1d9aa481684e12'; // Replace with your API key
+  static const String _apiKey = 'c0e827e4927342678a58e7d0e3cb979b'; // Replace with your API key
   static const String _replicaId = 'r14ea4b254d5'; // Replace with your replica ID
-  static const String _personaId = 'p245eb1029ed'; // Replace with your persona ID
+  static const String _personaId = 'p07fb322da79'; // Replace with your persona ID
   final _logger = Logger('TavusService');
 
   Future<ConversationResponse> createConversation({
@@ -30,7 +30,7 @@ class TavusService {
           'persona_id': _personaId,
           'conversation_name': conversationName ?? 'Tavus Conversation',
           'conversational_context': conversationalContext,
-          'custom_greeting': customGreeting,
+          'custom_greeting': "Hello! It's nice to see you again! Ready to start your Daily Check-in?",
           'properties': properties ?? {
             'max_call_duration': 3600,
             'participant_left_timeout': 60,

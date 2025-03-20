@@ -7,6 +7,7 @@ import '../theme/app_text_styles.dart';
 // Add MainScreen import
 import '../main.dart';
 import '../services/tutorial_service.dart';
+import './qr_scanner_screen.dart';  // Add QRScannerScreen import
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -240,14 +241,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> with SingleTickerPr
                         child: CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            // TODO: Implement account creation
+                            // Navigate to QR Scanner screen
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (context) => const QRScannerScreen(),
+                              ),
+                            );
                           },
-                          child: Text(
-                            'Create Account',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.heading3,
-                              AppColors.primary,
-                            ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                CupertinoIcons.qrcode_viewfinder,
+                                color: AppColors.primary,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Scan Supplements',
+                                style: AppTextStyles.withColor(
+                                  AppTextStyles.heading3,
+                                  AppColors.primary,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

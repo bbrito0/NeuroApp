@@ -6,9 +6,9 @@ class AppColors {
   static const primaryAlt = Color(0xFF30B0C7);
   
   // Background Gradient Colors
-  static const backgroundGradientStart = Color(0xFFc3d8df);
-  static const backgroundGradientMiddle = Color(0xFFc3d8df);
-  static const backgroundGradientEnd = Color(0xFFc3d8df);
+  static const backgroundGradientStart = Color.fromARGB(255, 172, 209, 217);
+  static const backgroundGradientMiddle = Color.fromARGB(255, 172, 209, 217);
+  static const backgroundGradientEnd = Color.fromARGB(255, 172, 209, 217);
   
   // Status Colors
   static const success = Color(0xFF34C759);
