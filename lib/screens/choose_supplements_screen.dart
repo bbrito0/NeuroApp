@@ -34,7 +34,6 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
-          height: 180,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -55,42 +54,48 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
           ),
           child: SafeArea(
             bottom: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CupertinoNavigationBar(
-                  backgroundColor: Colors.transparent,
-                  border: null,
-                  padding: const EdgeInsetsDirectional.only(start: 8),
-                  leading: CupertinoNavigationBarBackButton(
-                    color: AppColors.surface,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Text(
-                    'Choose Your Supplements',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.heading1,
-                      AppColors.surface,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: CupertinoNavigationBar(
+                      backgroundColor: Colors.transparent,
+                      border: null,
+                      padding: const EdgeInsetsDirectional.only(start: 8),
+                      leading: CupertinoNavigationBarBackButton(
+                        color: AppColors.surface,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Text(
-                    'We will track and record your treatments and improve your health condition.',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.bodyMedium,
-                      AppColors.surface,
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Choose Your Supplements',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.heading1,
+                        AppColors.surface,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'We will track and record your treatments and improve your health condition.',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodyMedium,
+                        AppColors.surface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -99,7 +104,7 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(180);
+  Size get preferredSize => const Size.fromHeight(160);
 
   @override
   bool shouldFullyObstruct(BuildContext context) => false;

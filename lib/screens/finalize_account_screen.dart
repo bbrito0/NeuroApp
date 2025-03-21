@@ -26,7 +26,6 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
-          height: 180,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -47,63 +46,69 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
           ),
           child: SafeArea(
             bottom: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CupertinoNavigationBar(
-                  backgroundColor: Colors.transparent,
-                  border: null,
-                  padding: const EdgeInsetsDirectional.only(start: 8),
-                  leading: CupertinoNavigationBarBackButton(
-                    color: AppColors.surface,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Text(
-                    'Create Account',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.heading1,
-                      AppColors.surface,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: CupertinoNavigationBar(
+                      backgroundColor: Colors.transparent,
+                      border: null,
+                      padding: const EdgeInsetsDirectional.only(start: 8),
+                      leading: CupertinoNavigationBarBackButton(
+                        color: AppColors.surface,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Text(
-                    'Complete your profile to get started with personalized health recommendations.',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.bodyMedium,
-                      AppColors.surface,
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Create Account',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.heading1,
+                        AppColors.surface,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      totalSteps,
-                      (index) => Container(
-                        width: 24,
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: index + 1 == currentStep
-                              ? AppColors.surface
-                              : AppColors.surface.withOpacity(0.3),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Complete your profile to get started with personalized health recommendations.',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodyMedium,
+                        AppColors.surface,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        totalSteps,
+                        (index) => Container(
+                          width: 24,
+                          height: 4,
+                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: index + 1 == currentStep
+                                ? AppColors.surface
+                                : AppColors.surface.withOpacity(0.3),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -112,7 +117,7 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(180);
+  Size get preferredSize => const Size.fromHeight(160);
 
   @override
   bool shouldFullyObstruct(BuildContext context) => false;

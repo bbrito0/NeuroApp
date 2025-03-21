@@ -6,12 +6,14 @@ import '../services/tavus_service.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
-import 'dart:html' as html;
+// Conditionally import dart:html using a different approach
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'package:flutter/services.dart';
-import 'dart:ui' as ui;
+
+// Import stub for non-web platforms
+import 'web_stub.dart' if (dart.library.html) 'web_shim.dart';
 
 class TavusCallScreen extends StatefulWidget {
   final String conversationUrl;
@@ -39,7 +41,8 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
     super.initState();
     _cleanupOldConversations();
     if (kIsWeb) {
-      _registerWebView();
+      // On web, we'll register a different view
+      registerWebView();
       // Set loading to false after a short delay for web
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted) {
@@ -59,27 +62,20 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
     }
   }
 
-  void _registerWebView() {
-    // Register the view factory only once
+  // This method will only be called on web platforms
+  // The implementation is in web_shim.dart which is only loaded on web
+  void registerWebView() {
     if (kIsWeb) {
-      // ignore: undefined_prefixed_name
-      ui.platformViewRegistry.registerViewFactory(_viewType, (int viewId) {
-        final iframeElement = html.IFrameElement()
-          ..style.border = 'none'
-          ..style.height = '100%'
-          ..style.width = '100%'
-          ..src = widget.conversationUrl
-          ..allow = 'camera; microphone; fullscreen; display-capture; autoplay';
-
-        // Listen for iframe load event
-        iframeElement.onLoad.listen((_) {
+      try {
+        // Call the method from the conditionally imported file
+        registerViewFactory(_viewType, widget.conversationUrl, (isLoaded) {
           if (mounted) {
             setState(() => _isLoading = false);
           }
         });
-
-        return iframeElement;
-      });
+      } catch (e) {
+        _logger.severe('Error registering web view: $e');
+      }
     }
   }
 
@@ -101,7 +97,7 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
   void _initWebView() {
     late final PlatformWebViewControllerCreationParams params;
 
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       params = WebKitWebViewControllerCreationParams(
         allowsInlineMediaPlayback: true,
         mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
@@ -132,7 +128,7 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
       )
       ..loadRequest(Uri.parse(widget.conversationUrl));
 
-    if (Platform.isAndroid) {
+    if (!kIsWeb && Platform.isAndroid) {
       final AndroidWebViewController androidController = _controller.platform as AndroidWebViewController;
       androidController.setMediaPlaybackRequiresUserGesture(false);
     }
@@ -143,9 +139,7 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
       return SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: HtmlElementView(
-          viewType: _viewType,
-        ),
+        child: getWebView(_viewType),
       );
     } else {
       return WebViewWidget(controller: _controller);

@@ -18,7 +18,6 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
-          height: 180,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -26,7 +25,6 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
               colors: [
                 const Color.fromARGB(255, 0, 118, 169),
                 const Color.fromARGB(255, 18, 162, 183),
-                
                 const Color.fromARGB(255, 92, 197, 217),
               ],
               stops: const [0.0, 0.5, 1.0],
@@ -40,42 +38,45 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
           ),
           child: SafeArea(
             bottom: false,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CupertinoNavigationBar(
-                  backgroundColor: Colors.transparent,
-                  border: null,
-                  padding: const EdgeInsetsDirectional.only(start: 8),
-                  leading: CupertinoNavigationBarBackButton(
-                    color: AppColors.surface,
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Text(
-                    'Scan Supplements',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.heading1,
-                      AppColors.surface,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CupertinoNavigationBar(
+                    backgroundColor: Colors.transparent,
+                    border: null,
+                    padding: const EdgeInsetsDirectional.only(start: 8),
+                    leading: CupertinoNavigationBarBackButton(
+                      color: AppColors.surface,
+                      onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Text(
-                    'We added a QR code to each supplement.\nThis will allow you to access all the resources\nand specific information for your recovery.',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.bodyMedium,
-                      AppColors.surface,
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Scan Supplements',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.heading1,
+                        AppColors.surface,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'We added a QR code to each supplement.\nThis will allow you to access all the resources\nand specific information for your recovery.',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodyMedium,
+                        AppColors.surface,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
