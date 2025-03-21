@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 class AppColors {
   // Primary Colors
-  static const primary = Color(0xFF0C99B3);
+  static const primary = Color.fromARGB(255, 18, 162, 183);
   static const primaryAlt = Color(0xFF30B0C7);
   
   // Background Gradient Colors

@@ -4,6 +4,119 @@ import 'dart:ui';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'home_screen.dart';
+import 'package:flutter_sficon/flutter_sficon.dart';
+import '../main.dart';
+
+class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
+  final int currentStep;
+  final int totalSteps;
+
+  const _CustomNavigationBar({
+    Key? key,
+    required this.currentStep,
+    required this.totalSteps,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        bottom: Radius.circular(20),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          height: 180,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: const [
+                Color.fromARGB(255, 0, 118, 169),
+                Color.fromARGB(255, 18, 162, 183),
+                Color.fromARGB(255, 92, 197, 217),
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.getPrimaryWithOpacity(0.2),
+                width: 0.5,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CupertinoNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  padding: const EdgeInsetsDirectional.only(start: 8),
+                  leading: CupertinoNavigationBarBackButton(
+                    color: AppColors.surface,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Text(
+                    'Create Account',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.heading1,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Text(
+                    'Complete your profile to get started with personalized health recommendations.',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      totalSteps,
+                      (index) => Container(
+                        width: 24,
+                        height: 4,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          color: index + 1 == currentStep
+                              ? AppColors.surface
+                              : AppColors.surface.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(180);
+
+  @override
+  bool shouldFullyObstruct(BuildContext context) => false;
+}
 
 class FinalizeAccountScreen extends StatefulWidget {
   const FinalizeAccountScreen({super.key});
@@ -17,6 +130,15 @@ class _FinalizeAccountScreenState extends State<FinalizeAccountScreen>
   late final AnimationController _controller;
   late final Animation<Alignment> _beginAlignment;
   late final Animation<Alignment> _endAlignment;
+
+  int _currentStep = 1;
+  final int _totalSteps = 2;
+
+  // Form controllers
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _showPassword = false;
 
   @override
   void initState() {
@@ -46,23 +168,129 @@ class _FinalizeAccountScreenState extends State<FinalizeAccountScreen>
   @override
   void dispose() {
     _controller.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
+  }
+
+  void _nextStep() {
+    if (_currentStep < _totalSteps) {
+      setState(() {
+        _currentStep++;
+      });
+    } else {
+      _showSuccessDialog();
+    }
+  }
+
+  void _previousStep() {
+    if (_currentStep > 1) {
+      setState(() {
+        _currentStep--;
+      });
+    }
+  }
+
+  void _showSuccessDialog() {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text(
+          'Account Created',
+          style: AppTextStyles.bodyLarge,
+        ),
+        content: Text(
+          'Your account has been created successfully!',
+          style: AppTextStyles.bodyMedium,
+        ),
+        actions: [
+          CupertinoDialogAction(
+            child: Text(
+              'Continue',
+              style: AppTextStyles.bodyMedium,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.of(context).pushAndRemoveUntil(
+                CupertinoPageRoute(
+                  builder: (context) => const MainScreen(),
+                ),
+                (route) => false,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required String placeholder,
+    required TextEditingController controller,
+    bool isPassword = false,
+    String? prefixText,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.getPrimaryWithOpacity(0.3),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.getPrimaryWithOpacity(0.2),
+              width: 0.5,
+            ),
+          ),
+          child: CupertinoTextField(
+            controller: controller,
+            placeholder: placeholder,
+            prefix: prefixText != null
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      prefixText,
+                      style: AppTextStyles.bodyMedium,
+                    ),
+                  )
+                : null,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            style: AppTextStyles.bodyMedium,
+            placeholderStyle: AppTextStyles.secondaryText,
+            obscureText: isPassword && !_showPassword,
+            suffix: isPassword
+                ? CupertinoButton(
+                    padding: const EdgeInsets.only(right: 16),
+                    onPressed: () {
+                      setState(() {
+                        _showPassword = !_showPassword;
+                      });
+                    },
+                    child: Icon(
+                      _showPassword
+                          ? CupertinoIcons.eye_slash_fill
+                          : CupertinoIcons.eye_fill,
+                      color: AppColors.secondaryLabel,
+                      size: 20,
+                    ),
+                  )
+                : null,
+            decoration: null,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
-        border: null,
-        middle: Text(
-          'Complete Your Profile',
-          style: AppTextStyles.withColor(
-            AppTextStyles.heading3,
-            AppColors.surface,
-          ),
-        ),
+      navigationBar: _CustomNavigationBar(
+        currentStep: _currentStep,
+        totalSteps: _totalSteps,
       ),
       child: Stack(
         children: [
@@ -91,119 +319,243 @@ class _FinalizeAccountScreenState extends State<FinalizeAccountScreen>
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                            ],
+                  const SizedBox(height: 24),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                        child: Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withOpacity(0.8),
+                                Colors.white.withOpacity(0.8),
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.getPrimaryWithOpacity(0.2),
+                              width: 0.5,
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                            width: 0.5,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SFIcon(
+                                        _currentStep == 1 ? SFIcons.sf_person_fill : SFIcons.sf_lock_fill,
+                                        fontSize: 12,
+                                        color: AppColors.primary,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Step ${_currentStep} of $_totalSteps',
+                                        style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                if (_currentStep == 1) ...[
+                                  Text(
+                                    'Personal Information',
+                                    style: AppTextStyles.heading2,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Please enter your name and email address',
+                                    style: AppTextStyles.secondaryText,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  _buildTextField(
+                                    placeholder: 'Full Name',
+                                    controller: _nameController,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildTextField(
+                                    placeholder: 'Email',
+                                    controller: _emailController,
+                                  ),
+                                ] else ...[
+                                  Text(
+                                    'Set Password',
+                                    style: AppTextStyles.heading2,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Create a secure password for your account',
+                                    style: AppTextStyles.secondaryText,
+                                  ),
+                                  const SizedBox(height: 24),
+                                  _buildTextField(
+                                    placeholder: 'Password',
+                                    controller: _passwordController,
+                                    isPassword: true,
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              CupertinoIcons.checkmark_circle_fill,
-                              size: 48,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Assessment Complete!',
-                              style: AppTextStyles.withColor(
-                                AppTextStyles.heading3,
-                                AppColors.surface,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Thank you for completing your initial health assessment. Your personalized health journey begins now.',
-                              style: AppTextStyles.withColor(
-                                AppTextStyles.bodyMedium,
-                                AppColors.secondaryLabel,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
                         ),
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        width: double.infinity,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.getPrimaryWithOpacity(0.3),
-                              AppColors.getPrimaryWithOpacity(0.2),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
-                            width: 0.5,
+                  Row(
+                    children: [
+                      if (_currentStep > 1)
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                              child: Container(
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.7),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: _previousStep,
+                                  child: Text(
+                                    'Back',
+                                    style: AppTextStyles.withColor(
+                                      AppTextStyles.heading3,
+                                      AppColors.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        child: CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () {
-                            Navigator.of(context).pushAndRemoveUntil(
-                              CupertinoPageRoute(
-                                builder: (context) => HomeScreen(
-                                  tabController: CupertinoTabController(initialIndex: 0),
+                      if (_currentStep > 1)
+                        const SizedBox(width: 16),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                            child: Container(
+                              height: 56,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Color.fromARGB(255, 0, 118, 169),
+                                    Color.fromARGB(255, 18, 162, 183),
+                                    Color.fromARGB(255, 92, 197, 217),
+                                  ],
+                                  stops: [0.0, 0.5, 1.0],
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.2),
+                                  width: 0.5,
                                 ),
                               ),
-                              (route) => false,
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Start Your Journey',
-                                style: AppTextStyles.withColor(
-                                  AppTextStyles.heading3,
-                                  AppColors.surface,
+                              child: CupertinoButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {
+                                  if (_currentStep == 1 && (_nameController.text.isEmpty || _emailController.text.isEmpty)) {
+                                    showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) => CupertinoAlertDialog(
+                                        title: Text(
+                                          'Incomplete Information',
+                                          style: AppTextStyles.bodyLarge,
+                                        ),
+                                        content: Text(
+                                          'Please fill in all fields to continue.',
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              'OK',
+                                              style: AppTextStyles.bodyMedium,
+                                            ),
+                                            onPressed: () => Navigator.pop(context),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  if (_currentStep == 2 && _passwordController.text.isEmpty) {
+                                    showCupertinoDialog(
+                                      context: context,
+                                      builder: (context) => CupertinoAlertDialog(
+                                        title: Text(
+                                          'Password Required',
+                                          style: AppTextStyles.bodyLarge,
+                                        ),
+                                        content: Text(
+                                          'Please enter a password to continue.',
+                                          style: AppTextStyles.bodyMedium,
+                                        ),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              'OK',
+                                              style: AppTextStyles.bodyMedium,
+                                            ),
+                                            onPressed: () => Navigator.pop(context),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  if (_currentStep == _totalSteps) {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      CupertinoPageRoute(
+                                        builder: (context) => const MainScreen(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  } else {
+                                    _nextStep();
+                                  }
+                                },
+                                child: Text(
+                                  _currentStep == _totalSteps ? 'Create Account' : 'Next',
+                                  style: AppTextStyles.withColor(
+                                    AppTextStyles.heading3,
+                                    AppColors.surface,
+                                  ),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              Icon(
-                                CupertinoIcons.arrow_right,
-                                color: AppColors.surface,
-                                size: 20,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

@@ -18,15 +18,16 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
-          height: 200,
+          height: 180,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                const Color.fromARGB(255, 49, 184, 178),
-                const Color.fromARGB(255, 86, 161, 177),
-                const Color.fromARGB(255, 137, 213, 230),
+                const Color.fromARGB(255, 0, 118, 169),
+                const Color.fromARGB(255, 18, 162, 183),
+                
+                const Color.fromARGB(255, 92, 197, 217),
               ],
               stops: const [0.0, 0.5, 1.0],
             ),
@@ -83,7 +84,7 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(200);
+  Size get preferredSize => const Size.fromHeight(180);
 
   @override
   bool shouldFullyObstruct(BuildContext context) => false;
@@ -236,7 +237,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> with SingleTickerProv
                           'Point your camera at the QR code on your supplement package',
                           style: AppTextStyles.withColor(
                             AppTextStyles.bodyMedium,
-                            AppColors.textPrimary,
+                            AppColors.primary,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -253,13 +254,15 @@ class _QRScannerScreenState extends State<QRScannerScreen> with SingleTickerProv
                         width: double.infinity,
                         height: 44,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              AppColors.getPrimaryWithOpacity(0.3),
-                              AppColors.getPrimaryWithOpacity(0.2),
+                              Color.fromARGB(255, 0, 118, 169),
+                              Color.fromARGB(255, 18, 162, 183),
+                              Color.fromARGB(255, 92, 197, 217),
                             ],
+                            stops: [0.0, 0.5, 1.0],
                           ),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(

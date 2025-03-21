@@ -13,6 +13,117 @@ enum Gender { male, female, other }
 enum ActivityLevel { sedentary, moderatelyActive, highlyActive }
 enum DietType { keto, vegan, balanced, other }
 
+class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
+  final int currentStep;
+  final int totalSteps;
+
+  const _CustomNavigationBar({
+    Key? key,
+    required this.currentStep,
+    required this.totalSteps,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        bottom: Radius.circular(20),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          height: 180,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: const [
+                Color.fromARGB(255, 0, 118, 169),
+                Color.fromARGB(255, 18, 162, 183),
+                Color.fromARGB(255, 92, 197, 217),
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.getPrimaryWithOpacity(0.2),
+                width: 0.5,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CupertinoNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  padding: const EdgeInsetsDirectional.only(start: 8),
+                  leading: CupertinoNavigationBarBackButton(
+                    color: AppColors.surface,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Text(
+                    'Medical History',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.heading1,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Text(
+                    'This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      totalSteps,
+                      (index) => Container(
+                        width: 24,
+                        height: 4,
+                        margin: const EdgeInsets.symmetric(horizontal: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          color: index + 1 == currentStep
+                              ? AppColors.surface
+                              : AppColors.surface.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(180);
+
+  @override
+  bool shouldFullyObstruct(BuildContext context) => false;
+}
+
 class MedicalRecordScreen extends StatefulWidget {
   const MedicalRecordScreen({super.key});
 
@@ -293,16 +404,9 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
-        border: null,
-        middle: Text(
-          'Medical History',
-          style: AppTextStyles.withColor(
-            AppTextStyles.heading2,
-            AppColors.surface,
-          ),
-        ),
+      navigationBar: _CustomNavigationBar(
+        currentStep: _currentStep,
+        totalSteps: _totalSteps,
       ),
       child: Stack(
         children: [
@@ -335,25 +439,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
-                  // Progress indicator
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _totalSteps,
-                      (index) => Container(
-                        width: 24,
-                        height: 4,
-                        margin: const EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(2),
-                          color: index + 1 == _currentStep
-                              ? AppColors.primary
-                              : AppColors.primary.withOpacity(0.2),
-                        ),
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   // Step content
                   Expanded(
@@ -406,14 +491,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                Text(
-                                  'This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.',
-                                  style: AppTextStyles.withColor(
-                                    AppTextStyles.bodyMedium,
-                                    AppColors.secondaryLabel,
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
                                 // Step content
                                 _currentStep == 1
                                     ? _buildPersonalInformationStep()
@@ -433,12 +510,38 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                     children: [
                       if (_currentStep > 1)
                         Expanded(
-                          child: CupertinoButton(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            onPressed: _previousStep,
-                            child: Text(
-                              'Back',
-                              style: AppTextStyles.actionButton,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                              child: Container(
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 0.5,
+                                  ),
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: CupertinoButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: _previousStep,
+                                    child: Text(
+                                      'Back',
+                                      style: AppTextStyles.withColor(
+                                        AppTextStyles.heading3,
+                                        AppColors.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -452,13 +555,15 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                             child: Container(
                               height: 56,
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    AppColors.getPrimaryWithOpacity(0.3),
-                                    AppColors.getPrimaryWithOpacity(0.2),
+                                    Color.fromARGB(255, 0, 118, 169),
+                                    Color.fromARGB(255, 18, 162, 183),
+                                    Color.fromARGB(255, 92, 197, 217),
                                   ],
+                                  stops: [0.0, 0.5, 1.0],
                                 ),
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
@@ -511,10 +616,10 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
-          height: 48,
+          height: 44,
           decoration: BoxDecoration(
             color: Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(24),
             border: Border.all(
               color: Colors.transparent,
               width: 0.5,
@@ -524,9 +629,10 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             padding: const EdgeInsets.all(1),
             child: CupertinoSlidingSegmentedControl<T>(
               groupValue: groupValue,
-              backgroundColor: AppColors.getPrimaryWithOpacity(0.3),
+              backgroundColor: AppColors.getPrimaryWithOpacity(0.2),
               thumbColor: AppColors.getPrimaryWithOpacity(0.6),
               padding: EdgeInsets.zero,
+              
               children: options.map(
                 (key, value) => MapEntry(
                   key,
@@ -559,11 +665,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Personal Information',
-          style: AppTextStyles.heading1,
-        ),
-        const SizedBox(height: 24),
         // Age Input
         Row(
           children: [
@@ -616,18 +717,21 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildSegmentedControl<Gender>(
-              groupValue: _selectedGender,
-              options: const {
-                Gender.male: 'Male',
-                Gender.female: 'Female',
-                Gender.other: 'Other',
-              },
-              onValueChanged: (value) {
-                setState(() {
-                  _selectedGender = value;
-                });
-              },
+            SizedBox(
+              width: 302,
+              child: _buildSegmentedControl<Gender>(
+                groupValue: _selectedGender,
+                options: const {
+                  Gender.male: 'Male',
+                  Gender.female: 'Female',
+                  Gender.other: 'Other',
+                },
+                onValueChanged: (value) {
+                  setState(() {
+                    _selectedGender = value;
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -974,11 +1078,20 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-        title: const Text('Complete Your Profile'),
-        content: const Text('Would you like to complete your account creation now?'),
+        title: Text(
+          'Complete Your Profile',
+          style: AppTextStyles.bodyLarge,
+        ),
+        content: Text(
+          'Would you like to complete your account creation now?',
+          style: AppTextStyles.bodyMedium,
+        ),
         actions: [
           CupertinoDialogAction(
-            child: const Text('Not Now'),
+            child: Text(
+              'Not Now',
+              style: AppTextStyles.bodyMedium,
+            ),
             onPressed: () {
               Navigator.pop(context); // Close dialog
               // Navigate to home screen
@@ -994,7 +1107,10 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
-            child: const Text('Complete Now'),
+            child: Text(
+              'Complete Now',
+              style: AppTextStyles.bodyMedium,
+            ),
             onPressed: () {
               Navigator.pop(context); // Close dialog
               // Navigate to finalize account screen

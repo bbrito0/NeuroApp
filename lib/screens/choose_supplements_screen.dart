@@ -22,6 +22,89 @@ class Supplement {
   });
 }
 
+class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
+  const _CustomNavigationBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        bottom: Radius.circular(20),
+      ),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          height: 180,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: const [
+                Color.fromARGB(255, 0, 118, 169),
+                Color.fromARGB(255, 18, 162, 183),
+                Color.fromARGB(255, 92, 197, 217),
+              ],
+              stops: const [0.0, 0.5, 1.0],
+            ),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.getPrimaryWithOpacity(0.2),
+                width: 0.5,
+              ),
+            ),
+          ),
+          child: SafeArea(
+            bottom: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CupertinoNavigationBar(
+                  backgroundColor: Colors.transparent,
+                  border: null,
+                  padding: const EdgeInsetsDirectional.only(start: 8),
+                  leading: CupertinoNavigationBarBackButton(
+                    color: AppColors.surface,
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: Text(
+                    'Choose Your Supplements',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.heading1,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                  child: Text(
+                    'We will track and record your treatments and improve your health condition.',
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodyMedium,
+                      AppColors.surface,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(180);
+
+  @override
+  bool shouldFullyObstruct(BuildContext context) => false;
+}
+
 class ChooseSupplementsScreen extends StatefulWidget {
   final String scannedCode;
 
@@ -121,17 +204,7 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      navigationBar: CupertinoNavigationBar(
-        backgroundColor: Colors.transparent,
-        border: null,
-        middle: Text(
-          'Choose Your Supplements',
-          style: AppTextStyles.withColor(
-            AppTextStyles.heading3,
-            AppColors.surface,
-          ),
-        ),
-      ),
+      navigationBar: _CustomNavigationBar(),
       child: Stack(
         children: [
           // Animated gradient background
@@ -167,40 +240,6 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  // Welcome text
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                              AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Text(
-                          'We will track and record your treatments and improve your health condition.',
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.bodyMedium,
-                            AppColors.primary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
                   // Supplements list
                   Expanded(
                     child: ClipRRect(
@@ -248,13 +287,15 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
                         width: double.infinity,
                         height: 56,
                         decoration: BoxDecoration(
-                          gradient: LinearGradient(
+                          gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              AppColors.getPrimaryWithOpacity(0.3),
-                              AppColors.getPrimaryWithOpacity(0.2),
+                              Color.fromARGB(255, 0, 118, 169),
+                              Color.fromARGB(255, 18, 162, 183),
+                              Color.fromARGB(255, 92, 197, 217),
                             ],
+                            stops: [0.0, 0.5, 1.0],
                           ),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
