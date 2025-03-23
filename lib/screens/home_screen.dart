@@ -13,6 +13,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../screens/profile_screen.dart';
 import '../services/tutorial_service.dart';
+import '../widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -84,27 +85,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       child: Stack(
         children: [
           // Premium Gradient Background with Frosted Glass Effect
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
-          ),
-          // Frosted Glass Overlay
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
-              ),
-            ),
+          GradientBackground(
+            child: Container(),
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
           ),
           // Main Content
-          CupertinoScrollbar(
-            thickness: 3.0,
-            radius: const Radius.circular(1.5),
-            mainAxisMargin: 2.0,
-            child: CustomScrollView(
-              controller: _scrollController,
+          CustomScrollView(
+            controller: _scrollController,
             physics: const BouncingScrollPhysics(),
             slivers: [
               CupertinoSliverRefreshControl(
@@ -126,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.asset(
-                              'assets/images/ChronoWell_logo-25[3].png',
+                              'assets/images/LogoWhite.png',
                               fit: BoxFit.contain,
                             ),
                           ),
@@ -137,88 +125,50 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     // Welcome Message with Enhanced Glass Effect
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: ClipRRect(
-                          key: welcomeCardKey,
-                        borderRadius: BorderRadius.circular(20),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                width: 0.5,
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                      child: FrostedCard(
+                        key: welcomeCardKey,
+                        borderRadius: 20,
+                        padding: const EdgeInsets.all(16),
+                        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                        border: Border.all(
+                          color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                          width: 0.5,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                                        borderRadius: BorderRadius.circular(8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                      gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SFIcon(
+                                        SFIcons.sf_sparkles,
+                                        fontSize: 14,
+                                        color: AppColors.primary,
                                       ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          SFIcon(
-                                            SFIcons.sf_sparkles,
-                                            fontSize: 14,
-                                            color: AppColors.primary,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          Text(
-                                            'AI Coach',
-                                            style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
-                                          ),
-                                        ],
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'AI Coach',
+                                        style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
                                       ),
-                                    ),
-                                    const Spacer(),
-                                      CupertinoButton(
-                                        padding: EdgeInsets.zero,
-                                        onPressed: () {
-                                          Navigator.of(context, rootNavigator: true).push(
-                                            CupertinoPageRoute(
-                                              builder: (context) => ProfileScreen(
-                                                tabController: widget.tabController,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: SFIcon(
-                                          SFIcons.sf_person_circle_fill,
-                                          fontSize: 28,
-                                          color: AppColors.primary,
-                                        ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'You\'re making great progress!',
-                                  style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Yet I can see you still have not done your daily check-in. Ready to start?',
-                                  style: AppTextStyles.secondaryText,
-                                ),
-                                const SizedBox(height: 16),
-                                CupertinoButton(
-                                  padding: EdgeInsets.zero,
+                                const Spacer(),
+                                ActionButton(
+                                  text: 'Check-in',
+                                  style: ActionButtonStyle.filled,
+                                  backgroundColor: const Color.fromARGB(255, 18, 162, 183),
+                                  textColor: AppColors.surface,
+                                  isFullWidth: false,
+                                  height: 36,
                                   onPressed: () async {
                                     try {
                                       // End any existing conversations first
@@ -258,32 +208,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                       );
                                     }
                                   },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          'Daily Check-in',
-                                          style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        SFIcon(
-                                          SFIcons.sf_chevron_right,
-                                          fontSize: 14,
-                                          color: AppColors.primary,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                 ),
                               ],
                             ),
-                          ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'You\'re making great progress!',
+                              style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Yet I can see you still have not done your daily check-in. Ready to start?',
+                              style: AppTextStyles.secondaryText,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
                         ),
                       ),
                     ),
@@ -340,66 +279,78 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                   _currentPage = page;
                                 });
                               },
+                              padEnds: false,
+                              pageSnapping: true,
+                              physics: const BouncingScrollPhysics(),
                               children: [
-                                _buildChallengeCard(
-                                  context,
-                                  'Memory Master',
-                                  'Enhance your memory skills',
-                                  0.65,
-                                  [
-                                    'Complete Memory Match Game',
-                                    'Read Memory Enhancement Article',
-                                    'Practice Visualization Exercise',
-                                  ],
-                                  SFIcons.sf_brain,
-                                  AppColors.primary,
-                                  () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => const MemoryMatchGame(),
-                                      ),
-                                    );
-                                  },
+                                Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  child: _buildChallengeCard(
+                                    context,
+                                    'Memory Master',
+                                    'Enhance your memory skills',
+                                    0.65,
+                                    [
+                                      'Complete Memory Match Game',
+                                      'Read Memory Enhancement Article',
+                                      'Practice Visualization Exercise',
+                                    ],
+                                    SFIcons.sf_brain,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const MemoryMatchGame(),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                                _buildChallengeCard(
-                                  context,
-                                  'Focus Champion',
-                                  'Improve your concentration',
-                                  0.45,
-                                  [
-                                    'Complete 10min Meditation',
-                                    'Practice Mindful Reading',
-                                    'Do a Focus Exercise',
-                                  ],
-                                  SFIcons.sf_rays,
-                                  AppColors.primary,
-                                  () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => const MeditationScreen(),
-                                      ),
-                                    );
-                                  },
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: _buildChallengeCard(
+                                    context,
+                                    'Focus Champion',
+                                    'Improve your concentration',
+                                    0.45,
+                                    [
+                                      'Complete 10min Meditation',
+                                      'Practice Mindful Reading',
+                                      'Do a Focus Exercise',
+                                    ],
+                                    SFIcons.sf_rays,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const MeditationScreen(),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                                _buildChallengeCard(
-                                  context,
-                                  'Problem Solver',
-                                  'Boost analytical thinking',
-                                  0.30,
-                                  [
-                                    'Complete Pattern Recognition',
-                                    'Solve Daily Puzzle',
-                                    'Read Logic Article',
-                                  ],
-                                  SFIcons.sf_puzzlepiece,
-                                  AppColors.primary,
-                                  () {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      CupertinoPageRoute(
-                                        builder: (context) => const PatternRecallGame(),
-                                      ),
-                                    );
-                                  },
+                                Container(
+                                  margin: const EdgeInsets.only(left: 10),
+                                  child: _buildChallengeCard(
+                                    context,
+                                    'Problem Solver',
+                                    'Boost analytical thinking',
+                                    0.30,
+                                    [
+                                      'Complete Pattern Recognition',
+                                      'Solve Daily Puzzle',
+                                      'Read Logic Article',
+                                    ],
+                                    SFIcons.sf_puzzlepiece,
+                                    AppColors.primary,
+                                    () {
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute(
+                                          builder: (context) => const PatternRecallGame(),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
@@ -537,7 +488,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
               ),
             ],
-            ),
           ),
         ],
       ),
@@ -553,22 +503,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   ) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: FrostedCard(
         padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.5, endOpacity: 0.5),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: AppColors.getPrimaryWithOpacity(0.15),
-            width: 0.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.getSurfaceWithOpacity(0.05),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
+        borderRadius: 24,
+        backgroundColor: const Color.fromARGB(255, 18, 162, 183),
+        border: Border.all(
+          color: AppColors.surface.withOpacity(0.3),
+          width: 0.5,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -577,20 +518,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             const SizedBox(height: 16),
             Text(
               title,
-              style: AppTextStyles.withColor(AppTextStyles.bodyLarge, AppColors.textPrimary),
+              style: AppTextStyles.withColor(AppTextStyles.bodyLarge, AppColors.surface),
             ),
             const SizedBox(height: 8),
             Row(
               children: [
                 Text(
                   'Explore',
-                  style: AppTextStyles.secondaryText,
+                  style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.surface.withOpacity(0.8)),
                 ),
                 const SizedBox(width: 4),
                 SFIcon(
                   SFIcons.sf_chevron_right,
                   fontSize: 12,
-                  color: AppColors.secondaryLabel,
+                  color: AppColors.surface.withOpacity(0.8),
                 ),
               ],
             ),
@@ -608,74 +549,52 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     String time,
     Color accentColor,
   ) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(0.8),
-                AppColors.getSurfaceWithOpacity(0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(0.1),
-              width: 0.5,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.getSurfaceWithOpacity(0.05),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return FrostedCard(
+      borderRadius: 20,
+      padding: const EdgeInsets.all(20),
+      backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+      border: Border.all(
+        color: AppColors.getPrimaryWithOpacity(0.1),
+        width: 0.5,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      gradient: AppColors.primarySurfaceGradient(startOpacity: 0.6, endOpacity: 0.6),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: AppColors.getPrimaryWithOpacity(0.2),
-                        width: 0.5,
-                      ),
-                    ),
-                    child: Text(
-                      category,
-                      style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF0D5A71)),
-                    ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  gradient: AppColors.primarySurfaceGradient(startOpacity: 0.6, endOpacity: 0.6),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: AppColors.getPrimaryWithOpacity(0.2),
+                    width: 0.5,
                   ),
-                  const Spacer(),
-                  Text(
-                    time,
-                    style: AppTextStyles.secondaryText,
-                  ),
-                ],
+                ),
+                child: Text(
+                  category,
+                  style: AppTextStyles.bodySmall.copyWith(color: const Color(0xFF0D5A71)),
+                ),
               ),
-              const SizedBox(height: 12),
+              const Spacer(),
               Text(
-                title,
-                style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
+                time,
+                style: AppTextStyles.secondaryText,
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            description,
+            style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
+          ),
+        ],
       ),
     );
   }
@@ -785,122 +704,104 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           ),
         );
       },
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.getSurfaceWithOpacity(0.8),
-                  AppColors.getSurfaceWithOpacity(0.8),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.getPrimaryWithOpacity(0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+      child: FrostedCard(
+        borderRadius: 20,
+        backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+        padding: const EdgeInsets.all(16),
+        border: Border.all(
+          color: AppColors.getPrimaryWithOpacity(0.1),
+          width: 0.5,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SFIcon(
+                  icon,
+                  fontSize: 20,
+                  color: const Color(0xFF0D5A71),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SFIcon(
-                        icon,
-                        fontSize: 20,
-                        color: const Color(0xFF0D5A71),
+                      Text(
+                        title,
+                        style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              subtitle,
-                              style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
-                            ),
-                          ],
-                        ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Container(
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: AppColors.getPrimaryWithOpacity(0.1),
-                      borderRadius: BorderRadius.circular(3),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              height: 6,
+              decoration: BoxDecoration(
+                color: AppColors.getPrimaryWithOpacity(0.1),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: progress,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary,
+                        AppColors.getPrimaryWithOpacity(0.8),
+                      ],
                     ),
-                    child: FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor: progress,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.primary,
-                              AppColors.getPrimaryWithOpacity(0.8),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-                    ),
+                    borderRadius: BorderRadius.circular(3),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${(progress * 100).toInt()}% Complete',
-                    style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                  ),
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: tasks.map((task) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2),
-                                child: SFIcon(
-                                  SFIcons.sf_checkmark_circle_fill,
-                                  fontSize: 14,
-                                  color: AppColors.getPrimaryWithOpacity(0.5),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  task,
-                                  style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )).toList(),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              '${(progress * 100).toInt()}% Complete',
+              style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: tasks.map((task) => Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: SFIcon(
+                            SFIcons.sf_checkmark_circle_fill,
+                            fontSize: 14,
+                            color: AppColors.getPrimaryWithOpacity(0.5),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            task,
+                            style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )).toList(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -989,11 +890,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       fontSize: 14,
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      'Recommended time: 8:00 AM',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.bodySmall,
-                        AppColors.primary,
+                    Flexible(
+                      child: Text(
+                        'Recommended time: 8:00 AM',
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodySmall,
+                          AppColors.primary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

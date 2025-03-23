@@ -8,126 +8,11 @@ import 'package:flutter_sficon/flutter_sficon.dart';
 import 'onboarding_video_call_screen.dart';
 import 'finalize_account_screen.dart';
 import 'home_screen.dart';
+import '../widgets/widgets.dart';
 
 enum Gender { male, female, other }
 enum ActivityLevel { sedentary, moderatelyActive, highlyActive }
 enum DietType { keto, vegan, balanced, other }
-
-class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
-  final int currentStep;
-  final int totalSteps;
-
-  const _CustomNavigationBar({
-    Key? key,
-    required this.currentStep,
-    required this.totalSteps,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(
-        bottom: Radius.circular(20),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: const [
-                Color.fromARGB(255, 0, 118, 169),
-                Color.fromARGB(255, 18, 162, 183),
-                Color.fromARGB(255, 92, 197, 217),
-              ],
-              stops: const [0.0, 0.5, 1.0],
-            ),
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.getPrimaryWithOpacity(0.2),
-                width: 0.5,
-              ),
-            ),
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: CupertinoNavigationBar(
-                      backgroundColor: Colors.transparent,
-                      border: null,
-                      padding: const EdgeInsetsDirectional.only(start: 8),
-                      leading: CupertinoNavigationBarBackButton(
-                        color: AppColors.surface,
-                        onPressed: () => Navigator.of(context).pop(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Medical History',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.heading1,
-                        AppColors.surface,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.bodyMedium,
-                        AppColors.surface,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        totalSteps,
-                        (index) => Container(
-                          width: 24,
-                          height: 4,
-                          margin: const EdgeInsets.symmetric(horizontal: 2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2),
-                            color: index + 1 == currentStep
-                                ? AppColors.surface
-                                : AppColors.surface.withOpacity(0.3),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(160);
-
-  @override
-  bool shouldFullyObstruct(BuildContext context) => false;
-}
 
 class MedicalRecordScreen extends StatefulWidget {
   const MedicalRecordScreen({super.key});
@@ -376,7 +261,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             height: 42,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppColors.getPrimaryWithOpacity(0.3),
+              color: AppColors.getPrimaryWithOpacity(0.1),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: AppColors.primary.withOpacity(0.2),
@@ -409,12 +294,16 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      navigationBar: _CustomNavigationBar(
+      navigationBar: CustomNavigationBar(
         currentStep: _currentStep,
         totalSteps: _totalSteps,
+        title: 'Medical History',
+        subtitle: 'This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.',
+        onBackPressed: () => Navigator.of(context).pop(),
       ),
       child: Stack(
         children: [
+          // Background with gradient and frosted effect
           AnimatedBuilder(
             animation: _controller,
             builder: (context, child) {
@@ -447,64 +336,49 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                   const SizedBox(height: 24),
                   // Step content
                   Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.white.withOpacity(0.8),
-                                Colors.white.withOpacity(0.8),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: AppColors.getPrimaryWithOpacity(0.2),
-                              width: 0.5,
-                            ),
-                          ),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Step title and description
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  decoration: BoxDecoration(
-                                    gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                                    borderRadius: BorderRadius.circular(8),
+                    child: FrostedCard(
+                      borderRadius: 16,
+                      padding: const EdgeInsets.all(24),
+                      backgroundColor: Colors.white.withOpacity(0.8),
+                      border: Border.all(
+                        color: AppColors.getPrimaryWithOpacity(0.2),
+                        width: 0.5,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Step title and description
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SFIcon(
+                                    SFIcons.sf_heart_fill,
+                                    fontSize: 12,
+                                    color: AppColors.primary,
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SFIcon(
-                                        SFIcons.sf_heart_fill,
-                                        fontSize: 12,
-                                        color: AppColors.primary,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        'Step ${_currentStep} of $_totalSteps',
-                                        style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
-                                      ),
-                                    ],
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    'Step ${_currentStep} of $_totalSteps',
+                                    style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
                                   ),
-                                ),
-                                const SizedBox(height: 16),
-                                // Step content
-                                _currentStep == 1
-                                    ? _buildPersonalInformationStep()
-                                    : _currentStep == 2
-                                        ? _buildActivityLevelStep()
-                                        : _buildDietaryPreferencesStep(),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 16),
+                            // Step content
+                            _currentStep == 1
+                                ? _buildPersonalInformationStep()
+                                : _currentStep == 2
+                                    ? _buildActivityLevelStep()
+                                    : _buildDietaryPreferencesStep(),
+                          ],
                         ),
                       ),
                     ),
@@ -515,88 +389,36 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                     children: [
                       if (_currentStep > 1)
                         Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                              child: Container(
-                                height: 56,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: CupertinoButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: _previousStep,
-                                    child: Text(
-                                      'Back',
-                                      style: AppTextStyles.withColor(
-                                        AppTextStyles.heading3,
-                                        AppColors.primary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          child: ActionButton(
+                            text: 'Back',
+                            onPressed: _previousStep,
+                            style: ActionButtonStyle.filled,
+                            backgroundColor: Colors.white.withOpacity(0.8),
+                            textColor: AppColors.primary,
+                            isFullWidth: true,
+                            height: 56,
+                            borderRadius: 16,
                           ),
                         ),
                       if (_currentStep > 1)
                         const SizedBox(width: 16),
                       Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                            child: Container(
-                              height: 56,
-                              decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color.fromARGB(255, 0, 118, 169),
-                                    Color.fromARGB(255, 18, 162, 183),
-                                    Color.fromARGB(255, 92, 197, 217),
-                                  ],
-                                  stops: [0.0, 0.5, 1.0],
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: CupertinoButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: _isFormValid()
-                                    ? () {
-                                        if (_currentStep < _totalSteps) {
-                                          _nextStep();
-                                        } else {
-                                          _showFinalizeAccountDialog();
-                                        }
-                                      }
-                                    : null,
-                                child: Text(
-                                  _currentStep == _totalSteps ? 'Finish' : 'Next',
-                                  style: AppTextStyles.withColor(
-                                    AppTextStyles.heading3,
-                                    AppColors.surface,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        child: ActionButton(
+                          text: _currentStep == _totalSteps ? 'Finish' : 'Next',
+                          onPressed: _isFormValid()
+                              ? () {
+                                  if (_currentStep < _totalSteps) {
+                                    _nextStep();
+                                  } else {
+                                    _showFinalizeAccountDialog();
+                                  }
+                                }
+                              : null,
+                          style: ActionButtonStyle.filled,
+                          backgroundColor: AppColors.primary,
+                          textColor: AppColors.surface,
+                          isFullWidth: true,
+                          height: 56,
                         ),
                       ),
                     ],
@@ -698,11 +520,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                 onTap: () {
                   _showPicker(
                     title: 'Age',
-                    items: List.generate(100, (i) => (i + 1).toString()),
+                    items: List.generate(83, (i) => (i + 18).toString()),
                     selectedValue: _ageController.text,
                     onSelectedItemChanged: (index) {
                       setState(() {
-                        _ageController.text = (index + 1).toString();
+                        _ageController.text = (index + 18).toString();
                       });
                     },
                   );
@@ -724,16 +546,12 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           children: [
             SizedBox(
               width: 302,
-              child: _buildSegmentedControl<Gender>(
-                groupValue: _selectedGender,
-                options: const {
-                  Gender.male: 'Male',
-                  Gender.female: 'Female',
-                  Gender.other: 'Other',
-                },
-                onValueChanged: (value) {
+              child: SlidingToggle(
+                options: const ['Male', 'Female', 'Other'],
+                initialSelection: _selectedGender != null ? _selectedGender!.index : 0,
+                onToggle: (index) {
                   setState(() {
-                    _selectedGender = value;
+                    _selectedGender = Gender.values[index];
                   });
                 },
               ),
@@ -774,24 +592,24 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
               ),
             ),
             const SizedBox(width: 16),
-            _buildSegmentedControl<bool>(
-              groupValue: _isWeightMetric,
-              options: const {
-                true: 'kg',
-                false: 'lbs',
-              },
-              onValueChanged: (value) {
-                setState(() {
-                  _isWeightMetric = value!;
-                  // Convert weight if needed
-                  if (_weightController.text.isNotEmpty) {
-                    final weight = double.parse(_weightController.text);
-                    _weightController.text = (_isWeightMetric 
-                        ? weight * 0.453592 
-                        : weight * 2.20462).round().toString();
-                  }
-                });
-              },
+            SizedBox(
+              width: 120,
+              child: SlidingToggle(
+                options: const ['kg', 'lbs'],
+                initialSelection: _isWeightMetric ? 0 : 1,
+                onToggle: (index) {
+                  setState(() {
+                    _isWeightMetric = index == 0;
+                    // Convert weight if needed
+                    if (_weightController.text.isNotEmpty) {
+                      final weight = double.parse(_weightController.text);
+                      _weightController.text = (_isWeightMetric 
+                          ? weight * 0.453592 
+                          : weight * 2.20462).round().toString();
+                    }
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -829,24 +647,24 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
               ),
             ),
             const SizedBox(width: 16),
-            _buildSegmentedControl<bool>(
-              groupValue: _isHeightMetric,
-              options: const {
-                true: 'cm',
-                false: 'ft',
-              },
-              onValueChanged: (value) {
-                setState(() {
-                  _isHeightMetric = value!;
-                  // Convert height if needed
-                  if (_heightController.text.isNotEmpty) {
-                    final height = double.parse(_heightController.text);
-                    _heightController.text = (_isHeightMetric 
-                        ? height * 30.48 
-                        : height / 30.48).toStringAsFixed(_isHeightMetric ? 0 : 1);
-                  }
-                });
-              },
+            SizedBox(
+              width: 120,
+              child: SlidingToggle(
+                options: const ['cm', 'ft'],
+                initialSelection: _isHeightMetric ? 0 : 1,
+                onToggle: (index) {
+                  setState(() {
+                    _isHeightMetric = index == 0;
+                    // Convert height if needed
+                    if (_heightController.text.isNotEmpty) {
+                      final height = double.parse(_heightController.text);
+                      _heightController.text = (_isHeightMetric 
+                          ? height * 30.48 
+                          : height / 30.48).toStringAsFixed(_isHeightMetric ? 0 : 1);
+                    }
+                  });
+                },
+              ),
             ),
           ],
         ),
@@ -1088,40 +906,37 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           style: AppTextStyles.bodyLarge,
         ),
         content: Text(
-          'Would you like to complete your account creation now?',
+          'Would you like to have a quick chat with our AI health coach to better understand your needs?',
           style: AppTextStyles.bodyMedium,
         ),
         actions: [
           CupertinoDialogAction(
             child: Text(
-              'Not Now',
+              'Skip',
               style: AppTextStyles.bodyMedium,
             ),
             onPressed: () {
               Navigator.pop(context); // Close dialog
-              // Navigate to home screen
-              Navigator.of(context).pushAndRemoveUntil(
+              // Navigate directly to finalize account screen
+              Navigator.of(context).push(
                 CupertinoPageRoute(
-                  builder: (context) => HomeScreen(
-                    tabController: CupertinoTabController(initialIndex: 0),
-                  ),
+                  builder: (context) => const FinalizeAccountScreen(),
                 ),
-                (route) => false,
               );
             },
           ),
           CupertinoDialogAction(
             isDefaultAction: true,
             child: Text(
-              'Complete Now',
+              'Start Chat',
               style: AppTextStyles.bodyMedium,
             ),
             onPressed: () {
               Navigator.pop(context); // Close dialog
-              // Navigate to finalize account screen
+              // Navigate to video call screen
               Navigator.of(context).push(
                 CupertinoPageRoute(
-                  builder: (context) => const FinalizeAccountScreen(),
+                  builder: (context) => const OnboardingVideoCallScreen(),
                 ),
               );
             },

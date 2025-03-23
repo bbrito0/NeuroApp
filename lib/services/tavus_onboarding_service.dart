@@ -5,9 +5,9 @@ import '../utils/logging.dart';
 
 class TavusOnboardingService {
   static const String _baseUrl = 'https://tavusapi.com/v2';
-  static const String _apiKey = 'c0e827e4927342678a58e7d0e3cb979b'; // Same API key as main service
-  static const String _replicaId = 'r14ea4b254d5'; // Same replica ID as main service
-  static const String _personaId = 'p07fb322da79'; // Same persona ID as main service
+  static const String _apiKey = '09a327468ee24eaa85c061e10d9ce293'; // Same API key as main service
+  static const String _replicaId = 'r0c4d42ecf0b'; // Same replica ID as main service
+  static const String _personaId = 'pe8b90193176'; // Same persona ID as main service
   final _logger = Logger('TavusOnboardingService');
 
   Future<ConversationResponse> createOnboardingCall() async {

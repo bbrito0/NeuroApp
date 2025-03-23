@@ -26,54 +26,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // Background image
           SizedBox.expand(
             child: Image.asset(
-              'assets/images/Lebron.png',
+              'assets/images/AI Health Assistant LOGIN SCREEN.png',
               fit: BoxFit.cover,
-            ),
-          ),
-          // Blue tint overlay
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(255, 0, 118, 169).withOpacity(0.45),
-                  Color.fromARGB(255, 18, 162, 183).withOpacity(0.45),
-                  Color.fromARGB(255, 92, 197, 217).withOpacity(0.45),
-                ],
-              stops: const [0.0, 0.5, 1.0],
-              ),
-            ),
-          ),
-          // White corner elements
-          Positioned(
-            top: -120,
-            right: -120,
-            child: Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 20,
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -120,
-            left: -120,
-            child: Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.white,
-                  width: 20,
-                ),
-                shape: BoxShape.circle,
-              ),
             ),
           ),
           // Content

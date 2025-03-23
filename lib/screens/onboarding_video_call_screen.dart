@@ -123,7 +123,7 @@ class _OnboardingVideoCallScreenState extends State<OnboardingVideoCallScreen>
 
   void _navigateToFinalize() {
     if (!mounted) return;
-    Navigator.of(context).pushReplacement(
+    Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (context) => const FinalizeAccountScreen(),
       ),
@@ -139,88 +139,108 @@ class _OnboardingVideoCallScreenState extends State<OnboardingVideoCallScreen>
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      backgroundColor: Colors.transparent,
-      navigationBar: CupertinoNavigationBar(
+    return WillPopScope(
+      onWillPop: () async {
+        if (_callId != null) {
+          await _tavusService.endCall(_callId!);
+          _navigateToFinalize();
+        }
+        return true;
+      },
+      child: CupertinoPageScaffold(
         backgroundColor: Colors.transparent,
-        border: null,
-        middle: Text(
-          'Initial Health Assessment',
-          style: AppTextStyles.withColor(
-            AppTextStyles.heading3,
-            AppColors.surface,
-          ),
-        ),
-      ),
-      child: Stack(
-        children: [
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: _beginAlignment.value,
-                    end: _endAlignment.value,
-                    colors: AppColors.primaryGradient.colors,
-                    tileMode: TileMode.mirror,
-                  ),
-                ),
-              );
-            },
-          ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
-              ),
+        navigationBar: CupertinoNavigationBar(
+          backgroundColor: Colors.transparent,
+          border: null,
+          middle: Text(
+            'Initial Health Assessment',
+            style: AppTextStyles.withColor(
+              AppTextStyles.heading3,
+              AppColors.surface,
             ),
           ),
-          SafeArea(
-            child: _isLoading
-                ? const Center(
-                    child: CupertinoActivityIndicator(
-                      radius: 16,
+          leading: CupertinoButton(
+            padding: EdgeInsets.zero,
+            child: const Icon(CupertinoIcons.xmark, color: AppColors.surface),
+            onPressed: () async {
+              if (_callId != null) {
+                await _tavusService.endCall(_callId!);
+                _navigateToFinalize();
+              }
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        child: Stack(
+          children: [
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: _beginAlignment.value,
+                      end: _endAlignment.value,
+                      colors: AppColors.primaryGradient.colors,
+                      tileMode: TileMode.mirror,
                     ),
-                  )
-                : _webViewController == null
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              CupertinoIcons.exclamationmark_circle,
-                              size: 48,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'Failed to initialize video call',
-                              style: AppTextStyles.withColor(
-                                AppTextStyles.heading3,
-                                AppColors.surface,
+                  ),
+                );
+              },
+            ),
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: AppColors.frostedGlassGradient,
+                ),
+              ),
+            ),
+            SafeArea(
+              child: _isLoading
+                  ? const Center(
+                      child: CupertinoActivityIndicator(
+                        radius: 16,
+                      ),
+                    )
+                  : _webViewController == null
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                CupertinoIcons.exclamationmark_circle,
+                                size: 48,
+                                color: Colors.white,
                               ),
-                            ),
-                            const SizedBox(height: 24),
-                            CupertinoButton(
-                              child: Text(
-                                'Try Again',
+                              const SizedBox(height: 16),
+                              Text(
+                                'Failed to initialize video call',
                                 style: AppTextStyles.withColor(
-                                  AppTextStyles.actionButton,
+                                  AppTextStyles.heading3,
                                   AppColors.surface,
                                 ),
                               ),
-                              onPressed: _initializeCall,
-                            ),
-                          ],
+                              const SizedBox(height: 24),
+                              CupertinoButton(
+                                child: Text(
+                                  'Try Again',
+                                  style: AppTextStyles.withColor(
+                                    AppTextStyles.actionButton,
+                                    AppColors.surface,
+                                  ),
+                                ),
+                                onPressed: _initializeCall,
+                              ),
+                            ],
+                          ),
+                        )
+                      : WebViewWidget(
+                          controller: _webViewController!,
                         ),
-                      )
-                    : WebViewWidget(
-                        controller: _webViewController!,
-                      ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

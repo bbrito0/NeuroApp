@@ -5,91 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import './choose_supplements_screen.dart';
-
-class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
-  const _CustomNavigationBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(
-        bottom: Radius.circular(20),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromARGB(255, 0, 118, 169),
-                const Color.fromARGB(255, 18, 162, 183),
-                const Color.fromARGB(255, 92, 197, 217),
-              ],
-              stops: const [0.0, 0.5, 1.0],
-            ),
-            border: Border(
-              bottom: BorderSide(
-                color: AppColors.getPrimaryWithOpacity(0.2),
-                width: 0.5,
-              ),
-            ),
-          ),
-          child: SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CupertinoNavigationBar(
-                    backgroundColor: Colors.transparent,
-                    border: null,
-                    padding: const EdgeInsetsDirectional.only(start: 8),
-                    leading: CupertinoNavigationBarBackButton(
-                      color: AppColors.surface,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Scan Supplements',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.heading1,
-                        AppColors.surface,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'We added a QR code to each supplement.\nThis will allow you to access all the resources\nand specific information for your recovery.',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.bodyMedium,
-                        AppColors.surface,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(180);
-
-  @override
-  bool shouldFullyObstruct(BuildContext context) => false;
-}
+import '../widgets/widgets.dart';
 
 class QRScannerScreen extends StatefulWidget {
   const QRScannerScreen({super.key});
@@ -140,7 +56,11 @@ class _QRScannerScreenState extends State<QRScannerScreen> with SingleTickerProv
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-      navigationBar: _CustomNavigationBar(),
+      navigationBar: CustomNavigationBar(
+        title: 'Scan Supplements',
+        subtitle: 'We added a QR code to each supplement.\nThis will allow you to access all the resources\nand specific information for your recovery.',
+        onBackPressed: () => Navigator.of(context).pop(),
+      ),
       child: Stack(
         children: [
           // Animated gradient background
@@ -224,66 +144,31 @@ class _QRScannerScreenState extends State<QRScannerScreen> with SingleTickerProv
                   ),
                   const SizedBox(height: 20),
                   // Instructions text
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          'Point your camera at the QR code on your supplement package',
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.bodyMedium,
-                            AppColors.primary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                  FrostedCard(
+                    padding: const EdgeInsets.all(16),
+                    backgroundColor: Colors.transparent,
+                    border: Border.all(
+                      color: Colors.transparent,
+                      width: 0,
+                    ),
+                    child: Text(
+                      'Point your camera at the QR code on your supplement package',
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodyMedium,
+                        const Color.fromARGB(255, 255, 255, 255),
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Expanded(child: SizedBox()),
                   // Development only button
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                      child: Container(
-                        width: double.infinity,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              Color.fromARGB(255, 0, 118, 169),
-                              Color.fromARGB(255, 18, 162, 183),
-                              Color.fromARGB(255, 92, 197, 217),
-                            ],
-                            stops: [0.0, 0.5, 1.0],
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.2),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: CupertinoButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: () => _handleScannedCode('dev-test-code'),
-                          child: Text(
-                            'Dev: Go to Choose Supplements',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.surface,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+                  ActionButton(
+                    text: 'Dev: Go to Choose Supplements',
+                    onPressed: () => _handleScannedCode('dev-test-code'),
+                    style: ActionButtonStyle.filled,
+                    backgroundColor: const Color.fromARGB(255, 18, 162, 183),
+                    textColor: AppColors.surface,
+                    isFullWidth: true,
                   ),
                 ],
               ),
