@@ -1,0 +1,17 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+When adding any new text to the ChronoWell app:
+Never use hardcoded strings directly in the UI
+Always define translations in both app_en.arb and app_es.arb files
+Use descriptive keys with proper documentation in the ARB files
+Access text via AppLocalizations.of(context)!.keyName
+Run flutter gen-l10n after adding new translation keys
+For strings with variables, use parameterized translations like:
+   // In ARB file:
+   "welcome": "Hello, {name}",
+   // In code:
+   AppLocalizations.of(context)!.welcome(userName)
+This ensures a consistent user experience across language preferences and simplifies future language additions.

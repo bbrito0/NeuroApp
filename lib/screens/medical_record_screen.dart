@@ -5,10 +5,13 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../main.dart';
 import 'package:flutter_sficon/flutter_sficon.dart';
-import 'onboarding_video_call_screen.dart';
+import 'onboarding_features_slideshow.dart';
 import 'finalize_account_screen.dart';
+import 'post_medical_decision_screen.dart';
+import 'setup_loading_screen.dart';
 import 'home_screen.dart';
 import '../widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 enum Gender { male, female, other }
 enum ActivityLevel { sedentary, moderatelyActive, highlyActive }
@@ -95,11 +98,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           showCupertinoDialog(
             context: context,
             builder: (context) => CupertinoAlertDialog(
-              title: const Text('Incomplete Information'),
-              content: const Text('Please fill in all fields to continue.'),
+              title: Text(AppLocalizations.of(context)!.incompleteInformation),
+              content: Text(AppLocalizations.of(context)!.fillAllFields),
               actions: [
                 CupertinoDialogAction(
-                  child: const Text('OK'),
+                  child: Text(AppLocalizations.of(context)!.ok),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -112,11 +115,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: const Text('Activity Level Required'),
-            content: const Text('Please select your activity level to continue.'),
+            title: Text(AppLocalizations.of(context)!.activityLevelRequired),
+            content: Text(AppLocalizations.of(context)!.selectActivityLevel),
             actions: [
               CupertinoDialogAction(
-                child: const Text('OK'),
+                child: Text(AppLocalizations.of(context)!.ok),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -128,11 +131,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
         showCupertinoDialog(
           context: context,
           builder: (context) => CupertinoAlertDialog(
-            title: const Text('Diet Type Required'),
-            content: const Text('Please select your diet type to continue.'),
+            title: Text(AppLocalizations.of(context)!.dietTypeRequired),
+            content: Text(AppLocalizations.of(context)!.selectDietType),
             actions: [
               CupertinoDialogAction(
-                child: const Text('OK'),
+                child: Text(AppLocalizations.of(context)!.ok),
                 onPressed: () => Navigator.pop(context),
               ),
             ],
@@ -197,7 +200,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                     padding: EdgeInsets.zero,
                     onPressed: () => Navigator.pop(context),
                     child: Text(
-                      'Cancel',
+                      AppLocalizations.of(context)!.cancel,
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.primary,
                       ),
@@ -211,7 +214,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                     padding: EdgeInsets.zero,
                     onPressed: () => Navigator.pop(context),
                     child: Text(
-                      'Done',
+                      AppLocalizations.of(context)!.done,
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: AppColors.primary,
                       ),
@@ -271,12 +274,16 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  value.isEmpty ? placeholder : value,
-                  style: value.isEmpty 
-                      ? AppTextStyles.secondaryText
-                      : AppTextStyles.bodyMedium,
+                Flexible(
+                  child: Text(
+                    value.isEmpty ? placeholder : value,
+                    style: value.isEmpty 
+                        ? AppTextStyles.secondaryText
+                        : AppTextStyles.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
+                const SizedBox(width: 8),
                 SFIcon(
                   SFIcons.sf_chevron_down,
                   color: AppColors.secondaryLabel,
@@ -292,13 +299,15 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       navigationBar: CustomNavigationBar(
         currentStep: _currentStep,
         totalSteps: _totalSteps,
-        title: 'Medical History',
-        subtitle: 'This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.',
+        title: localizations.medicalHistory,
+        subtitle: localizations.medicalHistoryInfo,
         onBackPressed: () => Navigator.of(context).pop(),
       ),
       child: Stack(
@@ -365,7 +374,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    'Step ${_currentStep} of $_totalSteps',
+                                    localizations.stepCount(_currentStep.toString(), _totalSteps.toString()),
                                     style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
                                   ),
                                 ],
@@ -390,21 +399,19 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                       if (_currentStep > 1)
                         Expanded(
                           child: ActionButton(
-                            text: 'Back',
+                            text: localizations.back,
                             onPressed: _previousStep,
                             style: ActionButtonStyle.filled,
                             backgroundColor: Colors.white.withOpacity(0.8),
                             textColor: AppColors.primary,
                             isFullWidth: true,
-                            height: 56,
-                            borderRadius: 16,
                           ),
                         ),
                       if (_currentStep > 1)
                         const SizedBox(width: 16),
                       Expanded(
                         child: ActionButton(
-                          text: _currentStep == _totalSteps ? 'Finish' : 'Next',
+                          text: _currentStep == _totalSteps ? localizations.finish : localizations.next,
                           onPressed: _isFormValid()
                               ? () {
                                   if (_currentStep < _totalSteps) {
@@ -418,7 +425,6 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                           backgroundColor: AppColors.primary,
                           textColor: AppColors.surface,
                           isFullWidth: true,
-                          height: 56,
                         ),
                       ),
                     ],
@@ -489,6 +495,8 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   }
 
   Widget _buildPersonalInformationStep() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -500,12 +508,12 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'What is your age?',
+                    localizations.whatIsYourAge,
                     style: AppTextStyles.bodyMedium,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'This helps us personalize your health recommendations',
+                    localizations.ageHelpsPersonalize,
                     style: AppTextStyles.secondaryText,
                   ),
                 ],
@@ -515,11 +523,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             SizedBox(
               width: 120,
               child: _buildPickerField(
-                placeholder: 'Select age',
+                placeholder: localizations.selectAge,
                 value: _ageController.text,
                 onTap: () {
                   _showPicker(
-                    title: 'Age',
+                    title: localizations.age,
                     items: List.generate(83, (i) => (i + 18).toString()),
                     selectedValue: _ageController.text,
                     onSelectedItemChanged: (index) {
@@ -537,7 +545,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
 
         // Gender Selection
         Text(
-          'What is your gender?',
+          localizations.whatIsYourGender,
           style: AppTextStyles.bodyMedium,
         ),
         const SizedBox(height: 8),
@@ -547,7 +555,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             SizedBox(
               width: 302,
               child: SlidingToggle(
-                options: const ['Male', 'Female', 'Other'],
+                options: [
+                  localizations.male,
+                  localizations.female,
+                  localizations.otherGender
+                ],
                 initialSelection: _selectedGender != null ? _selectedGender!.index : 0,
                 onToggle: (index) {
                   setState(() {
@@ -562,7 +574,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
 
         // Weight Input
         Text(
-          'What is your weight?',
+          localizations.whatIsYourWeight,
           style: AppTextStyles.bodyMedium,
         ),
         const SizedBox(height: 8),
@@ -570,11 +582,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           children: [
             Expanded(
               child: _buildPickerField(
-                placeholder: 'Select your weight',
+                placeholder: localizations.selectYourWeight,
                 value: _weightController.text,
                 onTap: () {
                   _showPicker(
-                    title: 'Weight (${_isWeightMetric ? 'kg' : 'lbs'})',
+                    title: '${localizations.weight} (${_isWeightMetric ? localizations.kg : localizations.lbs})',
                     items: List.generate(
                       _isWeightMetric ? 200 : 440,
                       (i) => (_isWeightMetric ? i + 30 : i + 66).toString(),
@@ -595,7 +607,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             SizedBox(
               width: 120,
               child: SlidingToggle(
-                options: const ['kg', 'lbs'],
+                options: [localizations.kg, localizations.lbs],
                 initialSelection: _isWeightMetric ? 0 : 1,
                 onToggle: (index) {
                   setState(() {
@@ -617,7 +629,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
 
         // Height Input
         Text(
-          'What is your height?',
+          localizations.whatIsYourHeight,
           style: AppTextStyles.bodyMedium,
         ),
         const SizedBox(height: 8),
@@ -625,11 +637,11 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
           children: [
             Expanded(
               child: _buildPickerField(
-                placeholder: 'Select your height',
+                placeholder: localizations.selectYourHeight,
                 value: _heightController.text,
                 onTap: () {
                   _showPicker(
-                    title: 'Height (${_isHeightMetric ? 'cm' : 'ft'})',
+                    title: '${localizations.height} (${_isHeightMetric ? localizations.cm : localizations.ft})',
                     items: List.generate(
                       _isHeightMetric ? 121 : 48,
                       (i) => (_isHeightMetric ? i + 130 : (i + 48) / 12).toStringAsFixed(_isHeightMetric ? 0 : 1),
@@ -650,7 +662,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             SizedBox(
               width: 120,
               child: SlidingToggle(
-                options: const ['cm', 'ft'],
+                options: [localizations.cm, localizations.ft],
                 initialSelection: _isHeightMetric ? 0 : 1,
                 onToggle: (index) {
                   setState(() {
@@ -673,37 +685,39 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   }
 
   Widget _buildActivityLevelStep() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Activity Level',
+          localizations.activityLevel,
           style: AppTextStyles.heading1,
         ),
         const SizedBox(height: 8),
         Text(
-          'Select your typical activity level',
+          localizations.selectYourActivityLevel,
           style: AppTextStyles.secondaryText,
         ),
         const SizedBox(height: 24),
         _buildActivityOption(
           ActivityLevel.sedentary,
-          'Sedentary',
-          'Little to no exercise',
+          localizations.sedentary,
+          localizations.sedentaryDesc,
           SFIcons.sf_house_fill,
         ),
         const SizedBox(height: 16),
         _buildActivityOption(
           ActivityLevel.moderatelyActive,
-          'Moderately Active',
-          'Light exercise 2-3 times a week',
+          localizations.moderatelyActive,
+          localizations.moderatelyActiveDesc,
           SFIcons.sf_figure_walk,
         ),
         const SizedBox(height: 16),
         _buildActivityOption(
           ActivityLevel.highlyActive,
-          'Highly Active',
-          'Frequent intense exercise',
+          localizations.highlyActive,
+          localizations.highlyActiveDesc,
           SFIcons.sf_figure_walk_circle_fill,
         ),
       ],
@@ -763,44 +777,46 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   }
 
   Widget _buildDietaryPreferencesStep() {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Dietary Preferences',
+          localizations.dietaryPreferences,
           style: AppTextStyles.heading1,
         ),
         const SizedBox(height: 8),
         Text(
-          'Select your primary diet type',
+          localizations.selectYourDietType,
           style: AppTextStyles.secondaryText,
         ),
         const SizedBox(height: 24),
         _buildDietOption(
           DietType.keto,
-          'Keto',
-          'High-fat, low-carb diet',
+          localizations.keto,
+          localizations.ketoDesc,
           SFIcons.sf_chart_pie_fill,
         ),
         const SizedBox(height: 16),
         _buildDietOption(
           DietType.vegan,
-          'Vegan',
-          'Plant-based diet without animal products',
+          localizations.vegan,
+          localizations.veganDesc,
           SFIcons.sf_leaf_fill,
         ),
         const SizedBox(height: 16),
         _buildDietOption(
           DietType.balanced,
-          'Balanced',
-          'Mixed diet with all food groups',
+          localizations.balanced,
+          localizations.balancedDesc,
           SFIcons.sf_square_grid_3x3_fill,
         ),
         const SizedBox(height: 16),
         _buildDietOption(
           DietType.other,
-          'Other',
-          'Specify your diet',
+          localizations.other,
+          localizations.specifyDiet,
           SFIcons.sf_plus_circle_fill,
         ),
         if (_dietType == DietType.other) ...[
@@ -816,7 +832,7 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
             ),
             child: CupertinoTextField(
               controller: _otherDietController,
-              placeholder: 'Enter your diet type',
+              placeholder: localizations.enterDietType,
               padding: const EdgeInsets.all(16),
               decoration: null,
               style: AppTextStyles.bodyMedium,
@@ -898,45 +914,32 @@ class _MedicalRecordScreenState extends State<MedicalRecordScreen>
   }
 
   void _showFinalizeAccountDialog() {
+    final localizations = AppLocalizations.of(context)!;
+    
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
         title: Text(
-          'Complete Your Profile',
+          localizations.profileComplete,
           style: AppTextStyles.bodyLarge,
         ),
         content: Text(
-          'Would you like to have a quick chat with our AI health coach to better understand your needs?',
+          localizations.profileCompleteDesc,
           style: AppTextStyles.bodyMedium,
         ),
         actions: [
           CupertinoDialogAction(
-            child: Text(
-              'Skip',
-              style: AppTextStyles.bodyMedium,
-            ),
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              // Navigate directly to finalize account screen
-              Navigator.of(context).push(
-                CupertinoPageRoute(
-                  builder: (context) => const FinalizeAccountScreen(),
-                ),
-              );
-            },
-          ),
-          CupertinoDialogAction(
             isDefaultAction: true,
             child: Text(
-              'Start Chat',
+              localizations.continueText,
               style: AppTextStyles.bodyMedium,
             ),
             onPressed: () {
               Navigator.pop(context); // Close dialog
-              // Navigate to video call screen
-              Navigator.of(context).push(
+              // Navigate to setup loading screen
+              Navigator.of(context).pushReplacement(
                 CupertinoPageRoute(
-                  builder: (context) => const OnboardingVideoCallScreen(),
+                  builder: (context) => const SetupLoadingScreen(),
                 ),
               );
             },

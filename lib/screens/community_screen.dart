@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui';
 import 'package:flutter_sficon/flutter_sficon.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../services/tutorial_service.dart';
+import '../widgets/widgets.dart';
 
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key});
@@ -14,33 +16,9 @@ class CommunityScreen extends StatefulWidget {
 }
 
 class _CommunityScreenState extends State<CommunityScreen> {
-  final List<ForumTopic> _topics = [
-    ForumTopic(
-      title: "Memory Techniques Discussion",
-      author: "Sarah M.",
-      lastActivity: DateTime.now().subtract(const Duration(minutes: 5)),
-      replies: 12,
-      likes: 45,
-      tags: ["Memory", "Tips"],
-    ),
-    ForumTopic(
-      title: "Daily Brain Training Results",
-      author: "Michael R.",
-      lastActivity: DateTime.now().subtract(const Duration(hours: 2)),
-      replies: 8,
-      likes: 23,
-      tags: ["Progress", "Training"],
-    ),
-    ForumTopic(
-      title: "Cognitive Health Tips",
-      author: "Dr. Emily K.",
-      lastActivity: DateTime.now().subtract(const Duration(hours: 6)),
-      replies: 15,
-      likes: 67,
-      tags: ["Health", "Expert"],
-    ),
-  ];
-
+  late List<ForumTopic> _topics;
+  late List<String> _tags;
+  
   late ScrollController _scrollController;
 
   // Add GlobalKeys for tutorial targets
@@ -79,151 +57,158 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
+    // Initialize tags with localized strings
+    _tags = [
+      localizations.tagMemory,
+      localizations.tagTraining,
+      localizations.tagHealth,
+      localizations.tagTips,
+      localizations.tagProgress
+    ];
+    
+    // Initialize topics with localized strings
+    _topics = [
+      ForumTopic(
+        title: "Memory Techniques Discussion",
+        author: "Sarah M.",
+        lastActivity: DateTime.now().subtract(const Duration(minutes: 5)),
+        replies: 12,
+        likes: 45,
+        tags: [localizations.tagMemory, localizations.tagTips],
+      ),
+      ForumTopic(
+        title: "Daily Brain Training Results",
+        author: "Michael R.",
+        lastActivity: DateTime.now().subtract(const Duration(hours: 2)),
+        replies: 8,
+        likes: 23,
+        tags: [localizations.tagProgress, localizations.tagTraining],
+      ),
+      ForumTopic(
+        title: "Cognitive Health Tips",
+        author: "Dr. Emily K.",
+        lastActivity: DateTime.now().subtract(const Duration(hours: 6)),
+        replies: 15,
+        likes: 67,
+        tags: [localizations.tagHealth, localizations.tagExpert],
+      ),
+    ];
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
+          GradientBackground(
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
+            child: Container(),
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
+          CustomScrollView(
+            controller: _scrollController,
+            primary: false,
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: Text(
+                  localizations.community,
+                  style: AppTextStyles.withColor(
+                    AppTextStyles.heading1,
+                    AppColors.textPrimary,
+                  ),
+                ),
+                backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppColors.separator.withOpacity(0.2),
+                    width: 0.5,
+                  ),
+                ),
+                trailing: CupertinoButton(
+                  key: newPostKey,
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    _showNewTopicSheet(context);
+                  },
+                  child: SFIcon(
+                    SFIcons.sf_square_and_pencil,
+                    fontSize: 22,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
-            ),
-          ),
-          CupertinoScrollbar(
-            thickness: 3.0,
-            radius: const Radius.circular(1.5),
-            mainAxisMargin: 2.0,
-            child: CustomScrollView(
-              controller: _scrollController,
-              primary: false,
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text(
-                    'Community',
-                    style: AppTextStyles.withColor(
-                      AppTextStyles.heading1,
-                      AppColors.textPrimary,
-                    ),
-                  ),
-                  backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
-                  border: Border(
-                    bottom: BorderSide(
-                      color: AppColors.separator.withOpacity(0.2),
-                      width: 0.5,
-                    ),
-                  ),
-                  trailing: CupertinoButton(
-                    key: newPostKey,
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      _showNewTopicSheet(context);
-                    },
-                    child: SFIcon(
-                      SFIcons.sf_square_and_pencil,
-                      fontSize: 22,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          key: searchKey,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: AppColors.getSurfaceWithOpacity(0.5),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: AppColors.separator.withOpacity(0.2),
-                              width: 0.5,
-                            ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        key: searchKey,
+                        hintText: localizations.searchTopics,
+                        prefix: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: SFIcon(
+                            SFIcons.sf_magnifyingglass,
+                            fontSize: 16,
+                            color: AppColors.secondaryLabel,
                           ),
-                          child: CupertinoTextField.borderless(
-                            prefix: Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: SFIcon(
-                                SFIcons.sf_magnifyingglass,
-                                fontSize: 16,
-                                color: AppColors.secondaryLabel,
+                        ),
+                        borderRadius: 10,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        key: tagsKey,
+                        height: 32,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _tags.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: index == 0 ? 0 : 8,
+                                right: index == _tags.length - 1 ? 0 : 0,
                               ),
-                            ),
-                            placeholder: 'Search topics',
-                            placeholderStyle: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.secondaryLabel,
-                            ),
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.textPrimary,
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        SizedBox(
-                          key: tagsKey,
-                          height: 32,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: ["Memory", "Training", "Health", "Tips", "Progress"].length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  left: index == 0 ? 0 : 8,
-                                  right: index == ["Memory", "Training", "Health", "Tips", "Progress"].length - 1 ? 0 : 0,
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                  decoration: BoxDecoration(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: AppColors.getPrimaryWithOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
                                     color: AppColors.getPrimaryWithOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(16),
-                                    border: Border.all(
-                                      color: AppColors.getPrimaryWithOpacity(0.1),
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    ["Memory", "Training", "Health", "Tips", "Progress"][index],
-                                    style: AppTextStyles.withColor(
-                                      AppTextStyles.bodySmall,
-                                      AppColors.primary,
-                                    ),
+                                    width: 0.5,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                                child: Text(
+                                  _tags[index],
+                                  style: AppTextStyles.withColor(
+                                    AppTextStyles.bodySmall,
+                                    AppColors.primary,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 24),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) => Container(
-                      key: index == 0 ? topicKey : null,
-                      child: _buildTopicCard(_topics[index]),
-                    ),
-                    childCount: _topics.length,
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Container(
+                    key: index == 0 ? topicKey : null,
+                    child: _buildTopicCard(_topics[index]),
                   ),
+                  childCount: _topics.length,
                 ),
-                const SliverPadding(
-                  padding: EdgeInsets.only(bottom: 100),
-                ),
-              ],
-            ),
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.only(bottom: 100),
+              ),
+            ],
           ),
         ],
       ),
@@ -233,14 +218,12 @@ class _CommunityScreenState extends State<CommunityScreen> {
   Widget _buildTopicCard(ForumTopic topic) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.getSurfaceWithOpacity(0.5),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: AppColors.separator.withOpacity(0.2),
-            width: 0.5,
-          ),
+      child: FrostedCard(
+        borderRadius: 16,
+        backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
+        border: Border.all(
+          color: AppColors.separator.withOpacity(0.3),
+          width: 0.1,
         ),
         child: CupertinoButton(
           padding: EdgeInsets.zero,
@@ -378,101 +361,111 @@ class _CommunityScreenState extends State<CommunityScreen> {
   }
 
   void _showNewTopicSheet(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     showCupertinoModalPopup(
       context: context,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        padding: const EdgeInsets.only(top: 12),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          decoration: BoxDecoration(
+            color: AppColors.getSurfaceWithOpacity(0.98),
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(20),
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppColors.separator.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                'New Topic',
-                style: AppTextStyles.withColor(
-                  AppTextStyles.heading2,
-                  AppColors.textPrimary,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CupertinoTextField(
-                      placeholder: 'Topic Title',
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        localizations.cancelButton,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.primary,
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text(
+                      localizations.createTopic,
                       style: AppTextStyles.withColor(
-                        AppTextStyles.bodyMedium,
+                        AppTextStyles.heading3,
                         AppColors.textPrimary,
                       ),
-                      decoration: BoxDecoration(
-                        color: AppColors.getSurfaceWithOpacity(0.5),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: AppColors.separator.withOpacity(0.2),
-                        ),
-                      ),
-                      padding: const EdgeInsets.all(12),
                     ),
-                    const SizedBox(height: 16),
-                    CupertinoTextField(
-                      placeholder: 'Write your post...',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.bodyMedium,
-                        AppColors.textPrimary,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.getSurfaceWithOpacity(0.5),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: AppColors.separator.withOpacity(0.2),
+                    CupertinoButton(
+                      padding: EdgeInsets.zero,
+                      child: Text(
+                        localizations.post,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.primary,
                         ),
                       ),
-                      padding: const EdgeInsets.all(12),
-                      maxLines: 5,
-                    ),
-                    const SizedBox(height: 24),
-                    Container(
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primaryGradient,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: CupertinoButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        padding: EdgeInsets.zero,
-                        child: Text(
-                          'Post Topic',
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.heading3,
-                            AppColors.surface,
-                          ),
-                        ),
-                      ),
+                      onPressed: () {
+                        // Post logic
+                        Navigator.pop(context);
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Container(
+                height: 0.5,
+                color: AppColors.separator.withOpacity(0.2),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      CupertinoTextField(
+                        placeholder: localizations.topicTitle,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.textPrimary,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.getSurfaceWithOpacity(0.5),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.separator.withOpacity(0.2),
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                      ),
+                      const SizedBox(height: 16),
+                      CupertinoTextField(
+                        placeholder: localizations.writeYourPost,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.textPrimary,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.getSurfaceWithOpacity(0.5),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: AppColors.separator.withOpacity(0.2),
+                          ),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        maxLines: 5,
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

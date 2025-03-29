@@ -8,6 +8,8 @@ import '../theme/app_text_styles.dart';
 import '../services/tutorial_service.dart';
 import 'tavus_call_screen.dart';
 import '../services/tavus_service.dart';
+import '../widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AICoachScreen extends StatefulWidget {
   const AICoachScreen({
@@ -78,7 +80,8 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
     
     // Add initial greeting
     Future.delayed(const Duration(milliseconds: 500), () {
-      _addAIMessage("Hello $_userName, how can I help you today?");
+      final localizations = AppLocalizations.of(context)!;
+      _addAIMessage(localizations.initialGreeting(_userName));
     });
   }
 
@@ -188,14 +191,15 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
   }
 
   Future<void> _startTavusCall(BuildContext context) async {
+    final localizations = AppLocalizations.of(context)!;
     try {
       // End any existing conversations first
       await _tavusService.endAllActiveConversations();
 
       final conversation = await _tavusService.createConversation(
-        conversationName: 'AI Coach Video Call',
+        conversationName: localizations.aiCoachCall,
         conversationalContext: 'You are having a video call with your AI health coach who helps you with mental wellness and cognitive training.',
-        customGreeting: 'Hello! I\'m excited to have this video chat with you. How can I help you today?',
+        customGreeting: localizations.greeting,
       );
 
       if (!mounted) return;
@@ -214,11 +218,11 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
       showCupertinoDialog(
         context: context,
         builder: (context) => CupertinoAlertDialog(
-          title: const Text('Error'),
-          content: Text('Failed to start video call: $e'),
+          title: Text(localizations.errorTitle),
+          content: Text(localizations.videoCallError('$e')),
           actions: [
             CupertinoDialogAction(
-              child: const Text('OK'),
+              child: Text(localizations.okButton),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -229,135 +233,318 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: CupertinoPageScaffold(
+    return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
-        navigationBar: CupertinoNavigationBar(
-          backgroundColor: AppColors.getSurfaceWithOpacity(0.7),
-          border: Border(
-            bottom: BorderSide(
-              color: AppColors.separator.withOpacity(0.2),
-              width: 0.5,
-            ),
+      child: Stack(
+        children: [
+          GradientBackground(
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
+            child: Container(),
           ),
-          middle: Text(
-            'AI Coach',
-            style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-          ),
-          leading: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: _handleBackPress,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          SafeArea(
+            bottom: false,
+            child: Column(
               children: [
-                SFIcon(
-                  SFIcons.sf_chevron_left,
-                  fontSize: 20,
-                  color: AppColors.primary,
+                _buildAppBar(),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: _buildChatList(),
+                  ),
                 ),
-                Text(
-                  'Back',
-                  style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                ),
+                _buildMessageInput(),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           ),
-          trailing: CupertinoButton(
-            key: _videoChatKey,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    final localizations = AppLocalizations.of(context)!;
+    
+    return Container(
+      padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.getPrimaryWithOpacity(0.1),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          CupertinoButton(
             padding: EdgeInsets.zero,
-            onPressed: () => _startTavusCall(context),
-            child: SFIcon(
-              SFIcons.sf_video_fill,
-              fontSize: 20,
+            onPressed: _handleBackPress,
+            child: Icon(
+              CupertinoIcons.back,
               color: AppColors.primary,
             ),
           ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.primaryGradient,
-              ),
-            ),
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: AppColors.frostedGlassGradient,
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.only(
-                      top: 90,
-                      bottom: 100
+          const Spacer(),
+          Text(
+            localizations.aiHealthCoachTitle,
+            style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+          ),
+          const Spacer(),
+          CupertinoButton(
+            key: _videoChatKey,
+            padding: EdgeInsets.zero,
+            onPressed: () async {
+              try {
+                // End any existing conversations first
+                await _tavusService.endAllActiveConversations();
+                
+                final conversation = await _tavusService.createConversation(
+                  conversationName: localizations.aiCoachCall,
+                  conversationalContext: 'This is a video call with your AI health coach who helps you with mental wellness and cognitive training.',
+                );
+                
+                if (!mounted) return;
+                  
+                Navigator.of(context, rootNavigator: true).push(
+                  CupertinoPageRoute(
+                    builder: (context) => TavusCallScreen(
+                      conversationUrl: conversation.conversationUrl,
+                      conversationId: conversation.conversationId,
                     ),
-                    itemCount: _messages.length,
-                    itemBuilder: (context, index) {
-                      final message = _messages[index];
-                      return _buildMessageBubble(message);
+                  ),
+                );
+              } catch (e) {
+                if (!mounted) return;
+                
+                showCupertinoDialog(
+                  context: context,
+                  builder: (context) => CupertinoAlertDialog(
+                    title: Text(localizations.errorTitle),
+                    content: Text(localizations.videoCallError('$e')),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: Text(localizations.okButton),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+            child: SFIcon(
+              SFIcons.sf_video_fill,
+              fontSize: 22,
+              color: AppColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildChatList() {
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverToBoxAdapter(child: SizedBox(height: 16)),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final message = _messages[index];
+              return _buildChatMessage(message);
+            },
+            childCount: _messages.length,
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: _isTyping
+              ? Padding(
+                  padding: const EdgeInsets.only(left: 24, top: 8, bottom: 8),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      FrostedCard(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        borderRadius: 20,
+                        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                        border: Border.all(
+                          color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                          width: 0.5,
+                        ),
+                        child: _buildTypingIndicator(),
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox(height: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTypingIndicator() {
+    return AnimatedBuilder(
+      animation: _typingDotsController,
+      builder: (context, child) {
+        final double firstOpacity = sin((_typingDotsController.value) * pi * 2) * 0.5 + 0.5;
+        final double secondOpacity = sin((_typingDotsController.value + 0.2) * pi * 2) * 0.5 + 0.5;
+        final double thirdOpacity = sin((_typingDotsController.value + 0.4) * pi * 2) * 0.5 + 0.5;
+        
+        return Row(
+          children: [
+            _buildDot(firstOpacity),
+            const SizedBox(width: 4),
+            _buildDot(secondOpacity),
+            const SizedBox(width: 4),
+            _buildDot(thirdOpacity),
+          ],
+        );
+      },
+    );
+  }
+  
+  Widget _buildDot(double opacity) {
+    return Opacity(
+      opacity: opacity,
+      child: Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatMessage(ChatMessage message) {
+    final bool isUser = message.isUser;
+    final alignment = isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final margin = isUser 
+        ? const EdgeInsets.only(left: 64, right: 16, bottom: 8)
+        : const EdgeInsets.only(left: 16, right: 64, bottom: 8);
+    
+    return Container(
+      margin: margin,
+      child: Column(
+        crossAxisAlignment: alignment,
+        children: [
+          FrostedCard(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            borderRadius: 20,
+            backgroundColor: isUser
+                ? AppColors.primary
+                : AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+            border: Border.all(
+              color: isUser
+                  ? AppColors.primary
+                  : AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+              width: 0.5,
+            ),
+            child: Text(
+              message.text,
+              style: AppTextStyles.withColor(
+                AppTextStyles.bodyMedium,
+                isUser ? AppColors.surface : AppColors.textPrimary,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 4, left: 4, right: 4),
+            child: Text(
+              _formatTimestamp(message.timestamp),
+              style: AppTextStyles.withColor(
+                AppTextStyles.bodySmall,
+                AppColors.secondaryLabel,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageInput() {
+    final localizations = AppLocalizations.of(context)!;
+    
+    return Container(
+      key: _chatInputKey,
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 8),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.getPrimaryWithOpacity(0.1),
+            width: 0.5,
+          ),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  CustomTextField(
+                    controller: _messageController,
+                    focusNode: _focusNode,
+                    hintText: localizations.typeMessage,
+                    keyboardType: TextInputType.text,
+                    onEditingComplete: _sendMessage,
+                    borderRadius: 24,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    enabled: true,
+                    onChanged: (value) {
+                      // Update state if needed
+                      setState(() {});
                     },
                   ),
-                ),
-                if (_isTyping)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 8),
-                    child: _buildTypingIndicator(),
-                  ),
-                ClipRRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                    child: Container(
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.getSurfaceWithOpacity(0.7),
-                        border: Border(
-                          top: BorderSide(
-                            color: AppColors.separator.withOpacity(0.2),
+                  if (_showTooltip)
+                    Positioned(
+                      top: -60,
+                      left: 20,
+                      child: FadeTransition(
+                        opacity: _tooltipAnimation,
+                        child: FrostedCard(
+                          borderRadius: 12,
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          backgroundColor: AppColors.surface.withOpacity(0.9),
+                          border: Border.all(
+                            color: AppColors.getPrimaryWithOpacity(0.1),
+                            width: 0.5,
                           ),
-                        ),
-                      ),
-                      child: SafeArea(
-                        top: false,
-                        child: Padding(
-                          key: _chatInputKey,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          child: Row(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: _buildTextInput(),
+                              Text(
+                                localizations.askMeAnything,
+                                style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
                               ),
-                              CupertinoButton(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                onPressed: _messageController.text.isNotEmpty
-                                    ? _handleSendMessage
-                                    : null,
-                                child: SFIcon(
-                                  SFIcons.sf_arrow_up_circle_fill,
-                                  fontSize: 24,
-                                  color: _messageController.text.isNotEmpty
-                                      ? AppColors.primary
-                                      : AppColors.systemGrey3,
-                                ),
+                              Text(
+                                localizations.tapVideoChat,
+                                style: AppTextStyles.secondaryText,
                               ),
                             ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-              ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: _sendMessage,
+              child: SFIcon(
+                SFIcons.sf_arrow_up_circle_fill,
+                fontSize: 24,
+                color: AppColors.primary,
+              ),
             ),
           ],
         ),
@@ -365,151 +552,68 @@ class _AICoachScreenState extends State<AICoachScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message) {
-    final isUser = message.isUser;
-    final bubbleColor = isUser
-        ? CupertinoColors.white
-        : CupertinoColors.white;
-
-    return Padding(
-      padding: EdgeInsets.only(
-        left: isUser ? 64 : 16,
-        right: isUser ? 16 : 64,
-        bottom: 8,
-      ),
-      child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: [
-          if (!isUser) _buildAvatar(),
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                color: bubbleColor,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.getPrimaryWithOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Text(
-                message.text,
-                style: AppTextStyles.withColor(
-                  AppTextStyles.bodyMedium,
-                  isUser ? AppColors.primary : AppColors.textPrimary,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  String _formatTimestamp(DateTime timestamp) {
+    final localizations = AppLocalizations.of(context)!;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final messageDate = DateTime(timestamp.year, timestamp.month, timestamp.day);
+    
+    if (messageDate == today) {
+      // Today, just show time
+      return "${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}";
+    } else if (messageDate == today.subtract(const Duration(days: 1))) {
+      // Yesterday
+      return localizations.yesterday;
+    } else {
+      // Show date
+      return "${timestamp.month}/${timestamp.day}/${timestamp.year}";
+    }
   }
 
-  Widget _buildAvatar() {
-    return Container(
-      width: 32,
-      height: 32,
-      margin: const EdgeInsets.only(right: 8),
-      decoration: BoxDecoration(
-        color: CupertinoColors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.getPrimaryWithOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Center(
-        child: SFIcon(
-          SFIcons.sf_brain,
-          fontSize: 16,
-          color: AppColors.primary,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTypingIndicator() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: CupertinoColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.getPrimaryWithOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: List.generate(3, (index) {
-          return Container(
-            width: 6,
-            height: 6,
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            decoration: BoxDecoration(
-              color: AppColors.getPrimaryWithOpacity(0.5),
-              shape: BoxShape.circle,
-            ),
-            child: AnimatedBuilder(
-              animation: _typingDotsController,
-              builder: (context, child) {
-                final animation = sin((_typingDotsController.value * 2 * pi) + (index * pi / 2));
-                return Transform.translate(
-                  offset: Offset(0, -2 * animation),
-                  child: child,
-                );
-              },
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _buildTextInput() {
-    return CupertinoTextField.borderless(
-      controller: _messageController,
-      focusNode: _focusNode,
-      placeholder: 'Message',
-      placeholderStyle: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: CupertinoColors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.getPrimaryWithOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      onTap: () {
-        _focusNode.requestFocus();
-        _scrollToBottom();
-      },
-      onChanged: (value) {
-        setState(() {});
-      },
-      onSubmitted: (value) {
-        if (value.isNotEmpty) {
-          _handleSendMessage();
-        }
-      },
-      textInputAction: TextInputAction.send,
-      style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
-      cursorColor: AppColors.primary,
-    );
+  void _sendMessage() {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
+    
+    setState(() {
+      _messages.add(ChatMessage(
+        text: text,
+        isUser: true,
+        timestamp: DateTime.now(),
+      ));
+      _messageController.clear();
+    });
+    
+    _scrollToBottom();
+    
+    // Simulate AI response
+    Future.delayed(const Duration(milliseconds: 500), () {
+      final localizations = AppLocalizations.of(context)!;
+      String response;
+      
+      if (text.toLowerCase().contains("hello") || text.toLowerCase().contains("hi")) {
+        response = localizations.greeting;
+      } else if (text.toLowerCase().contains("how are you")) {
+        response = localizations.howAreYou;
+      } else if (text.toLowerCase().contains("meditation")) {
+        response = localizations.meditationResponse;
+      } else if (text.toLowerCase().contains("sleep") || text.toLowerCase().contains("insomnia")) {
+        response = localizations.sleepResponse;
+      } else if (text.toLowerCase().contains("stress") || text.toLowerCase().contains("anxiety")) {
+        response = localizations.stressResponse;
+      } else if (text.toLowerCase().contains("exercise") || text.toLowerCase().contains("workout")) {
+        response = localizations.exerciseResponse;
+      } else if (text.toLowerCase().contains("diet") || text.toLowerCase().contains("nutrition") || text.toLowerCase().contains("eat")) {
+        response = localizations.dietResponse;
+      } else if (text.toLowerCase().contains("game") || text.toLowerCase().contains("puzzle") || text.toLowerCase().contains("challenge")) {
+        response = localizations.gameResponse;
+      } else if (text.toLowerCase().contains("thank")) {
+        response = localizations.thankYouResponse;
+      } else {
+        response = localizations.defaultResponse;
+      }
+      
+      _addAIMessage(response);
+    });
   }
 }
 

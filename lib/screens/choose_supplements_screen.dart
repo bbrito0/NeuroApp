@@ -5,7 +5,9 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../main.dart';
 import 'medical_record_screen.dart';
+import 'supplement_quiz_screen.dart';
 import '../widgets/widgets.dart';
+import 'package:flutter_sficon/flutter_sficon.dart';
 
 class Supplement {
   final String name;
@@ -188,28 +190,49 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
                   ),
                   const SizedBox(height: 24),
                   // Continue button
-                  ActionButton(
-                    text: 'Continue',
-                    onPressed: _supplements.any((s) => s.isSelected)
-                        ? () {
-                            // Navigate to medical record screen
-                            Navigator.of(context).push(
-                              CupertinoPageRoute(
-                                builder: (context) => const MedicalRecordScreen(),
-                              ),
-                            );
-                          }
-                        : null,
-                    style: ActionButtonStyle.filled,
-                    backgroundColor: const Color.fromARGB(255, 18, 162, 183),
-                    textColor: AppColors.surface,
-                    isFullWidth: true,
-                    height: 56,
-                    icon: Icon(
-                      CupertinoIcons.arrow_right,
-                      color: AppColors.surface,
-                      size: 20,
-                    ),
+                  Column(
+                    children: [
+                      ActionButton(
+                        text: 'Continue',
+                        onPressed: _supplements.any((s) => s.isSelected)
+                            ? () {
+                                // Navigate to medical record screen
+                                Navigator.of(context).push(
+                                  CupertinoPageRoute(
+                                    builder: (context) => const MedicalRecordScreen(),
+                                  ),
+                                );
+                              }
+                            : null,
+                        style: ActionButtonStyle.filled,
+                        backgroundColor: const Color.fromARGB(255, 18, 162, 183),
+                        textColor: AppColors.surface,
+                        isFullWidth: true,
+                        height: 56,
+                        icon: Icon(
+                          CupertinoIcons.arrow_right,
+                          color: AppColors.surface,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // No supplement yet button
+                      ActionButton(
+                        text: "I don't have a supplement yet",
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (context) => const SupplementQuizScreen(),
+                            ),
+                          );
+                        },
+                        style: ActionButtonStyle.outlined,
+                        backgroundColor: Colors.transparent,
+                        textColor: AppColors.surface,
+                        isFullWidth: true,
+                        height: 56,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -221,6 +244,8 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
   }
 
   Widget _buildSupplementCard(Supplement supplement) {
+    final isSelected = supplement.isSelected;
+    
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: CupertinoButton(
@@ -231,73 +256,62 @@ class _ChooseSupplementsScreenState extends State<ChooseSupplementsScreen>
           });
         },
         child: Container(
-          height: 100,
-          child: Stack(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.getSurfaceWithOpacity(0.1),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.getPrimaryWithOpacity(0.2),
+              width: isSelected ? 2 : 0.5,
+            ),
+          ),
+          child: Row(
             children: [
-              Positioned(
-                left: 0,
-                top: 0,
-                bottom: 0,
-                child: Container(
-                  width: 4,
-                  decoration: BoxDecoration(
-                    color: supplement.accentColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Row(
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            supplement.styledName,
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.heading3,
-                              AppColors.primary,
-                            ),
+                    Row(
+                      children: [
+                        Container(
+                          height: 24,
+                          width: 4,
+                          decoration: BoxDecoration(
+                            color: supplement.accentColor,
+                            borderRadius: BorderRadius.circular(2),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            supplement.benefits.join(' · '),
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.secondaryLabel.withOpacity(0.8),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 32,
-                      height: 32,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: supplement.isSelected 
-                              ? AppColors.primary 
-                              : AppColors.secondaryLabel.withOpacity(0.3),
-                          width: 2,
                         ),
-                        color: supplement.isSelected
-                            ? AppColors.primary.withOpacity(0.1)
-                            : Colors.transparent,
+                        const SizedBox(width: 10),
+                        Text(
+                          supplement.styledName,
+                          style: AppTextStyles.withColor(
+                            AppTextStyles.heading3,
+                            isSelected ? AppColors.primary : AppColors.textPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 14),
+                      child: Text(
+                        supplement.benefits.join(' · '),
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.secondaryLabel.withOpacity(0.8),
+                        ),
                       ),
-                      child: supplement.isSelected
-                          ? Icon(
-                              CupertinoIcons.checkmark,
-                              size: 20,
-                              color: AppColors.primary,
-                            )
-                          : null,
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(width: 16),
+              SFIcon(
+                SFIcons.sf_circle_circle_fill,
+                fontSize: 20,
+                color: isSelected 
+                    ? AppColors.primary 
+                    : AppColors.secondaryLabel,
               ),
             ],
           ),

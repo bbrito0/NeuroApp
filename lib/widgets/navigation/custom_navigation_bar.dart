@@ -56,7 +56,7 @@ class CustomNavigationBar extends StatelessWidget implements ObstructingPreferre
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 8),
+                    padding: const EdgeInsets.only(top: 0),
                     child: CupertinoNavigationBar(
                       backgroundColor: Colors.transparent,
                       border: null,

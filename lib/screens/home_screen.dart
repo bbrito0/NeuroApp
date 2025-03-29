@@ -13,7 +13,9 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../screens/profile_screen.dart';
 import '../services/tutorial_service.dart';
+import '../services/theme_service.dart';
 import '../widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   late ScrollController _scrollController;
   int _currentPage = 0;
   final TavusService _tavusService = TavusService();
+  final ThemeService _themeService = ThemeService();
 
   // Add GlobalKeys for tutorial targets
   final GlobalKey welcomeCardKey = GlobalKey();
@@ -53,6 +56,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     for (int i = 1; i <= 5; i++) {
       _completedDays.add(now.day - i);
     }
+    
+    // Initialize theme service
+    _themeService.initialize();
+    
+    // Listen for theme changes
+    _themeService.addListener(() {
+      if (mounted) {
+        setState(() {
+          // Rebuild the entire screen when theme changes
+        });
+      }
+    });
     
     // Show appropriate content after build is complete
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -80,6 +95,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
@@ -87,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           // Premium Gradient Background with Frosted Glass Effect
           GradientBackground(
             child: Container(),
-            customGradient: AppColors.primaryGradient,
+            style: BackgroundStyle.premium,
             hasSafeArea: false,
           ),
           // Main Content
@@ -128,8 +145,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       child: FrostedCard(
                         key: welcomeCardKey,
                         borderRadius: 20,
-                        padding: const EdgeInsets.all(16),
-                        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                        padding: const EdgeInsets.all(20),
+                        hierarchy: CardHierarchy.primary,
+                        shadows: AppColors.cardShadow,
+                        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.primaryCardOpacity),
                         border: Border.all(
                           color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
                           width: 0.5,
@@ -155,15 +174,39 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        'AI Coach',
+                                        AppLocalizations.of(context)!.aiCoach,
                                         style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
                                       ),
                                     ],
                                   ),
                                 ),
                                 const Spacer(),
+                                // Theme toggle button
+                                CupertinoButton(
+                                  padding: EdgeInsets.zero,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.getSurfaceWithOpacity(0.8),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: SFIcon(
+                                      AppColors.currentTheme == ThemeMode.dark 
+                                          ? SFIcons.sf_sun_max_fill
+                                          : SFIcons.sf_moon_fill,
+                                      fontSize: 18,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _themeService.toggleTheme();
+                                    });
+                                  },
+                                ),
+                                const SizedBox(width: 12),
                                 ActionButton(
-                                  text: 'Check-in',
+                                  text: AppLocalizations.of(context)!.checkInButton,
                                   style: ActionButtonStyle.filled,
                                   backgroundColor: const Color.fromARGB(255, 18, 162, 183),
                                   textColor: AppColors.surface,
@@ -196,11 +239,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                       showCupertinoDialog(
                                         context: context,
                                         builder: (context) => CupertinoAlertDialog(
-                                          title: const Text('Error'),
-                                          content: Text('Failed to start daily check-in: $e'),
+                                          title: Text(AppLocalizations.of(context)!.error),
+                                          content: Text(AppLocalizations.of(context)!.failedToStartCheckIn(e.toString())),
                                           actions: [
                                             CupertinoDialogAction(
-                                              child: const Text('OK'),
+                                              child: Text(AppLocalizations.of(context)!.ok),
                                               onPressed: () => Navigator.pop(context),
                                             ),
                                           ],
@@ -213,13 +256,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              'You\'re making great progress!',
-                              style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                              AppLocalizations.of(context)!.welcomeCardTitle,
+                              style: AppTextStyles.adaptive(AppTextStyles.heading2),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Yet I can see you still have not done your daily check-in. Ready to start?',
-                              style: AppTextStyles.secondaryText,
+                              AppLocalizations.of(context)!.welcomeCardSubtitle,
+                              style: AppTextStyles.adaptive(AppTextStyles.secondaryText, isPrimary: false),
                             ),
                             const SizedBox(height: 16),
                           ],
@@ -238,16 +281,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Daily Challenges',
-                                style: AppTextStyles.heading1,
+                                AppLocalizations.of(context)!.dailyChallenges,
+                                style: AppTextStyles.adaptive(AppTextStyles.heading1),
                               ),
                               CupertinoButton(
                                 padding: EdgeInsets.zero,
                                 child: Row(
                                   children: [
                                     Text(
-                                      'View All',
-                                      style: AppTextStyles.actionButton,
+                                      AppLocalizations.of(context)!.viewAll,
+                                      style: AppTextStyles.withColor(AppTextStyles.actionButton, AppColors.primary),
                                     ),
                                     const SizedBox(width: 4),
                                     SFIcon(
@@ -270,8 +313,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             ],
                           ),
                           const SizedBox(height: 16),
-                          SizedBox(
+                          Container(
                             height: 250,
+                            decoration: const BoxDecoration(
+                              color: Colors.transparent,
+                            ),
+                            margin: const EdgeInsets.only(bottom: 8),
                             child: PageView(
                               controller: _pageController,
                               onPageChanged: (int page) {
@@ -282,74 +329,84 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                               padEnds: false,
                               pageSnapping: true,
                               physics: const BouncingScrollPhysics(),
+                              clipBehavior: Clip.none,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  child: _buildChallengeCard(
-                                    context,
-                                    'Memory Master',
-                                    'Enhance your memory skills',
-                                    0.65,
-                                    [
-                                      'Complete Memory Match Game',
-                                      'Read Memory Enhancement Article',
-                                      'Practice Visualization Exercise',
-                                    ],
-                                    SFIcons.sf_brain,
-                                    AppColors.primary,
-                                    () {
-                                      Navigator.of(context, rootNavigator: true).push(
-                                        CupertinoPageRoute(
-                                          builder: (context) => const MemoryMatchGame(),
-                                        ),
-                                      );
-                                    },
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Transform.translate(
+                                    offset: const Offset(0, -2),
+                                    child: _buildChallengeCard(
+                                      context,
+                                      localizations.memoryMaster,
+                                      localizations.enhanceMemorySkills,
+                                      0.65,
+                                      [
+                                        localizations.completeMemoryMatch,
+                                        localizations.readMemoryArticle,
+                                        localizations.practiceVisualization,
+                                      ],
+                                      SFIcons.sf_brain,
+                                      AppColors.primary,
+                                      () {
+                                        Navigator.of(context, rootNavigator: true).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => const MemoryMatchGame(),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  child: _buildChallengeCard(
-                                    context,
-                                    'Focus Champion',
-                                    'Improve your concentration',
-                                    0.45,
-                                    [
-                                      'Complete 10min Meditation',
-                                      'Practice Mindful Reading',
-                                      'Do a Focus Exercise',
-                                    ],
-                                    SFIcons.sf_rays,
-                                    AppColors.primary,
-                                    () {
-                                      Navigator.of(context, rootNavigator: true).push(
-                                        CupertinoPageRoute(
-                                          builder: (context) => const MeditationScreen(),
-                                        ),
-                                      );
-                                    },
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  child: Transform.translate(
+                                    offset: const Offset(0, -2),
+                                    child: _buildChallengeCard(
+                                      context,
+                                      localizations.focusChampion,
+                                      localizations.improveConcentration,
+                                      0.45,
+                                      [
+                                        localizations.completeMeditation,
+                                        localizations.practiceMindfulReading,
+                                        localizations.doFocusExercise,
+                                      ],
+                                      SFIcons.sf_rays,
+                                      AppColors.primary,
+                                      () {
+                                        Navigator.of(context, rootNavigator: true).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => const MeditationScreen(),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 10),
-                                  child: _buildChallengeCard(
-                                    context,
-                                    'Problem Solver',
-                                    'Boost analytical thinking',
-                                    0.30,
-                                    [
-                                      'Complete Pattern Recognition',
-                                      'Solve Daily Puzzle',
-                                      'Read Logic Article',
-                                    ],
-                                    SFIcons.sf_puzzlepiece,
-                                    AppColors.primary,
-                                    () {
-                                      Navigator.of(context, rootNavigator: true).push(
-                                        CupertinoPageRoute(
-                                          builder: (context) => const PatternRecallGame(),
-                                        ),
-                                      );
-                                    },
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Transform.translate(
+                                    offset: const Offset(0, -2),
+                                    child: _buildChallengeCard(
+                                      context,
+                                      localizations.problemSolver,
+                                      localizations.boostAnalyticalThinking,
+                                      0.30,
+                                      [
+                                        localizations.completePatternRecognition,
+                                        localizations.solveDailyPuzzle,
+                                        localizations.readLogicArticle,
+                                      ],
+                                      SFIcons.sf_puzzlepiece,
+                                      AppColors.primary,
+                                      () {
+                                        Navigator.of(context, rootNavigator: true).push(
+                                          CupertinoPageRoute(
+                                            builder: (context) => const PatternRecallGame(),
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
                               ],
@@ -386,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           Expanded(
                             child: _buildQuickAccessCard(
                               context,
-                              'Cognitive\nAssessment',
+                              localizations.cognitiveAssessment,
                               SFIcon(
                                 SFIcons.sf_puzzlepiece,
                                 fontSize: 20,
@@ -397,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 Navigator.of(context, rootNavigator: true).push(
                                   CupertinoPageRoute(
                                     builder: (context) => const ChallengesScreen(),
-                                    title: 'Cognitive Assessment',
+                                    title: 'Challenges',
                                     fullscreenDialog: true,
                                     maintainState: true,
                                     allowSnapshotting: true,
@@ -410,7 +467,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           Expanded(
                             child: _buildQuickAccessCard(
                               context,
-                              'Learning\nResources',
+                              localizations.learningResources,
                               SFIcon(
                                 SFIcons.sf_book,
                                 fontSize: 20,
@@ -437,16 +494,16 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Latest Updates',
-                                style: AppTextStyles.heading2,
+                                AppLocalizations.of(context)!.latestUpdates,
+                                style: AppTextStyles.adaptive(AppTextStyles.heading2),
                               ),
                               CupertinoButton(
                                 padding: EdgeInsets.zero,
                                 child: Row(
                                   children: [
                                     Text(
-                                      'View All',
-                                      style: AppTextStyles.actionButton,
+                                      AppLocalizations.of(context)!.viewAll,
+                                      style: AppTextStyles.withColor(AppTextStyles.actionButton, AppColors.primary),
                                     ),
                                     const SizedBox(width: 4),
                                     SFIcon(
@@ -463,19 +520,19 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           const SizedBox(height: 16),
                           _buildNewsItem(
                             context,
-                            'New Challenge Available',
-                            'Pattern Recognition Master',
-                            'Try our latest cognitive exercise designed to enhance your pattern recognition abilities.',
-                            '2h ago',
+                            localizations.newChallengeAvailable,
+                            localizations.patternRecognitionMaster,
+                            localizations.tryLatestExercise,
+                            localizations.hoursAgo('2'),
                             AppColors.primary,
                           ),
                           const SizedBox(height: 12),
                           _buildNewsItem(
                             context,
-                            'Weekly Report Ready',
-                            'Performance Insights',
-                            'Your personalized cognitive performance report for this week is now available.',
-                            '1d ago',
+                            localizations.weeklyReportReady,
+                            localizations.performanceInsights,
+                            localizations.weeklyReportDescription,
+                            localizations.daysAgo('1'),
                             AppColors.primary,
                           ),
                         ],
@@ -501,6 +558,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     Color color,
     VoidCallback onTap,
   ) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return GestureDetector(
       onTap: onTap,
       child: FrostedCard(
@@ -524,7 +583,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             Row(
               children: [
                 Text(
-                  'Explore',
+                  localizations.explore,
                   style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.surface.withOpacity(0.8)),
                 ),
                 const SizedBox(width: 4),
@@ -609,6 +668,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     Color color,
     VoidCallback onTap,
   ) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return GestureDetector(
       onTap: () {
         showCupertinoDialog(
@@ -626,7 +687,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Start $title?',
+                    localizations.startChallengePrompt(title),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.withColor(
                       AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w500),
@@ -639,7 +700,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 children: [
                   const SizedBox(height: 12),
                   Text(
-                    'Are you ready to begin this challenge? Make sure you have enough time to complete it without interruptions.',
+                    localizations.challengeReadyText,
                     textAlign: TextAlign.center,
                     style: AppTextStyles.withColor(
                       AppTextStyles.bodyMedium,
@@ -663,7 +724,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          'Estimated time: 10-15 min',
+                          localizations.estimatedTime('10-15 min'),
                           style: AppTextStyles.withColor(
                             AppTextStyles.bodySmall,
                             AppColors.primary,
@@ -677,7 +738,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               actions: [
                 CupertinoDialogAction(
                   child: Text(
-                    'Not Now',
+                    localizations.notNow,
                     style: AppTextStyles.withColor(
                       AppTextStyles.bodyMedium,
                       AppColors.secondaryLabel,
@@ -688,7 +749,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 CupertinoDialogAction(
                   isDefaultAction: true,
                   child: Text(
-                    'Start Challenge',
+                    localizations.startChallenge,
                     style: AppTextStyles.withColor(
                       AppTextStyles.bodyMedium,
                       AppColors.primary,
@@ -706,12 +767,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       },
       child: FrostedCard(
         borderRadius: 20,
-        backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
-        padding: const EdgeInsets.all(16),
+        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.primaryCardOpacity),
+        padding: const EdgeInsets.all(20),
         border: Border.all(
-          color: AppColors.getPrimaryWithOpacity(0.1),
+          color: AppColors.getPrimaryWithOpacity(0.15),
           width: 0.5,
         ),
+        hierarchy: CardHierarchy.primary,
+        shadows: AppColors.cardShadow,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -729,12 +792,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     children: [
                       Text(
                         title,
-                        style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                        style: AppTextStyles.adaptive(AppTextStyles.heading3),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         subtitle,
-                        style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.secondaryLabel),
+                        style: AppTextStyles.adaptive(AppTextStyles.bodyMedium, isPrimary: false),
                       ),
                     ],
                   ),
@@ -743,10 +806,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
             const SizedBox(height: 16),
             Container(
-              height: 6,
+              height: 8, // Slightly taller
               decoration: BoxDecoration(
                 color: AppColors.getPrimaryWithOpacity(0.1),
-                borderRadius: BorderRadius.circular(3),
+                borderRadius: BorderRadius.circular(4), // Slightly more rounded
               ),
               child: FractionallySizedBox(
                 alignment: Alignment.centerLeft,
@@ -759,14 +822,14 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         AppColors.getPrimaryWithOpacity(0.8),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(3),
+                    borderRadius: BorderRadius.circular(4), // Match outer radius
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
-              '${(progress * 100).toInt()}% Complete',
+              localizations.percentComplete((progress * 100).toInt().toString()),
               style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
             ),
             const SizedBox(height: 16),
@@ -792,7 +855,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         Expanded(
                           child: Text(
                             task,
-                            style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.textPrimary),
+                            style: AppTextStyles.adaptive(AppTextStyles.bodyMedium),
                           ),
                         ),
                       ],
@@ -838,6 +901,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   void _showMedicationReminder() {
     if (!mounted) return;
+    final localizations = AppLocalizations.of(context)!;
+    
     showCupertinoDialog(
       context: context,
       barrierDismissible: true,
@@ -853,7 +918,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ),
               const SizedBox(height: 8),
               Text(
-                'Daily Reminder',
+                localizations.dailyReminder,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.withColor(
                   AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w500),
@@ -866,7 +931,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             children: [
               const SizedBox(height: 12),
               Text(
-                'Have you taken your ChronoWell today?',
+                localizations.takenChronowell,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
@@ -892,7 +957,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     const SizedBox(width: 6),
                     Flexible(
                       child: Text(
-                        'Recommended time: 8:00 AM',
+                        localizations.recommendedTime('8:00 AM'),
                         style: AppTextStyles.withColor(
                           AppTextStyles.bodySmall,
                           AppColors.primary,
@@ -908,7 +973,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           actions: [
             CupertinoDialogAction(
               child: Text(
-                'Skip Today',
+                localizations.skipToday,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
                   AppColors.secondaryLabel,
@@ -922,7 +987,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             CupertinoDialogAction(
               isDefaultAction: true,
               child: Text(
-                'Yes, Taken',
+                localizations.yesTaken,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
                   AppColors.primary,
@@ -943,6 +1008,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   void _showSkipWarning() {
     if (!mounted) return;
+    final localizations = AppLocalizations.of(context)!;
+    
     showCupertinoDialog(
       context: context,
       barrierDismissible: true,
@@ -958,7 +1025,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               ),
               const SizedBox(height: 8),
               Text(
-                'Important Reminder',
+                localizations.importantReminder,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.withColor(
                   AppTextStyles.withWeight(AppTextStyles.heading2, FontWeight.w600),
@@ -971,7 +1038,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             children: [
               const SizedBox(height: 12),
               Text(
-                'Taking ChronoWell daily is crucial for optimal results. Regular use helps maintain cognitive improvement and builds lasting benefits.',
+                localizations.takeChronowellDaily,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
@@ -984,7 +1051,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             CupertinoDialogAction(
               isDefaultAction: true,
               child: Text(
-                'I\'ll Take It Now',
+                localizations.illTakeItNow,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
                   AppColors.primary,
@@ -998,7 +1065,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
             CupertinoDialogAction(
               child: Text(
-                'Skip Anyway',
+                localizations.skipAnyway,
                 style: AppTextStyles.withColor(
                   AppTextStyles.bodyMedium,
                   AppColors.secondaryLabel,
@@ -1017,6 +1084,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
   void _showStreakCalendar() {
     if (!mounted) return;
+    final localizations = AppLocalizations.of(context)!;
     
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
@@ -1065,7 +1133,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '$_currentStreak Day Streak!',
+                            localizations.dayStreakText(_currentStreak.toString()),
                             style: AppTextStyles.withColor(
                               AppTextStyles.withWeight(AppTextStyles.heading1, FontWeight.w500),
                               AppColors.textPrimary,
@@ -1075,7 +1143,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Keep Going! Almost hitting a new 7 day streak!',
+                        localizations.keepGoingStreak,
                         textAlign: TextAlign.center,
                         style: AppTextStyles.withColor(
                           AppTextStyles.bodyMedium,
@@ -1085,7 +1153,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       const SizedBox(height: 20),
                       // Month name
                       Text(
-                        '${_getMonthName(currentMonth)} $currentYear',
+                        '${_getLocalizedMonthName(currentMonth, localizations)} $currentYear',
                         style: AppTextStyles.withColor(
                           AppTextStyles.withWeight(AppTextStyles.heading3, FontWeight.w500),
                           AppColors.textPrimary,
@@ -1095,16 +1163,24 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       // Weekday headers
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-                            .map((day) => SizedBox(
-                                  width: 32,
-                                  child: Text(
-                                    day,
-                                    textAlign: TextAlign.center,
-                                    style: AppTextStyles.secondaryText,
-                                  ),
-                                ))
-                            .toList(),
+                        children: [
+                          localizations.monday,
+                          localizations.tuesday,
+                          localizations.wednesday,
+                          localizations.thursday,
+                          localizations.friday,
+                          localizations.saturday,
+                          localizations.sunday
+                        ]
+                          .map((day) => SizedBox(
+                                width: 32,
+                                child: Text(
+                                  day,
+                                  textAlign: TextAlign.center,
+                                  style: AppTextStyles.secondaryText,
+                                ),
+                              ))
+                          .toList(),
                       ),
                       const SizedBox(height: 8),
                       // Calendar grid
@@ -1188,7 +1264,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       CupertinoButton(
                         padding: EdgeInsets.zero,
                         child: Text(
-                          'Close',
+                          localizations.close,
                           style: AppTextStyles.actionButton,
                         ),
                         onPressed: () {
@@ -1208,13 +1284,22 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     overlay.insert(overlayEntry);
   }
 
-  // Helper method to get month name
-  String _getMonthName(int month) {
-    const months = [
-      'January', 'February', 'March', 'April',
-      'May', 'June', 'July', 'August',
-      'September', 'October', 'November', 'December'
-    ];
-    return months[month - 1];
+  // Helper method to get localized month name
+  String _getLocalizedMonthName(int month, AppLocalizations localizations) {
+    switch (month) {
+      case 1: return localizations.january;
+      case 2: return localizations.february;
+      case 3: return localizations.march;
+      case 4: return localizations.april;
+      case 5: return localizations.may;
+      case 6: return localizations.june;
+      case 7: return localizations.july;
+      case 8: return localizations.august;
+      case 9: return localizations.september;
+      case 10: return localizations.october;
+      case 11: return localizations.november;
+      case 12: return localizations.december;
+      default: return '';
+    }
   }
 } 

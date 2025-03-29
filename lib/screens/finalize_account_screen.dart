@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 import 'home_screen.dart';
 import 'package:flutter_sficon/flutter_sficon.dart';
 import '../main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferredSizeWidget {
   final int currentStep;
@@ -68,7 +69,7 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'Create Account',
+                      AppLocalizations.of(context)!.createAccount,
                       style: AppTextStyles.withColor(
                         AppTextStyles.heading1,
                         AppColors.surface,
@@ -79,7 +80,7 @@ class _CustomNavigationBar extends StatelessWidget implements ObstructingPreferr
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'Complete your profile to get started with personalized health recommendations.',
+                      AppLocalizations.of(context)!.completeProfile,
                       style: AppTextStyles.withColor(
                         AppTextStyles.bodyMedium,
                         AppColors.surface,
@@ -380,37 +381,37 @@ class _FinalizeAccountScreenState extends State<FinalizeAccountScreen>
                                 const SizedBox(height: 24),
                                 if (_currentStep == 1) ...[
                                   Text(
-                                    'Personal Information',
+                                    AppLocalizations.of(context)!.personalInformation,
                                     style: AppTextStyles.heading2,
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Please enter your name and email address',
+                                    AppLocalizations.of(context)!.enterNameEmail,
                                     style: AppTextStyles.secondaryText,
                                   ),
                                   const SizedBox(height: 24),
                                   _buildTextField(
-                                    placeholder: 'Full Name',
+                                    placeholder: AppLocalizations.of(context)!.fullName,
                                     controller: _nameController,
                                   ),
                                   const SizedBox(height: 16),
                                   _buildTextField(
-                                    placeholder: 'Email',
+                                    placeholder: AppLocalizations.of(context)!.email,
                                     controller: _emailController,
                                   ),
                                 ] else ...[
                                   Text(
-                                    'Set Password',
+                                    AppLocalizations.of(context)!.setPassword,
                                     style: AppTextStyles.heading2,
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    'Create a secure password for your account',
+                                    AppLocalizations.of(context)!.createPassword,
                                     style: AppTextStyles.secondaryText,
                                   ),
                                   const SizedBox(height: 24),
                                   _buildTextField(
-                                    placeholder: 'Password',
+                                    placeholder: AppLocalizations.of(context)!.password,
                                     controller: _passwordController,
                                     isPassword: true,
                                   ),

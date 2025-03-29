@@ -1,0 +1,1217 @@
+{
+  "appTitle": "ChronoWell",
+  "@appTitle": {
+    "description": "The name of the application"
+  },
+
+  "welcomeTitle": "Welcome to ChronoWell",
+  "@welcomeTitle": {
+    "description": "Title shown on the welcome page"
+  },
+
+  "welcomeMessage": "Your personal cognitive wellness companion on the journey to better mental fitness.",
+  "@welcomeMessage": {
+    "description": "Welcome message shown on the welcome card"
+  },
+
+  "getStarted": "Get Started",
+  "@getStarted": {
+    "description": "Text for the get started button"
+  },
+
+  "welcomeCardTitle": "You're making great progress!",
+  "@welcomeCardTitle": {
+    "description": "Title shown on the welcome card in home screen"
+  },
+
+  "welcomeCardSubtitle": "Yet I can see you still have not done your daily check-in. Ready to start?",
+  "@welcomeCardSubtitle": {
+    "description": "Subtitle shown on the welcome card in home screen"
+  },
+
+  "checkInButton": "Check-in",
+  "@checkInButton": {
+    "description": "Text for the check-in button"
+  },
+
+  "dailyChallenges": "Daily Challenges",
+  "@dailyChallenges": {
+    "description": "Title for daily challenges section"
+  },
+
+  "viewAll": "View All",
+  "@viewAll": {
+    "description": "Text for view all button"
+  },
+
+  "latestUpdates": "Latest Updates",
+  "@latestUpdates": {
+    "description": "Title for latest updates section"
+  },
+
+  "next": "Next",
+  "@next": {
+    "description": "Text for next button"
+  },
+
+  "back": "Back",
+  "@back": {
+    "description": "Text for back button"
+  },
+
+  "finish": "Finish",
+  "@finish": {
+    "description": "Text for finish button"
+  },
+
+  "continueAction": "Continue",
+  "@continueAction": {
+    "description": "Text for continue button"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Title for settings page"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Label for language selection"
+  },
+
+  "english": "English",
+  "@english": {
+    "description": "Name of English language"
+  },
+
+  "spanish": "Spanish",
+  "@spanish": {
+    "description": "Name of Spanish language"
+  },
+
+  "portuguese": "Portuguese",
+  "@portuguese": {
+    "description": "Name of Portuguese language"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Text for cancel button"
+  },
+
+  "aiCoach": "AI Coach",
+  "@aiCoach": {
+    "description": "Label for AI Coach section"
+  },
+
+  "aiInsight": "AI Insight",
+  "@aiInsight": {
+    "description": "Label for AI Insight section"
+  },
+
+  "aiHealthCoach": "AI Health Coach",
+  "@aiHealthCoach": {
+    "description": "Title for AI Health Coach screen"
+  },
+
+  "welcomeBack": "Welcome Back",
+  "@welcomeBack": {
+    "description": "Welcome back message"
+  },
+
+  "todaysChallenge": "Today's Challenge",
+  "@todaysChallenge": {
+    "description": "Label for today's challenge"
+  },
+
+  "startChallenge": "Start Challenge",
+  "@startChallenge": {
+    "description": "Button to start a challenge"
+  },
+
+  "estimatedTime": "Estimated time: {duration}",
+  "@estimatedTime": {
+    "description": "Estimated time for an activity",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "10-15 min"
+      }
+    }
+  },
+
+  "recommendedTime": "Recommended time: {time}",
+  "@recommendedTime": {
+    "description": "Recommended time for an activity",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "8:00 AM"
+      }
+    }
+  },
+
+  "createAccount": "Create Account",
+  "@createAccount": {
+    "description": "Title for create account screen"
+  },
+
+  "completeProfile": "Complete your profile to get started with personalized health recommendations.",
+  "@completeProfile": {
+    "description": "Message for complete profile"
+  },
+
+  "personalInformation": "Personal Information",
+  "@personalInformation": {
+    "description": "Label for personal information section"
+  },
+
+  "enterNameEmail": "Please enter your name and email address",
+  "@enterNameEmail": {
+    "description": "Instruction to enter name and email"
+  },
+
+  "fullName": "Full Name",
+  "@fullName": {
+    "description": "Label for full name field"
+  },
+
+  "email": "Email",
+  "@email": {
+    "description": "Label for email field"
+  },
+
+  "setPassword": "Set Password",
+  "@setPassword": {
+    "description": "Label for set password section"
+  },
+
+  "createPassword": "Create a secure password for your account",
+  "@createPassword": {
+    "description": "Instruction to create password"
+  },
+
+  "password": "Password",
+  "@password": {
+    "description": "Label for password field"
+  },
+
+  "onboardingTitle": "Welcome to ChronoWell",
+  "@onboardingTitle": {
+    "description": "Title shown in the onboarding features slideshow"
+  },
+
+  "skip": "Skip",
+  "@skip": {
+    "description": "Text for skip button"
+  },
+
+  "continueScanCode": "Continue to Scan Code",
+  "@continueScanCode": {
+    "description": "Text for continue to scan code button"
+  },
+
+  "featurePersonalizedTitle": "Personalized Features",
+  "@featurePersonalizedTitle": {
+    "description": "Title for personalized features card"
+  },
+
+  "featurePersonalizedDesc": "All features are tailored to your supplementation plan and needs, helping you optimize your health journey",
+  "@featurePersonalizedDesc": {
+    "description": "Description for personalized features card"
+  },
+
+  "featureAICoachTitle": "AI Coach",
+  "@featureAICoachTitle": {
+    "description": "Title for AI coach feature card"
+  },
+
+  "featureAICoachDesc": "Chat with your AI coach daily to share how you feel and get personalized recommendations based on your supplementation plan",
+  "@featureAICoachDesc": {
+    "description": "Description for AI coach feature card"
+  },
+
+  "featureMyHubTitle": "My Hub",
+  "@featureMyHubTitle": {
+    "description": "Title for My Hub feature card"
+  },
+
+  "featureMyHubDesc": "Track your progress, set goals, and visualize your health journey with AI insights based on your supplement usage",
+  "@featureMyHubDesc": {
+    "description": "Description for My Hub feature card"
+  },
+
+  "featureCommunityTitle": "Join the Community",
+  "@featureCommunityTitle": {
+    "description": "Title for community feature card"
+  },
+
+  "featureCommunityDesc": "Connect with others on similar health journeys to share experiences and find support",
+  "@featureCommunityDesc": {
+    "description": "Description for community feature card"
+  },
+
+  "featureMedicalTitle": "Medical Screen",
+  "@featureMedicalTitle": {
+    "description": "Title for medical screen feature card"
+  },
+
+  "featureMedicalDesc": "Keep your health profile updated, track your supplements, and receive care tailored to your personal needs",
+  "@featureMedicalDesc": {
+    "description": "Description for medical screen feature card"
+  },
+
+  "meditation": "Meditation",
+  "@meditation": {
+    "description": "Title for the meditation screen"
+  },
+
+  "featuredMeditations": "Featured Meditations This Week",
+  "@featuredMeditations": {
+    "description": "Header for featured meditations section"
+  },
+
+  "mindfulBreathing": "Mindful Breathing",
+  "@mindfulBreathing": {
+    "description": "Title for mindful breathing meditation"
+  },
+
+  "mindfulBreathingDesc": "A gentle introduction to mindful breathing techniques for relaxation and focus.",
+  "@mindfulBreathingDesc": {
+    "description": "Description for mindful breathing meditation"
+  },
+
+  "bodyScan": "Body Scan",
+  "@bodyScan": {
+    "description": "Title for body scan meditation"
+  },
+
+  "bodyScanDesc": "Progressive relaxation through a guided body awareness meditation.",
+  "@bodyScanDesc": {
+    "description": "Description for body scan meditation"
+  },
+
+  "mentalClarity": "Mental Clarity",
+  "@mentalClarity": {
+    "description": "Title for mental clarity meditation"
+  },
+
+  "mentalClarityDesc": "Clear your mind and enhance focus with this guided meditation session.",
+  "@mentalClarityDesc": {
+    "description": "Description for mental clarity meditation"
+  },
+
+  "stressRelief": "Stress Relief",
+  "@stressRelief": {
+    "description": "Title for stress relief meditation"
+  },
+
+  "stressReliefDesc": "Release tension and find inner peace with calming visualization techniques.",
+  "@stressReliefDesc": {
+    "description": "Description for stress relief meditation"
+  },
+
+  "deepFocus": "Deep Focus",
+  "@deepFocus": {
+    "description": "Title for deep focus meditation"
+  },
+
+  "deepFocusDesc": "Enhance concentration and mental clarity for improved productivity.",
+  "@deepFocusDesc": {
+    "description": "Description for deep focus meditation"
+  },
+
+  "profile": "Profile",
+  "@profile": {
+    "description": "Title for the profile screen"
+  },
+
+  "trainingLabel": "Training since Jan 2024",
+  "@trainingLabel": {
+    "description": "Label showing when training started"
+  },
+
+  "daysLabel": "Days",
+  "@daysLabel": {
+    "description": "Label for days count in profile stats"
+  },
+
+  "challengesLabel": "Challenges",
+  "@challengesLabel": {
+    "description": "Label for challenges count in profile stats"
+  },
+
+  "meditationsLabel": "Meditations",
+  "@meditationsLabel": {
+    "description": "Label for meditations count in profile stats"
+  },
+
+  "accountSettings": "Account Settings",
+  "@accountSettings": {
+    "description": "Label for account settings option"
+  },
+
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Label for notifications option"
+  },
+
+  "privacy": "Privacy",
+  "@privacy": {
+    "description": "Label for privacy option"
+  },
+
+  "helpSupport": "Help & Support",
+  "@helpSupport": {
+    "description": "Label for help and support option"
+  },
+
+  "resources": "Resources",
+  "@resources": {
+    "description": "Title for the resources screen"
+  },
+
+  "searchResources": "Search resources",
+  "@searchResources": {
+    "description": "Placeholder for resources search field"
+  },
+
+  "categories": "Categories",
+  "@categories": {
+    "description": "Title for categories section"
+  },
+
+  "memory": "Memory",
+  "@memory": {
+    "description": "Category title for memory"
+  },
+
+  "focus": "Focus",
+  "@focus": {
+    "description": "Category title for focus"
+  },
+
+  "speed": "Speed",
+  "@speed": {
+    "description": "Category title for speed"
+  },
+
+  "problemSolving": "Problem Solving",
+  "@problemSolving": {
+    "description": "Category title for problem solving"
+  },
+
+  "featuredArticles": "Featured Articles",
+  "@featuredArticles": {
+    "description": "Title for featured articles section"
+  },
+
+  "article": "Article",
+  "@article": {
+    "description": "Label for article type"
+  },
+
+  "minRead": "{time} min read",
+  "@minRead": {
+    "description": "Read time for articles",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "5"
+      }
+    }
+  },
+
+  "aiHealthAssistant": "AI. Health Assistant APP",
+  "@aiHealthAssistant": {
+    "description": "Subtitle for the app on login screen"
+  },
+
+  "login": "Login",
+  "@login": {
+    "description": "Label for login button"
+  },
+
+  "newUser": "New User",
+  "@newUser": {
+    "description": "Label for new user button"
+  },
+
+  "forgotPassword": "Forgot password?",
+  "@forgotPassword": {
+    "description": "Label for forgot password option"
+  },
+
+  "completeSetup": "Complete Setup",
+  "@completeSetup": {
+    "description": "Title for complete setup screen"
+  },
+
+  "chooseHowToProceed": "Choose how you want to proceed with ChronoWell",
+  "@chooseHowToProceed": {
+    "description": "Subtitle for post medical decision screen"
+  },
+
+  "scanProductCode": "Scan Product Code",
+  "@scanProductCode": {
+    "description": "Title for scan product code option"
+  },
+
+  "unlockPremiumFeatures": "Unlock all premium features by scanning your supplement code",
+  "@unlockPremiumFeatures": {
+    "description": "Description for scan product code option"
+  },
+
+  "continueWithLimitedFeatures": "Continue with Limited Features",
+  "@continueWithLimitedFeatures": {
+    "description": "Title for limited features option"
+  },
+
+  "accessBasicFeatures": "Access basic features without a product code",
+  "@accessBasicFeatures": {
+    "description": "Description for limited features option"
+  },
+
+  "premiumFeaturesNote": "Premium features include personalized AI coaching, advanced tracking, and tailored supplement recommendations.",
+  "@premiumFeaturesNote": {
+    "description": "Note about premium features"
+  },
+
+  "analyzed": "Analyzing your health profile...",
+  "@analyzed": {
+    "description": "Loading message when analyzing health profile"
+  },
+
+  "personalizing": "Personalizing your supplement plan...",
+  "@personalizing": {
+    "description": "Loading message when personalizing plan"
+  },
+
+  "optimizing": "Optimizing your cognitive training...",
+  "@optimizing": {
+    "description": "Loading message when optimizing training"
+  },
+
+  "finalizing": "Finalizing your experience...",
+  "@finalizing": {
+    "description": "Loading message when finalizing setup"
+  },
+
+  "setupComplete": "Setup Complete!",
+  "@setupComplete": {
+    "description": "Message when setup is complete"
+  },
+
+  "ready": "Ready!",
+  "@ready": {
+    "description": "Status message when setup is complete"
+  },
+
+  "didYouKnow": "Did you know?",
+  "@didYouKnow": {
+    "description": "Title for fact in health tip"
+  },
+
+  "healthFact": "Health Fact",
+  "@healthFact": {
+    "description": "Title for health fact"
+  },
+
+  "supplementBenefit": "Supplement Benefit",
+  "@supplementBenefit": {
+    "description": "Title for supplement benefit"
+  },
+
+  "wellnessTip": "Wellness Tip",
+  "@wellnessTip": {
+    "description": "Title for wellness tip"
+  },
+
+  "brainPower": "Brain Power",
+  "@brainPower": {
+    "description": "Title for brain power fact"
+  },
+
+  "supplementQuiz": "Supplement Quiz",
+  "@supplementQuiz": {
+    "description": "Title for supplement quiz"
+  },
+
+  "helpUsFindSupplements": "Help us find the perfect supplements for your needs",
+  "@helpUsFindSupplements": {
+    "description": "Subtitle for supplement quiz"
+  },
+
+  "question": "Question {number} of {total}",
+  "@question": {
+    "description": "Label for question number in quiz",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+
+  "seeResults": "See Results",
+  "@seeResults": {
+    "description": "Label for see results button"
+  },
+
+  "supplementIdQuestion": "What is your primary health goal?",
+  "@supplementIdQuestion": {
+    "description": "First question in supplement quiz"
+  },
+
+  "supplementSymptomQuestion": "Do you currently experience any of these symptoms?",
+  "@supplementSymptomQuestion": {
+    "description": "Second question in supplement quiz"
+  },
+
+  "supplementStressQuestion": "How would you describe your typical stress level?",
+  "@supplementStressQuestion": {
+    "description": "Third question in supplement quiz"
+  },
+
+  "supplementSleepQuestion": "How is your typical sleep quality?",
+  "@supplementSleepQuestion": {
+    "description": "Fourth question in supplement quiz"
+  },
+
+  "supplementDietQuestion": "How would you characterize your diet?",
+  "@supplementDietQuestion": {
+    "description": "Fifth question in supplement quiz"
+  },
+
+  "yourSupplements": "Your Supplements",
+  "@yourSupplements": {
+    "description": "Title for supplements screen"
+  },
+
+  "reviewAndManage": "Review and manage",
+  "@reviewAndManage": {
+    "description": "Subtitle for supplement management"
+  },
+
+  "productCode": "Product Code: {code}",
+  "@productCode": {
+    "description": "Label showing product code",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+
+  "supplementIdentified": "Supplement identified from your code",
+  "@supplementIdentified": {
+    "description": "Message showing supplement was identified"
+  },
+
+  "verified": "Verified",
+  "@verified": {
+    "description": "Label for verified supplement"
+  },
+
+  "benefits": "Benefits",
+  "@benefits": {
+    "description": "Label for benefits section"
+  },
+
+  "recommendedDosage": "Recommended Dosage",
+  "@recommendedDosage": {
+    "description": "Label for recommended dosage section"
+  },
+
+  "addMoreSupplements": "Add More Supplements",
+  "@addMoreSupplements": {
+    "description": "Button to add more supplements"
+  },
+
+  "continueToHealthProfile": "Continue to Health Profile",
+  "@continueToHealthProfile": {
+    "description": "Button to navigate to health profile"
+  },
+  
+  "aiCoachCall": "AI Coach Call",
+  "medicalScreen": "Medical Portal",
+  "medicalReports": "Medical Reports",
+  "caregiverPortal": "Caregiver Portal",
+  "upcomingMeetings": "Upcoming Meetings",
+  "medicalHistory": "Medical History",
+  "medicalHistoryInfo": "This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.",
+  "medicalSummary": "Medical Summary",
+  "symptomsTracker": "Symptoms Tracker",
+  "recentActivities": "Recent Activities",
+  "progressTracking": "Progress Tracking",
+  "heartRate": "Heart Rate",
+  "bpm": "BPM",
+  "sleepQuality": "Sleep Quality",
+  "hours": "hours",
+  "nutrition": "Nutrition",
+  "calories": "calories",
+  "steps": "Steps",
+  "stepsUnit": "steps",
+  "medicalRecords": "Medical Records",
+  "medicalHistorySummary": "View your complete medical history, including doctor visits, test results, and treatment plans.",
+  "checkup": "Checkup",
+  "routineCheckupDesc": "Annual physical examination with vitals check and basic lab work.",
+  "specialist": "Specialist Consultation",
+  "neurologistConsultationDesc": "Neurological assessment and cognitive function testing.",
+  "labTest": "Lab Test",
+  "bloodWorkDesc": "Comprehensive blood panel including metabolic and lipid profiles.",
+  "imaging": "Imaging",
+  "brainScanDesc": "MRI brain scan to evaluate neural structure and activity.",
+  "therapy": "Therapy",
+  "physicalTherapyDesc": "Physical therapy session focusing on mobility and strength exercises.",
+  
+  "premiumFeaturesDescription": "Premium features include personalized AI coaching, advanced tracking, and tailored supplement recommendations.",
+  "decisionRecorded": "Decision Recorded",
+  "decisionSummary": "Your medical decision has been recorded and added to your health profile. Your healthcare provider has been notified.",
+  "nextSteps": "Next Steps",
+  "reviewMedicalPlan": "Review Medical Plan",
+  "reviewMedicalPlanDesc": "Go through your updated treatment plan in the Health Profile section.",
+  "scheduleFollowUp": "Schedule Follow-Up",
+  "scheduleFollowUpDesc": "Book your next appointment with your healthcare provider.",
+  "trackProgress": "Track Progress",
+  "trackProgressDesc": "Monitor your health metrics and symptoms in the Progress section.",
+  
+  "myHub": "My Hub",
+  "modules": "Modules",
+  "activities": "Activities",
+  "progress": "Progress",
+  "recommendedModules": "Recommended Modules",
+  "cognitiveFitness": "Cognitive Fitness",
+  "cognitiveFitnessDesc": "Brain exercises to improve memory, focus, and mental clarity.",
+  "stressManagement": "Stress Management",
+  "stressManagementDesc": "Techniques to reduce stress and promote relaxation.",
+  "allModules": "All Modules",
+  "sleepImprovement": "Sleep Improvement",
+  "sleepImprovementDesc": "Strategies to optimize sleep quality and duration.",
+  "nutritionOptimization": "Nutrition Optimization",
+  "nutritionOptimizationDesc": "Personalized nutrition plans for cognitive health.",
+  "todaysActivities": "Today's Activities",
+  "focusExercise": "Focus Exercise",
+  "focusExerciseDesc": "Attention training to improve concentration.",
+  "minutes": "minutes",
+  "pending": "Pending",
+  "mindfulnessSession": "Mindfulness Session",
+  "mindfulnessSessionDesc": "Guided meditation for mental clarity.",
+  "completed": "Completed",
+  "upcomingActivities": "Upcoming Activities",
+  "memoryChallenge": "Memory Challenge",
+  "memoryChallengeDesc": "Exercise to strengthen working memory.",
+  "tomorrow": "Tomorrow",
+  "sleepJournal": "Sleep Journal",
+  "sleepJournalDesc": "Record sleep patterns and quality.",
+  "weeklyProgress": "Weekly Progress",
+  "activitiesCompleted": "Activities Completed",
+  "focusScore": "Focus Score",
+  "wellnessScore": "Wellness Score",
+  "streaks": "Streaks",
+  "currentStreak": "Current Streak",
+  "longestStreak": "Longest Streak",
+  "days": "days",
+  "incompleteInformation": "Incomplete Information",
+  "fillAllFields": "Please fill in all fields to continue.",
+  "ok": "OK",
+  "activityLevelRequired": "Activity Level Required",
+  "selectActivityLevel": "Please select your activity level to continue.",
+  "dietTypeRequired": "Diet Type Required",
+  "selectDietType": "Please select your diet type to continue.",
+  "done": "Done",
+  "whatIsYourAge": "What is your age?",
+  "ageHelpsPersonalize": "This helps us personalize your health recommendations",
+  "selectAge": "Select age",
+  "age": "Age",
+  "whatIsYourGender": "What is your gender?",
+  "male": "Male",
+  "female": "Female",
+  "otherGender": "Other",
+  "whatIsYourWeight": "What is your weight?",
+  "selectYourWeight": "Select your weight",
+  "weight": "Weight",
+  "kg": "kg",
+  "lbs": "lbs",
+  "whatIsYourHeight": "What is your height?",
+  "selectYourHeight": "Select your height",
+  "height": "Height",
+  "cm": "cm",
+  "ft": "ft",
+  "stepCount": "Step {current} of {total}",
+  "@stepCount": {
+    "placeholders": {
+      "current": {},
+      "total": {}
+    }
+  },
+  "activityLevel": "Activity Level",
+  "selectYourActivityLevel": "Select your typical activity level",
+  "sedentary": "Sedentary",
+  "sedentaryDesc": "Little to no exercise",
+  "moderatelyActive": "Moderately Active",
+  "moderatelyActiveDesc": "Light exercise 2-3 times a week",
+  "highlyActive": "Highly Active",
+  "highlyActiveDesc": "Frequent intense exercise",
+  "dietaryPreferences": "Dietary Preferences",
+  "selectYourDietType": "Select your primary diet type",
+  "keto": "Keto",
+  "ketoDesc": "High-fat, low-carb diet",
+  "vegan": "Vegan",
+  "veganDesc": "Plant-based diet without animal products",
+  "balanced": "Balanced",
+  "balancedDesc": "Mixed diet with all food groups",
+  "other": "Other",
+  "specifyDiet": "Specify your diet",
+  "enterDietType": "Enter your diet type",
+  "profileComplete": "Profile Complete",
+  "profileCompleteDesc": "Your health profile is now complete! We'll now set up your personalized experience.",
+  "continueText": "Continue",
+
+  "cognitiveAssessment": "Cognitive Assessment",
+  "letsTrainBrain": "Let's train your brain today!",
+  "featuredChallenges": "Featured Challenges",
+  "allChallenges": "All Challenges",
+  "featured": "Featured",
+  "start": "Start",
+  
+  "memoryMatch": "Memory Match",
+  "memoryMatchDesc": "Test your visual memory with card matching",
+  "quickReaction": "Quick Reaction",
+  "quickReactionDesc": "Measure your response time to visual stimuli",
+  "patternQuest": "Pattern Quest",
+  "patternQuestDesc": "Memorize and recreate complex patterns",
+  "wordRecall": "Word Recall",
+  "wordRecallDesc": "Test your ability to remember words",
+  "focusTimer": "Focus Timer",
+  "focusTimerDesc": "Track and improve your attention span",
+  "visualPuzzle": "Visual Puzzle",
+  "visualPuzzleDesc": "Solve spatial reasoning challenges",
+
+  "learningResources": "Learning\nResources",
+  "explore": "Explore",
+  
+  "memoryMaster": "Memory Master",
+  "enhanceMemorySkills": "Enhance your memory skills",
+  "completeMemoryMatch": "Complete Memory Match Game",
+  "readMemoryArticle": "Read Memory Enhancement Article",
+  "practiceVisualization": "Practice Visualization Exercise",
+  
+  "focusChampion": "Focus Champion",
+  "improveConcentration": "Improve your concentration",
+  "completeMeditation": "Complete 10min Meditation",
+  "practiceMindfulReading": "Practice Mindful Reading",
+  "doFocusExercise": "Do a Focus Exercise",
+  
+  "problemSolver": "Problem Solver",
+  "boostAnalyticalThinking": "Boost analytical thinking",
+  "completePatternRecognition": "Complete Pattern Recognition",
+  "solveDailyPuzzle": "Solve Daily Puzzle",
+  "readLogicArticle": "Read Logic Article",
+  
+  "startChallengePrompt": "Start {title}?",
+  "@startChallengePrompt": {
+    "placeholders": {
+      "title": {}
+    }
+  },
+  "challengeReadyText": "Are you ready to begin this challenge? Make sure you have enough time to complete it without interruptions.",
+  "estimatedTime": "Estimated time: 10-15 min",
+  "notNow": "Not Now",
+  "startChallenge": "Start Challenge",
+  
+  "dailyReminder": "Daily Reminder",
+  "takenChronowell": "Have you taken your ChronoWell today?",
+  "recommendedTime": "Recommended time: 8:00 AM",
+  "skipToday": "Skip Today",
+  "yesTaken": "Yes, Taken",
+  
+  "importantReminder": "Important Reminder",
+  "takeChronowellDaily": "Taking ChronoWell daily is crucial for optimal results. Regular use helps maintain cognitive improvement and builds lasting benefits.",
+  "illTakeItNow": "I'll Take It Now",
+  "skipAnyway": "Skip Anyway",
+  
+  "dayStreakText": "{count} Day Streak!",
+  "@dayStreakText": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "keepGoingStreak": "Keep Going! Almost hitting a new 7 day streak!",
+  "close": "Close",
+  
+  "newChallengeAvailable": "New Challenge Available",
+  "patternRecognitionMaster": "Pattern Recognition Master",
+  "tryLatestExercise": "Try our latest cognitive exercise designed to enhance your pattern recognition abilities.",
+  "hoursAgo": "{hours}h ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "daysAgo": "{days}d ago",
+  "@daysAgo": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "weeklyReportReady": "Weekly Report Ready",
+  "performanceInsights": "Performance Insights",
+  "weeklyReportDescription": "Your personalized cognitive performance report for this week is now available.",
+  
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
+  
+  "monday": "M",
+  "tuesday": "T",
+  "wednesday": "W",
+  "thursday": "T",
+  "friday": "F",
+  "saturday": "S",
+  "sunday": "S",
+  
+  "percentComplete": "{percent}% Complete",
+  "@percentComplete": {
+    "placeholders": {
+      "percent": {}
+    }
+  },
+  
+  "error": "Error",
+  "failedToStartCheckIn": "Failed to start daily check-in: {errorMessage}",
+  "@failedToStartCheckIn": {
+    "placeholders": {
+      "errorMessage": {}
+    }
+  },
+
+  "improveMemoryTitle": "How to Improve Memory - Part {part}",
+  "@improveMemoryTitle": {
+    "placeholders": {
+      "part": {
+        "type": "String"
+      }
+    }
+  },
+  "improveMemoryDescription": "Learn effective techniques to enhance your memory capacity and retention.",
+
+  "overallScore": "Overall Score",
+  "categoryMemory": "Memory",
+  "categoryFocus": "Focus",
+  "categoryProblem": "Problem",
+  "progressOverview": "Progress Overview",
+  "seeDetails": "See Details",
+  "myGoals": "My Goals",
+  "editGoals": "Edit Goals",
+  "memoryGoalTitle": "Improve short-term memory by 20%",
+  "focusGoalTitle": "Maintain focus for longer periods",
+  "problemSolvingGoalTitle": "Master complex pattern recognition",
+  "targetScore": "Target Score: {score}",
+  "@targetScore": {
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "communityHub": "Community\nHub",
+  "profileSettings": "Profile\nSettings",
+  "cancelButton": "Cancel",
+  "saveButton": "Save",
+  "currentGoal": "Current Goal: {goal}",
+  "@currentGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "enterYourGoal": "Enter your goal",
+  "targetScoreLabel": "Target Score:",
+
+  "activitiesScreen": "Activities",
+  "featuredActivities": "Featured Activities",
+  "cognitiveAssessmentTitle": "Cognitive Assessment",
+  "cognitiveAssessmentDesc": "Test and improve your cognitive abilities",
+  "meditationTitle": "Meditation",
+  "meditationDesc": "Practice mindfulness and relaxation",
+  "learningResourcesTitle": "Learning Resources",
+  "learningResourcesDesc": "Explore educational content and guides",
+  
+  "latestReport": "Latest Report",
+  "reportDate": "March 15, 2024",
+  "viewButton": "View",
+  "availableNow": "Available Now",
+  "unavailable": "Unavailable",
+  "scheduleButton": "Schedule",
+  "joinButton": "Join",
+  "familyMedicalHistory": "Family Medical History",
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "editButton": "Edit",
+  "meetingTime": "{date} at {time}",
+  "@meetingTime": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviews": "{count} reviews",
+  "@reviews": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "aiHealthCoachTitle": "AI Health Coach",
+  "typeMessage": "Type your message...",
+  "askMeAnything": "Ask me anything about your health",
+  "tapVideoChat": "Tap the Video Chat button for a face-to-face conversation",
+  "errorTitle": "Error",
+  "videoCallError": "Failed to start video call: {error}",
+  "@videoCallError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "okButton": "OK",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "greeting": "Hello! How can I help you with your health or cognitive training today?",
+  "howAreYou": "I'm functioning well, thank you! More importantly, how are you feeling today?",
+  "meditationResponse": "Meditation is a great practice for mental clarity and stress reduction. Would you like me to recommend some techniques or guide you through a quick session?",
+  "sleepResponse": "Sleep is crucial for cognitive function. I recommend establishing a consistent schedule, avoiding screens before bedtime, and creating a relaxing environment. Would you like more specific advice?",
+  "stressResponse": "I'm sorry to hear you're feeling stressed. Deep breathing exercises, mindfulness, and physical activity can help manage stress. Would you like to know more about any of these approaches?",
+  "exerciseResponse": "Regular exercise is great for both physical and mental health! Even 30 minutes of moderate activity daily can make a significant difference. What type of exercises do you enjoy?",
+  "dietResponse": "A balanced diet rich in fruits, vegetables, whole grains, and lean proteins supports cognitive function. Omega-3 fatty acids found in fish, walnuts, and flaxseeds are particularly beneficial for brain health.",
+  "gameResponse": "Cognitive games and puzzles are excellent for keeping your mind sharp! Our app offers several challenges designed to improve memory, focus, and problem-solving skills. Would you like to try one?",
+  "thankYouResponse": "You're welcome! I'm here to help anytime you need assistance or have questions about your cognitive health.",
+  "defaultResponse": "That's an interesting point. Would you like to discuss how this relates to your cognitive health journey? I'm here to support you however I can.",
+  "initialGreeting": "Hello {name}, how can I help you today?",
+  "@initialGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "community": "Community",
+  "searchTopics": "Search topics",
+  "tagMemory": "Memory",
+  "tagTraining": "Training",
+  "tagHealth": "Health",
+  "tagTips": "Tips",
+  "tagProgress": "Progress",
+  "tagExpert": "Expert",
+  "topicTitle": "Topic Title",
+  "writeYourPost": "Write your post...",
+  "createTopic": "Create Topic",
+  "post": "Post",
+
+  "startNewGame": "Start a new game!",
+  "watchPattern": "Watch the pattern!",
+  "yourTurn": "Your turn!",
+  "incorrectPattern": "Wrong pattern!",
+  "tryAgain": "Try again",
+  "levelUp": "Level up to level {level}!",
+  "@levelUp": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "correct": "Correct! Well done!",
+  "level": "Level: {level}",
+  "@level": {
+    "placeholders": {
+      "level": {
+        "type": "String"
+      }
+    }
+  },
+  "restart": "Restart",
+  
+  "scanSupplementCode": "Scan Supplement Code",
+  "scanBarcodeSubtitle": "Scan the barcode on your supplement bottle to\nautomatically add it to your supplement list.",
+  "pointCameraBarcode": "Point your camera at the barcode on your supplement package",
+  "enterCodeManually": "Enter Code Manually",
+  "noProductCode": "I don't have a product code",
+  "enterSupplementCode": "Enter Supplement Code",
+  "enterCodeHere": "Enter code here",
+  "submit": "Submit",
+  "devTestScan": "Dev: Test Scan",
+  
+  "productCodePrefix": "Product Code: ",
+  
+  "supplementQuizTitle": "Supplement Quiz",
+  "supplementQuizSubtitle": "Help us find the perfect supplements for your needs",
+  "primaryHealthGoalQuestion": "What is your primary health goal?",
+  "improveCognitiveFunction": "Improve cognitive function",
+  "betterSleepQuality": "Better sleep quality",
+  "moreEnergy": "More energy",
+  "reduceStressAnxiety": "Reduce stress/anxiety", 
+  "overallHealthOptimization": "Overall health optimization",
+  
+  "symptomsQuestion": "Do you currently experience any of these symptoms?",
+  "brainFogSymptom": "Brain fog or poor concentration",
+  "lowEnergySymptom": "Low energy or fatigue",
+  "troubleSleepingSymptom": "Trouble sleeping",
+  "moodFluctuationsSymptom": "Mood fluctuations",
+  "noSymptomsOption": "None of the above",
+  
+  "stressLevelQuestion": "How would you describe your typical stress level?",
+  "veryHighStress": "Very high (constant stress)",
+  "highStress": "High (frequent stress)",
+  "moderateStress": "Moderate (occasional stress)",
+  "lowStress": "Low (rarely stressed)",
+  "veryLowStress": "Very low (almost never stressed)",
+  
+  "sleepQualityQuestion": "How is your typical sleep quality?",
+  "excellentSleep": "Excellent (7-8+ hours uninterrupted)",
+  "goodSleep": "Good (6-7 hours, few interruptions)",
+  "fairSleep": "Fair (5-6 hours, some interruptions)",
+  "poorSleep": "Poor (less than 5 hours or very interrupted)",
+  "veryPoorSleep": "Very poor (significant sleep issues)",
+  
+  "dietQuestion": "How would you characterize your diet?",
+  "veryHealthyDiet": "Very healthy (whole foods, balanced meals)",
+  "mostlyHealthyDiet": "Mostly healthy with occasional indulgences",
+  "averageDiet": "Average (mix of healthy and processed foods)",
+  "belowAverageDiet": "Below average (mostly processed foods)",
+  "poorDiet": "Poor (highly processed, unbalanced)",
+
+  "supplementDescription": "Premium cognitive enhancement supplement",
+  "@supplementDescription": {
+    "description": "Description for REVITA supplement"
+  },
+
+  "benefitImprovedFocus": "Improved focus and concentration",
+  "@benefitImprovedFocus": {
+    "description": "Benefit for improved focus"
+  },
+
+  "benefitEnhancedMemory": "Enhanced memory retention",
+  "@benefitEnhancedMemory": {
+    "description": "Benefit for enhanced memory"
+  },
+
+  "benefitReducedBrainFog": "Reduced brain fog",
+  "@benefitReducedBrainFog": {
+    "description": "Benefit for reduced brain fog"
+  },
+
+  "benefitIncreasedClarity": "Increased mental clarity",
+  "@benefitIncreasedClarity": {
+    "description": "Benefit for increased mental clarity"
+  },
+
+  "supplementDosage": "2 capsules daily, preferably with food",
+  "@supplementDosage": {
+    "description": "Recommended dosage for REVITA supplement"
+  },
+
+  "loadingAnalyzingProfile": "Analyzing your health profile...",
+  "@loadingAnalyzingProfile": {
+    "description": "Loading message shown when analyzing health profile"
+  },
+
+  "loadingPersonalizingPlan": "Personalizing your supplement plan...",
+  "@loadingPersonalizingPlan": {
+    "description": "Loading message shown when personalizing supplement plan"
+  },
+
+  "loadingOptimizingTraining": "Optimizing your cognitive training...",
+  "@loadingOptimizingTraining": {
+    "description": "Loading message shown when optimizing cognitive training"
+  },
+
+  "loadingFinalizingExperience": "Finalizing your experience...",
+  "@loadingFinalizingExperience": {
+    "description": "Loading message shown when finalizing the user experience"
+  },
+  
+  "tipDidYouKnow": "Did you know?",
+  "@tipDidYouKnow": {
+    "description": "Title for interesting fact tips"
+  },
+
+  "tipHealthFact": "Health Fact",
+  "@tipHealthFact": {
+    "description": "Title for health fact tips"
+  },
+
+  "tipSupplementBenefit": "Supplement Benefit",
+  "@tipSupplementBenefit": {
+    "description": "Title for supplement benefit tips"
+  },
+
+  "tipWellnessTip": "Wellness Tip",
+  "@tipWellnessTip": {
+    "description": "Title for wellness tips"
+  },
+
+  "tipBrainPower": "Brain Power",
+  "@tipBrainPower": {
+    "description": "Title for brain power tips"
+  },
+  
+  "tipOmega3Content": "Omega-3 fatty acids found in ChronoWell supplements support brain health and cognitive function.",
+  "@tipOmega3Content": {
+    "description": "Tip content about Omega-3 fatty acids benefits"
+  },
+
+  "tipCognitiveTrainingContent": "Regular cognitive training can increase neuroplasticity, helping your brain form new neural connections.",
+  "@tipCognitiveTrainingContent": {
+    "description": "Tip content about cognitive training benefits"
+  },
+
+  "tipVitaminD3Content": "Vitamin D3 in our supplements helps maintain cognitive function and reduces risk of cognitive decline.",
+  "@tipVitaminD3Content": {
+    "description": "Tip content about Vitamin D3 benefits"
+  },
+
+  "tipSleepContent": "Combining ChronoWell supplements with 7-8 hours of quality sleep maximizes cognitive benefits.",
+  "@tipSleepContent": {
+    "description": "Tip content about combining supplements with sleep"
+  },
+
+  "tipBacopaContent": "Bacopa Monnieri, a key ingredient in REVITA, has been shown to improve memory formation and recall.",
+  "@tipBacopaContent": {
+    "description": "Tip content about Bacopa Monnieri benefits"
+  },
+
+  "tipPersonalizedContent": "Our personalized approach matches your specific cognitive needs with targeted supplement formulations.",
+  "@tipPersonalizedContent": {
+    "description": "Tip content about personalized approach to supplements"
+  }
+} 

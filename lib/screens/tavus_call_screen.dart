@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../services/tavus_service.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -148,6 +149,8 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return WillPopScope(
       onWillPop: () async {
         await _endConversation();
@@ -156,7 +159,7 @@ class _TavusCallScreenState extends State<TavusCallScreen> {
       child: CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
           middle: Text(
-            'AI Coach Call',
+            localizations.aiCoachCall,
             style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
           ),
           leading: CupertinoButton(

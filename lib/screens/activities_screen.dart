@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui';
 import 'package:flutter_sficon/flutter_sficon.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'challenges_screen.dart';
 import 'meditation_screen.dart';
 import 'resources_screen.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../widgets/widgets.dart';
 
 class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({
@@ -23,24 +25,17 @@ class ActivitiesScreen extends StatefulWidget {
 class _ActivitiesScreenState extends State<ActivitiesScreen> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
           // Premium Gradient Background
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
-          ),
-          // Frosted Glass Overlay
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
-              ),
-            ),
+          GradientBackground(
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
+            child: Container(),
           ),
           // Main Content
           CustomScrollView(
@@ -48,7 +43,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
             slivers: [
               CupertinoSliverNavigationBar(
                 largeTitle: Text(
-                  'Activities',
+                  localizations.activitiesScreen,
                   style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
                 ),
                 backgroundColor: Colors.transparent,
@@ -70,20 +65,20 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Featured Activities',
+                        localizations.featuredActivities,
                         style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
                       ),
                       const SizedBox(height: 16),
                       _buildActivityCard(
                         context,
-                        'Cognitive Assessment',
-                        'Test and improve your cognitive abilities',
+                        localizations.cognitiveAssessmentTitle,
+                        localizations.cognitiveAssessmentDesc,
                         SFIcons.sf_puzzlepiece,
                         () {
                           Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute(
                               builder: (context) => const ChallengesScreen(),
-                              title: 'Cognitive Assessment',
+                              title: localizations.cognitiveAssessmentTitle,
                             ),
                           );
                         },
@@ -91,14 +86,14 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                       const SizedBox(height: 16),
                       _buildActivityCard(
                         context,
-                        'Meditation',
-                        'Practice mindfulness and relaxation',
+                        localizations.meditationTitle,
+                        localizations.meditationDesc,
                         SFIcons.sf_leaf,
                         () {
                           Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute(
                               builder: (context) => const MeditationScreen(),
-                              title: 'Meditation',
+                              title: localizations.meditationTitle,
                             ),
                           );
                         },
@@ -106,14 +101,14 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                       const SizedBox(height: 16),
                       _buildActivityCard(
                         context,
-                        'Learning Resources',
-                        'Explore educational content and guides',
+                        localizations.learningResourcesTitle,
+                        localizations.learningResourcesDesc,
                         SFIcons.sf_book,
                         () {
                           Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute(
                               builder: (context) => ResourcesScreen(tabController: widget.tabController),
-                              title: 'Resources',
+                              title: localizations.resources,
                             ),
                           );
                         },
@@ -138,65 +133,50 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
   ) {
     return GestureDetector(
       onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                  AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+      child: FrostedCard(
+        borderRadius: 20,
+        backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+        padding: const EdgeInsets.all(16),
+        border: Border.all(
+          color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+          width: 0.5,
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 24,
+              height: 24,
+              alignment: Alignment.center,
+              child: SFIcon(
+                icon,
+                fontSize: 20,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: AppTextStyles.secondaryText,
+                  ),
                 ],
               ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                width: 0.5,
-              ),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: 24,
-                  height: 24,
-                  alignment: Alignment.center,
-                  child: SFIcon(
-                    icon,
-                    fontSize: 20,
-                    color: AppColors.primary,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        description,
-                        style: AppTextStyles.secondaryText,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                SFIcon(
-                  SFIcons.sf_chevron_right,
-                  fontSize: 14,
-                  color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
-                ),
-              ],
+            const SizedBox(width: 8),
+            SFIcon(
+              SFIcons.sf_chevron_right,
+              fontSize: 14,
+              color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
             ),
-          ),
+          ],
         ),
       ),
     );

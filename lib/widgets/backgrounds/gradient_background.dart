@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
+import '../../theme/app_colors.dart' hide ThemeMode;
+import '../../theme/app_colors.dart' as app_theme show ThemeMode;
 
 class GradientBackground extends StatelessWidget {
   final Widget child;
@@ -7,6 +8,7 @@ class GradientBackground extends StatelessWidget {
   final Gradient? customGradient;
   final bool hasSafeArea;
   final EdgeInsetsGeometry? padding;
+  final BackgroundStyle style;
   
   const GradientBackground({
     Key? key,
@@ -15,13 +17,17 @@ class GradientBackground extends StatelessWidget {
     this.customGradient,
     this.hasSafeArea = true,
     this.padding,
+    this.style = BackgroundStyle.standard,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Default to the app background gradient
+    final Gradient effectiveGradient = customGradient ?? AppColors.appBackgroundGradient;
+    
     final gradientWidget = Container(
       decoration: BoxDecoration(
-        gradient: customGradient ?? (usePrimaryGradient ? AppColors.primaryGradient : null),
+        gradient: effectiveGradient,
       ),
       padding: padding,
       child: child,
@@ -31,4 +37,10 @@ class GradientBackground extends StatelessWidget {
       ? SafeArea(child: gradientWidget) 
       : gradientWidget;
   }
+}
+
+enum BackgroundStyle {
+  standard,
+  premium,
+  vignette
 } 

@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
 // Add MainScreen import
 import '../main.dart';
 import '../services/tutorial_service.dart';
-import './qr_scanner_screen.dart';  // Add QRScannerScreen import
+import './onboarding_features_slideshow.dart';  // Import the onboarding features slideshow
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -19,6 +20,8 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
@@ -45,7 +48,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'AI. Health Assistant APP',
+                    localizations.aiHealthAssistant,
                     style: AppTextStyles.withColor(
                       AppTextStyles.bodyMedium,
                       AppColors.surface.withOpacity(0.8),
@@ -75,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         );
                       },
                       child: Text(
-                        'Login',
+                        localizations.login,
                         style: AppTextStyles.withColor(
                           AppTextStyles.bodyLarge,
                           AppColors.surface,
@@ -84,14 +87,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // Scan Supplements Button
+                  // New User Button
                   Container(
                     width: double.infinity,
                     height: 56,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: AppColors.primary.withOpacity(0.3),
                       border: Border.all(
-                        color: Colors.white,
+                        color: AppColors.primary,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(18),
@@ -101,12 +104,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       onPressed: () {
                         Navigator.of(context).push(
                           CupertinoPageRoute(
-                            builder: (context) => const QRScannerScreen(),
+                            builder: (context) => const OnboardingFeaturesSlideshow(),
                           ),
                         );
                       },
                       child: Text(
-                        'Scan supplements',
+                        localizations.newUser,
                         style: AppTextStyles.withColor(
                           AppTextStyles.bodyLarge,
                           AppColors.surface,
@@ -122,7 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       // Handle forgot password
                     },
                     child: Text(
-                      'Forgot password?',
+                      localizations.forgotPassword,
                       style: AppTextStyles.withColor(
                         AppTextStyles.bodyMedium,
                         AppColors.surface.withOpacity(0.8),

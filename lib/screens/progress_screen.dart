@@ -7,6 +7,8 @@ import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../services/tutorial_service.dart';
+import '../widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // Data Models
 class ProgressDataPoint {
@@ -314,366 +316,325 @@ class _ProgressScreenState extends State<ProgressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
+          GradientBackground(
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
+            child: Container(),
           ),
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
+          CustomScrollView(
+            controller: _scrollController,
+            primary: false,
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              CupertinoSliverNavigationBar(
+                largeTitle: Text(
+                  localizations.progress,
+                  style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
+                ),
+                middle: Text(
+                  localizations.progress,
+                  style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                ),
+                alwaysShowMiddle: false,
+                backgroundColor: Colors.transparent,
+                border: null,
+                stretch: false,
+                automaticallyImplyLeading: false,
+                leading: CupertinoButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Icon(
+                    CupertinoIcons.back,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
-            ),
-          ),
-          CupertinoScrollbar(
-            thickness: 3.0,
-            radius: const Radius.circular(1.5),
-            mainAxisMargin: 2.0,
-            child: CustomScrollView(
-              controller: _scrollController,
-              primary: false,
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                CupertinoSliverNavigationBar(
-                  largeTitle: Text(
-                    'Progress',
-                    style: AppTextStyles.withColor(AppTextStyles.heading1, AppColors.textPrimary),
-                  ),
-                  middle: Text(
-                    'Progress',
-                    style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                  ),
-                  alwaysShowMiddle: false,
-                  backgroundColor: Colors.transparent,
-                  border: null,
-                  stretch: false,
-                  automaticallyImplyLeading: false,
-                  leading: CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Icon(
-                      CupertinoIcons.back,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(height: 16),
-                        
-                        // AI Progress Comment Card
-                        SizedBox(
-                          width: double.infinity,
-                          child: Container(
-                            key: aiInsightKey,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: BackdropFilter(
-                                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                                child: Container(
-                                  padding: const EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                        AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                      ],
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            SFIcon(
-                                              SFIcons.sf_sparkles,
-                                              fontSize: 14,
-                                              color: AppColors.primary,
-                                            ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              'AI Insight',
-                                              style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Text(
-                                        'Great progress in memory exercises!',
-                                        style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Your consistent practice is showing results. Focus on pattern recognition exercises to maximize improvement.',
-                                        style: AppTextStyles.secondaryText,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 16),
+                      
+                      // AI Progress Comment Card
+                      SizedBox(
+                        width: double.infinity,
+                        child: FrostedCard(
+                          key: aiInsightKey,
+                          borderRadius: 20,
+                          backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                          border: Border.all(
+                            color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                            width: 0.5,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 20),
-                ),
-                // Graph Card with key
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: ClipRRect(
-                      key: progressChartKey,
-                      borderRadius: BorderRadius.circular(20),
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                        child: Container(
-                          height: 340,
                           padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-                              width: 0.5,
-                            ),
-                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _selectedCategory,
-                                        style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '+15% This Week',
-                                        style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          showCupertinoModalPopup<void>(
-                                            context: context,
-                                            builder: (BuildContext context) => CupertinoActionSheet(
-                                              title: const Text('Export Progress'),
-                                              message: const Text('Choose how you want to share your progress data'),
-                                              actions: <CupertinoActionSheetAction>[
-                                                CupertinoActionSheetAction(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Save as PDF'),
-                                                ),
-                                                CupertinoActionSheetAction(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Share via Email'),
-                                                ),
-                                              ],
-                                              cancelButton: CupertinoActionSheetAction(
-                                                isDestructiveAction: true,
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text('Cancel'),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: SFIcon(
-                                          SFIcons.sf_square_and_arrow_up,
-                                          fontSize: 20,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      GestureDetector(
-                                        onTap: () {
-                                          showCupertinoModalPopup<void>(
-                                            context: context,
-                                            builder: (BuildContext context) => Container(
-                                              height: 216,
-                                              padding: const EdgeInsets.only(top: 6.0),
-                                              margin: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context).viewInsets.bottom,
-                                              ),
-                                              color: CupertinoColors.systemBackground,
-                                              child: SafeArea(
-                                                top: false,
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: CupertinoPicker(
-                                                        magnification: 1.22,
-                                                        squeeze: 1.2,
-                                                        useMagnifier: true,
-                                                        itemExtent: 32.0,
-                                                        scrollController: FixedExtentScrollController(
-                                                          initialItem: ['Memory', 'Focus', 'Problem']
-                                                              .indexOf(_selectedCategory),
-                                                        ),
-                                                        onSelectedItemChanged: (int selectedItem) {
-                                                          setState(() {
-                                                            _selectedCategory = ['Memory', 'Focus', 'Problem'][selectedItem];
-                                                            _updateData();
-                                                          });
-                                                        },
-                                                        children: const [
-                                                          Text('Memory'),
-                                                          Text('Focus'),
-                                                          Text('Problem'),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: CupertinoPicker(
-                                                        magnification: 1.22,
-                                                        squeeze: 1.2,
-                                                        useMagnifier: true,
-                                                        itemExtent: 32.0,
-                                                        scrollController: FixedExtentScrollController(
-                                                          initialItem: ['Week', 'Month', 'Year']
-                                                              .indexOf(_selectedTimeRange),
-                                                        ),
-                                                        onSelectedItemChanged: (int selectedItem) {
-                                                          setState(() {
-                                                            _selectedTimeRange = ['Week', 'Month', 'Year'][selectedItem];
-                                                            _updateData();
-                                                          });
-                                                        },
-                                                        children: const [
-                                                          Text('Week'),
-                                                          Text('Month'),
-                                                          Text('Year'),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        child: SFIcon(
-                                          SFIcons.sf_slider_horizontal_3,
-                                          fontSize: 20,
-                                          color: AppColors.primary,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 20),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: LineChart(
-                                    _createChartData(),
-                                    duration: const Duration(milliseconds: 500),
-                                  ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: AppColors.getPrimaryWithOpacity(AppColors.inactiveOpacity),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SFIcon(
+                                      SFIcons.sf_sparkles,
+                                      fontSize: 14,
+                                      color: AppColors.primary,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'AI Insight',
+                                      style: AppTextStyles.withColor(AppTextStyles.bodySmall, AppColors.primary),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Great progress in memory exercises!',
+                                style: AppTextStyles.withColor(AppTextStyles.heading3, AppColors.textPrimary),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Your consistent practice is showing results. Focus on pattern recognition exercises to maximize improvement.',
+                                style: AppTextStyles.secondaryText,
                               ),
                             ],
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
+              // Graph Card with key
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SizedBox(
+                    height: 340,
+                    child: FrostedCard(
+                      key: progressChartKey,
+                      borderRadius: 20,
+                      backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+                      border: Border.all(
+                        color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+                        width: 0.5,
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _selectedCategory,
+                                    style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '+15% This Week',
+                                    style: AppTextStyles.withColor(AppTextStyles.bodyMedium, AppColors.primary),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      showCupertinoModalPopup<void>(
+                                        context: context,
+                                        builder: (BuildContext context) => CupertinoActionSheet(
+                                          title: const Text('Export Progress'),
+                                          message: const Text('Choose how you want to share your progress data'),
+                                          actions: <CupertinoActionSheetAction>[
+                                            CupertinoActionSheetAction(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Save as PDF'),
+                                            ),
+                                            CupertinoActionSheetAction(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Share via Email'),
+                                            ),
+                                          ],
+                                          cancelButton: CupertinoActionSheetAction(
+                                            isDestructiveAction: true,
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Cancel'),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: SFIcon(
+                                      SFIcons.sf_square_and_arrow_up,
+                                      fontSize: 20,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showCupertinoModalPopup<void>(
+                                        context: context,
+                                        builder: (BuildContext context) => Container(
+                                          height: 216,
+                                          padding: const EdgeInsets.only(top: 6.0),
+                                          margin: EdgeInsets.only(
+                                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                                          ),
+                                          color: CupertinoColors.systemBackground,
+                                          child: SafeArea(
+                                            top: false,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: CupertinoPicker(
+                                                    magnification: 1.22,
+                                                    squeeze: 1.2,
+                                                    useMagnifier: true,
+                                                    itemExtent: 32.0,
+                                                    scrollController: FixedExtentScrollController(
+                                                      initialItem: ['Memory', 'Focus', 'Problem']
+                                                          .indexOf(_selectedCategory),
+                                                    ),
+                                                    onSelectedItemChanged: (int selectedItem) {
+                                                      setState(() {
+                                                        _selectedCategory = ['Memory', 'Focus', 'Problem'][selectedItem];
+                                                        _updateData();
+                                                      });
+                                                    },
+                                                    children: const [
+                                                      Text('Memory'),
+                                                      Text('Focus'),
+                                                      Text('Problem'),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: CupertinoPicker(
+                                                    magnification: 1.22,
+                                                    squeeze: 1.2,
+                                                    useMagnifier: true,
+                                                    itemExtent: 32.0,
+                                                    scrollController: FixedExtentScrollController(
+                                                      initialItem: ['Week', 'Month', 'Year']
+                                                          .indexOf(_selectedTimeRange),
+                                                    ),
+                                                    onSelectedItemChanged: (int selectedItem) {
+                                                      setState(() {
+                                                        _selectedTimeRange = ['Week', 'Month', 'Year'][selectedItem];
+                                                        _updateData();
+                                                      });
+                                                    },
+                                                    children: const [
+                                                      Text('Week'),
+                                                      Text('Month'),
+                                                      Text('Year'),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: SFIcon(
+                                      SFIcons.sf_slider_horizontal_3,
+                                      fontSize: 20,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: LineChart(
+                                _createChartData(),
+                                duration: const Duration(milliseconds: 500),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 20),
-                ),
-                // Stats Grid with key
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: GridView.count(
-                      key: statsGridKey,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 1.25,
-                      children: [
-                        _buildStatCard(
-                          'Current Score',
-                          _currentData.points.last.value.toStringAsFixed(0),
-                          SFIcons.sf_chart_bar,
-                        ),
-                        _buildStatCard(
-                          'Best Score',
-                          _currentData.maxValue.toStringAsFixed(0),
-                          SFIcons.sf_star,
-                        ),
-                        _buildStatCard(
-                          'Daily Streak',
-                          '7 days',
-                          SFIcons.sf_flame,
-                        ),
-                        _buildStatCard(
-                          'Exercises',
-                          '28',
-                          SFIcons.sf_square_stack_3d_up,
-                        ),
-                      ],
-                    ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 20),
+              ),
+              // Stats Grid with key
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: GridView.count(
+                    key: statsGridKey,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 1.25,
+                    children: [
+                      _buildStatCard(
+                        'Current Score',
+                        _currentData.points.last.value.toStringAsFixed(0),
+                        SFIcons.sf_chart_bar,
+                      ),
+                      _buildStatCard(
+                        'Best Score',
+                        _currentData.maxValue.toStringAsFixed(0),
+                        SFIcons.sf_star,
+                      ),
+                      _buildStatCard(
+                        'Daily Streak',
+                        '7 days',
+                        SFIcons.sf_flame,
+                      ),
+                      _buildStatCard(
+                        'Exercises',
+                        '28',
+                        SFIcons.sf_square_stack_3d_up,
+                      ),
+                    ],
                   ),
                 ),
-                const SliverPadding(
-                  padding: EdgeInsets.only(bottom: 32),
-                ),
-              ],
-            ),
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.only(bottom: 32),
+              ),
+            ],
           ),
         ],
       ),
@@ -681,49 +642,34 @@ class _ProgressScreenState extends State<ProgressScreen> {
   }
 
   Widget _buildStatCard(String title, String value, IconData icon) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-                AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
-              width: 0.5,
-            ),
+    return FrostedCard(
+      borderRadius: 20,
+      backgroundColor: AppColors.getSurfaceWithOpacity(AppColors.surfaceOpacity),
+      border: Border.all(
+        color: AppColors.getPrimaryWithOpacity(AppColors.borderOpacity),
+        width: 0.5,
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SFIcon(
+            icon,
+            fontSize: 22,
+            color: AppColors.primary,
           ),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SFIcon(
-                icon,
-                fontSize: 22,
-                color: AppColors.primary,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                value,
-                style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                title,
-                style: AppTextStyles.secondaryText,
-                textAlign: TextAlign.center,
-              ),
-            ],
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: AppTextStyles.withColor(AppTextStyles.heading2, AppColors.textPrimary),
           ),
-        ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: AppTextStyles.secondaryText,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

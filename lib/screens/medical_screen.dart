@@ -5,6 +5,8 @@ import 'package:flutter_sficon/flutter_sficon.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../services/tutorial_service.dart';
+import '../widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MedicalScreen extends StatefulWidget {
   const MedicalScreen({
@@ -87,24 +89,17 @@ class _MedicalScreenState extends State<MedicalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
         children: [
           // Background gradient
-          Container(
-            decoration: BoxDecoration(
-              gradient: AppColors.primaryGradient,
-            ),
-          ),
-          // Frosted Glass Overlay
-          BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 60.0, sigmaY: 60.0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: AppColors.frostedGlassGradient,
-              ),
-            ),
+          GradientBackground(
+            customGradient: AppColors.primaryGradient,
+            hasSafeArea: false,
+            child: Container(),
           ),
           // Main Content
           CustomScrollView(
@@ -113,14 +108,14 @@ class _MedicalScreenState extends State<MedicalScreen> {
             slivers: [
               CupertinoSliverNavigationBar(
                 largeTitle: Text(
-                  'Medical Portal',
+                  localizations.medicalScreen,
                   style: AppTextStyles.withColor(
                     AppTextStyles.heading1,
                     AppColors.textPrimary,
                   ),
                 ),
                 middle: Text(
-                  'Medical Portal',
+                  localizations.medicalScreen,
                   style: AppTextStyles.withColor(
                     AppTextStyles.heading3,
                     AppColors.textPrimary,
@@ -148,7 +143,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
                     children: [
                       const SizedBox(height: 8),
                       // Medical Reports Section
-                      _buildSectionTitle('Medical Reports'),
+                      _buildSectionTitle(localizations.medicalReports),
                       const SizedBox(height: 12),
                       Container(
                         key: _medicalReportsKey,
@@ -157,7 +152,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       const SizedBox(height: 24),
 
                       // Caregiver Portal Section
-                      _buildSectionTitle('Caregiver Portal'),
+                      _buildSectionTitle(localizations.caregiverPortal),
                       const SizedBox(height: 12),
                       SizedBox(
                         key: _caregiverPortalKey,
@@ -171,7 +166,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       const SizedBox(height: 24),
 
                       // Upcoming Meetings Section
-                      _buildSectionTitle('Upcoming Meetings'),
+                      _buildSectionTitle(localizations.upcomingMeetings),
                       const SizedBox(height: 12),
                       Container(
                         key: _upcomingMeetingsKey,
@@ -184,7 +179,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       const SizedBox(height: 24),
 
                       // Medical History Form Section
-                      _buildSectionTitle('Medical History'),
+                      _buildSectionTitle(localizations.medicalHistory),
                       const SizedBox(height: 12),
                       Container(
                         key: _medicalHistoryKey,
@@ -215,295 +210,125 @@ class _MedicalScreenState extends State<MedicalScreen> {
   }
 
   Widget _buildMedicalReportsCard() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                AppColors.getSurfaceWithOpacity(0.8),
-                AppColors.getSurfaceWithOpacity(0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(0.1),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final localizations = AppLocalizations.of(context)!;
+    
+    return FrostedCard(
+      borderRadius: 20,
+      padding: const EdgeInsets.all(16),
+      backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+      border: Border.all(
+        color: AppColors.getPrimaryWithOpacity(0.1),
+        width: 0.5,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.getPrimaryWithOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.getPrimaryWithOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SFIcon(
+                  SFIcons.sf_doc_text,
+                  fontSize: 24,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.latestReport,
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.heading3,
+                        AppColors.textPrimary,
+                      ),
                     ),
-                    child: SFIcon(
-                      SFIcons.sf_doc_text,
-                      fontSize: 24,
-                      color: AppColors.primary,
+                    Text(
+                      localizations.reportDate,
+                      style: AppTextStyles.secondaryText,
                     ),
+                  ],
+                ),
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  // Handle view report
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Latest Report',
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.heading3,
-                            AppColors.textPrimary,
-                          ),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        localizations.viewButton,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.primary,
                         ),
-                        Text(
-                          'March 15, 2024',
-                          style: AppTextStyles.secondaryText,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 4),
+                      SFIcon(
+                        SFIcons.sf_chevron_right,
+                        fontSize: 14,
+                        color: AppColors.primary,
+                      ),
+                    ],
                   ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      // Handle view report
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'View',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          SFIcon(
-                            SFIcons.sf_chevron_right,
-                            fontSize: 14,
-                            color: AppColors.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildCaregiverCard(Map<String, dynamic> caregiver) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return Container(
       width: 280,
       margin: const EdgeInsets.only(right: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.getSurfaceWithOpacity(0.8),
-                  AppColors.getSurfaceWithOpacity(0.8),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.getPrimaryWithOpacity(0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        gradient: AppColors.primarySurfaceGradient(),
-                      ),
-                      child: Center(
-                        child: SFIcon(
-                          SFIcons.sf_person_fill,
-                          fontSize: 30,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            caregiver['name'],
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.heading3,
-                              AppColors.textPrimary,
-                            ),
-                          ),
-                          Text(
-                            caregiver['specialty'],
-                            style: AppTextStyles.secondaryText,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    SFIcon(
-                      SFIcons.sf_star_fill,
-                      fontSize: 14,
-                      color: const Color(0xFFFFB800),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${caregiver['rating']} (${caregiver['reviews']} reviews)',
-                      style: AppTextStyles.withColor(
-                        AppTextStyles.bodySmall,
-                        AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: caregiver['available']
-                            ? const Color(0xFF34C759).withOpacity(0.1)
-                            : AppColors.getPrimaryWithOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        caregiver['available'] ? 'Available Now' : 'Unavailable',
-                        style: AppTextStyles.withColor(
-                          AppTextStyles.bodySmall,
-                          caregiver['available']
-                              ? const Color(0xFF34C759)
-                              : AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
-                        // Handle schedule
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Schedule',
-                              style: AppTextStyles.withColor(
-                                AppTextStyles.bodyMedium,
-                                AppColors.primary,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            SFIcon(
-                              SFIcons.sf_chevron_right,
-                              fontSize: 14,
-                              color: AppColors.primary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+      child: FrostedCard(
+        borderRadius: 20,
+        padding: const EdgeInsets.all(16),
+        backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+        border: Border.all(
+          color: AppColors.getPrimaryWithOpacity(0.1),
+          width: 0.5,
         ),
-      ),
-    );
-  }
-
-  Widget _buildMeetingCard(Map<String, dynamic> meeting) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.getSurfaceWithOpacity(0.8),
-                  AppColors.getSurfaceWithOpacity(0.8),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: AppColors.getPrimaryWithOpacity(0.1),
-                width: 0.5,
-              ),
-            ),
-            child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  width: 60,
+                  height: 60,
                   decoration: BoxDecoration(
-                    color: AppColors.getPrimaryWithOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(30),
+                    gradient: AppColors.primarySurfaceGradient(),
                   ),
-                  child: SFIcon(
-                    SFIcons.sf_video_fill,
-                          fontSize: 24,
-                    color: AppColors.primary,
+                  child: Center(
+                    child: SFIcon(
+                      SFIcons.sf_person_fill,
+                      fontSize: 30,
+                      color: AppColors.primary,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -512,42 +337,68 @@ class _MedicalScreenState extends State<MedicalScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        meeting['doctor'],
+                        caregiver['name'],
                         style: AppTextStyles.withColor(
                           AppTextStyles.heading3,
                           AppColors.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 4),
                       Text(
-                        '${meeting['date']} at ${meeting['time']}',
+                        caregiver['specialty'],
                         style: AppTextStyles.secondaryText,
-                      ),
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF34C759).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          meeting['status'],
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.bodySmall,
-                            const Color(0xFF34C759),
-                          ),
-                        ),
                       ),
                     ],
                   ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                SFIcon(
+                  SFIcons.sf_star_fill,
+                  fontSize: 14,
+                  color: const Color(0xFFFFB800),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '${caregiver['rating']} (${localizations.reviews(caregiver['reviews'])})',
+                  style: AppTextStyles.withColor(
+                    AppTextStyles.bodySmall,
+                    AppColors.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: caregiver['available']
+                        ? const Color(0xFF34C759).withOpacity(0.1)
+                        : AppColors.getPrimaryWithOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    caregiver['available'] ? localizations.availableNow : localizations.unavailable,
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.bodySmall,
+                      caregiver['available']
+                          ? const Color(0xFF34C759)
+                          : AppColors.primary,
+                    ),
+                  ),
+                ),
+                const Spacer(),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   onPressed: () {
-                    // Handle join meeting
+                    // Handle schedule
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
@@ -562,7 +413,7 @@ class _MedicalScreenState extends State<MedicalScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Join',
+                          localizations.scheduleButton,
                           style: AppTextStyles.withColor(
                             AppTextStyles.bodyMedium,
                             AppColors.primary,
@@ -580,109 +431,201 @@ class _MedicalScreenState extends State<MedicalScreen> {
                 ),
               ],
             ),
-          ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMeetingCard(Map<String, dynamic> meeting) {
+    final localizations = AppLocalizations.of(context)!;
+    
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: FrostedCard(
+        borderRadius: 20,
+        padding: const EdgeInsets.all(16),
+        backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+        border: Border.all(
+          color: AppColors.getPrimaryWithOpacity(0.1),
+          width: 0.5,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.getPrimaryWithOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: SFIcon(
+                SFIcons.sf_video_fill,
+                      fontSize: 24,
+                color: AppColors.primary,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    meeting['doctor'],
+                    style: AppTextStyles.withColor(
+                      AppTextStyles.heading3,
+                      AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    localizations.meetingTime(meeting['date'], meeting['time']),
+                    style: AppTextStyles.secondaryText,
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF34C759).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      meeting['status'],
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodySmall,
+                        const Color(0xFF34C759),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                // Handle join meeting
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      localizations.joinButton,
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.bodyMedium,
+                        AppColors.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    SFIcon(
+                      SFIcons.sf_chevron_right,
+                      fontSize: 14,
+                      color: AppColors.primary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildMedicalHistoryForm() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.getSurfaceWithOpacity(0.8),
-                AppColors.getSurfaceWithOpacity(0.8),
-              ],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppColors.getPrimaryWithOpacity(0.1),
-              width: 0.5,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final localizations = AppLocalizations.of(context)!;
+    
+    return FrostedCard(
+      borderRadius: 20,
+      padding: const EdgeInsets.all(16),
+      backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
+      border: Border.all(
+        color: AppColors.getPrimaryWithOpacity(0.1),
+        width: 0.5,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.getPrimaryWithOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.getPrimaryWithOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: SFIcon(
+                  SFIcons.sf_list_clipboard,
+                  fontSize: 24,
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizations.familyMedicalHistory,
+                      style: AppTextStyles.withColor(
+                        AppTextStyles.heading3,
+                        AppColors.textPrimary,
+                      ),
                     ),
-                    child: SFIcon(
-                      SFIcons.sf_list_clipboard,
-                      fontSize: 24,
-                      color: AppColors.primary,
+                    Text(
+                      localizations.lastUpdated("March 18, 2024"),
+                      style: AppTextStyles.secondaryText,
                     ),
+                  ],
+                ),
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  // Handle edit form
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Family Medical History',
-                          style: AppTextStyles.withColor(
-                            AppTextStyles.heading3,
-                            AppColors.textPrimary,
-                          ),
+                  decoration: BoxDecoration(
+                    gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        localizations.editButton,
+                        style: AppTextStyles.withColor(
+                          AppTextStyles.bodyMedium,
+                          AppColors.primary,
                         ),
-                        Text(
-                          'Last updated: March 18, 2024',
-                          style: AppTextStyles.secondaryText,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 4),
+                      SFIcon(
+                        SFIcons.sf_chevron_right,
+                        fontSize: 14,
+                        color: AppColors.primary,
+                      ),
+                    ],
                   ),
-                  CupertinoButton(
-                    padding: EdgeInsets.zero,
-                    onPressed: () {
-                      // Handle edit form
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: AppColors.primarySurfaceGradient(startOpacity: 0.2, endOpacity: 0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Edit',
-                            style: AppTextStyles.withColor(
-                              AppTextStyles.bodyMedium,
-                              AppColors.primary,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          SFIcon(
-                            SFIcons.sf_chevron_right,
-                            fontSize: 14,
-                            color: AppColors.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }

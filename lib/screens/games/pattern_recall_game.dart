@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'dart:ui';
 import 'dart:math';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PatternRecallGame extends StatefulWidget {
   const PatternRecallGame({super.key});
@@ -19,8 +20,18 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
   int currentLevel = 3;
   int correctStreak = 0;
   int errorCount = 0;
-  String statusText = "Start a new game!";
+  String? statusText;
   bool isGameStarted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        statusText = AppLocalizations.of(context)!.startNewGame;
+      });
+    });
+  }
 
   void generateSequence() {
     sequence = List.generate(currentLevel, (_) => Random().nextInt(gridSize * gridSize));
@@ -29,7 +40,7 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
   Future<void> playSequence() async {
     setState(() {
       isDisplayingSequence = true;
-      statusText = "Watch the pattern!";
+      statusText = AppLocalizations.of(context)!.watchPattern;
     });
 
     for (int index in sequence) {
@@ -41,7 +52,7 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
 
     setState(() {
       isDisplayingSequence = false;
-      statusText = "Your turn!";
+      statusText = AppLocalizations.of(context)!.yourTurn;
     });
   }
 
@@ -60,71 +71,67 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
 
   void _handleIncorrectTap(int index) {
     errorCount++;
-    tileHighlights[index] = true;
-    statusText = "Wrong pattern! Try again.";
-
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) {
-        setState(() {
-          tileHighlights[index] = false;
-          userInput.clear();
-          if (errorCount >= 2) {
-            currentLevel = max(1, currentLevel - 1);
-            errorCount = 0;
-            statusText = "Level decreased. Start new game.";
-            isGameStarted = false;
-          }
-        });
-      }
+    statusText = AppLocalizations.of(context)!.incorrectPattern;
+    
+    Future.delayed(const Duration(milliseconds: 800), () {
+      setState(() {
+        isGameStarted = false;
+        userInput.clear();
+        statusText = AppLocalizations.of(context)!.tryAgain;
+      });
     });
   }
 
   void _handleCorrectSequence() {
     correctStreak++;
-    statusText = "Correct! Well done!";
-
-    if (correctStreak >= 3) {
+    
+    if (correctStreak >= 2) {
       currentLevel++;
       correctStreak = 0;
-      statusText = "Level up! Start new game.";
-      isGameStarted = false;
+      statusText = AppLocalizations.of(context)!.levelUp(currentLevel.toString());
     } else {
-      Future.delayed(const Duration(milliseconds: 1000), () {
-        if (mounted) {
-          setState(() {
-            userInput.clear();
-            generateSequence();
-            playSequence();
-          });
-        }
-      });
+      statusText = AppLocalizations.of(context)!.correct;
     }
+    
+    Future.delayed(const Duration(milliseconds: 800), () {
+      setState(() {
+        userInput.clear();
+        startNewGame();
+      });
+    });
   }
 
   void startNewGame() {
+    if (isDisplayingSequence) return;
+    
     setState(() {
-      userInput.clear();
       isGameStarted = true;
+      userInput.clear();
       generateSequence();
     });
+    
     playSequence();
   }
 
   Color _getTileColor(int index) {
-    if (!tileHighlights[index]) return const Color(0xFFE8E8EA);
+    if (tileHighlights[index]) {
+      return const Color(0xFF30B0C7);
+    }
     
-    if (userInput.isNotEmpty && index == userInput.last) {
+    if (userInput.isNotEmpty && userInput.last == index) {
       if (sequence[userInput.length - 1] != index) {
         return CupertinoColors.destructiveRed;
-      } else {
-        return const Color(0xFF50d5e5); // Light blue for correct taps
       }
+      return const Color(0xFF50d5e5);
     }
-    return const Color(0xFF30B0C7);
+    
+    return CupertinoColors.systemBackground;
   }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    
     return CupertinoPageScaffold(
       backgroundColor: Colors.transparent,
       child: Stack(
@@ -165,9 +172,9 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
             physics: const BouncingScrollPhysics(),
             slivers: [
               CupertinoSliverNavigationBar(
-                largeTitle: const Text(
-                  'Pattern Recall',
-                  style: TextStyle(
+                largeTitle: Text(
+                  localizations.patternQuest,
+                  style: const TextStyle(
                     fontFamily: '.SF Pro Text',
                     fontSize: 24,
                     fontWeight: FontWeight.w500,
@@ -221,7 +228,7 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        statusText,
+                                        statusText ?? '',
                                         style: const TextStyle(
                                           fontFamily: '.SF Pro Text',
                                           fontSize: 17,
@@ -232,7 +239,7 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        'Level: $currentLevel',
+                                        localizations.level(currentLevel.toString()),
                                         style: TextStyle(
                                           fontFamily: '.SF Pro Text',
                                           fontSize: 15,
@@ -253,7 +260,7 @@ class _PatternRecallGameState extends State<PatternRecallGame> {
                             color: const Color(0xFF50d5e5),
                             onPressed: !isDisplayingSequence ? startNewGame : null,
                             child: Text(
-                              isGameStarted ? 'Restart' : 'Start',
+                              isGameStarted ? localizations.restart : localizations.start,
                               style: const TextStyle(
                                 fontFamily: '.SF Pro Text',
                                 fontSize: 17,
