@@ -643,7 +643,13 @@
   "caregiverPortal": "Caregiver Portal",
   "upcomingMeetings": "Upcoming Meetings",
   "medicalHistory": "Medical History",
-  "medicalHistoryInfo": "This questionnaire aims to gather health information to identify medical conditions, ensure proper care, and promote well-being.",
+  "@medicalHistory": {
+    "description": "Title for the medical history section or screen"
+  },
+  "medicalHistoryInfo": "Please provide your medical history to personalize your experience.",
+  "@medicalHistoryInfo": {
+    "description": "Subtitle explaining the purpose of the medical history form"
+  },
   "medicalSummary": "Medical Summary",
   "symptomsTracker": "Symptoms Tracker",
   "recentActivities": "Recent Activities",
@@ -960,31 +966,50 @@
   "scheduleButton": "Schedule",
   "joinButton": "Join",
   "familyMedicalHistory": "Family Medical History",
-  "lastUpdated": "Last updated: {date}",
-  "@lastUpdated": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
+  "@familyMedicalHistory": {
+    "description": "Title for the family medical history section or screen"
   },
-  "editButton": "Edit",
-  "meetingTime": "{date} at {time}",
-  "@meetingTime": {
+  "familyMedicalHistoryDesc": "Update relevant family medical conditions.",
+  "@familyMedicalHistoryDesc": {
+    "description": "Subtitle/description for the family medical history form"
+  },
+  "knownConditions": "Known Conditions",
+  "@knownConditions": {
+    "description": "Label for the family known conditions input field"
+  },
+  "familyConditionsPlaceholder": "e.g., Diabetes (Mother), High Blood Pressure (Father)",
+  "@familyConditionsPlaceholder": {
+    "description": "Placeholder text for the family known conditions input field"
+  },
+  "knownAllergies": "Known Allergies",
+  "@knownAllergies": {
+    "description": "Label for the family known allergies input field"
+  },
+  "familyAllergiesPlaceholder": "e.g., Penicillin (Sister)",
+  "@familyAllergiesPlaceholder": {
+    "description": "Placeholder text for the family known allergies input field"
+  },
+  "relevantMedications": "Relevant Medications/Sensitivities",
+  "@relevantMedications": {
+    "description": "Label for the family relevant medications input field"
+  },
+  "familyMedicationsPlaceholder": "e.g., Specific hereditary medication sensitivities",
+  "@familyMedicationsPlaceholder": {
+    "description": "Placeholder text for the family relevant medications input field"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Generic save button text"
+  },
+  "stepCount": "Step {currentStep} of {totalSteps}",
+  "@stepCount": {
+    "description": "Indicates the current step in a multi-step process",
     "placeholders": {
-      "date": {
+      "currentStep": {
         "type": "String"
       },
-      "time": {
+      "totalSteps": {
         "type": "String"
-      }
-    }
-  },
-  "reviews": "{count} reviews",
-  "@reviews": {
-    "placeholders": {
-      "count": {
-        "type": "int"
       }
     }
   },
@@ -1062,8 +1087,20 @@
   "restart": "Restart",
   
   "scanSupplementCode": "Scan Supplement Code",
-  "scanBarcodeSubtitle": "Scan the barcode on your supplement bottle to\nautomatically add it to your supplement list.",
-  "pointCameraBarcode": "Point your camera at the barcode on your supplement package",
+  "@scanSupplementCode": {
+    "description": "Title for the screen where users scan or enter their supplement code"
+  },
+
+  "scanBarcodeSubtitle": "Scan the code on your supplement bottle to\nautomatically add it to your supplement list.",
+  "@scanBarcodeSubtitle": {
+    "description": "Subtitle explaining how to scan the supplement code"
+  },
+
+  "pointCameraBarcode": "Point your camera at the code on your supplement package",
+  "@pointCameraBarcode": {
+    "description": "Instruction text for the code scanner"
+  },
+
   "enterCodeManually": "Enter Code Manually",
   "noProductCode": "I don't have a product code",
   "enterSupplementCode": "Enter Supplement Code",
@@ -1213,5 +1250,362 @@
   "tipPersonalizedContent": "Our personalized approach matches your specific cognitive needs with targeted supplement formulations.",
   "@tipPersonalizedContent": {
     "description": "Tip content about personalized approach to supplements"
+  },
+
+  "error": "Error",
+  "@error": {
+    "description": "Title for error dialogs"
+  },
+
+  "ok": "OK",
+  "@ok": {
+    "description": "Text for OK button"
+  },
+
+  "initialHealthAssessment": "Initial Health Assessment",
+  "@initialHealthAssessment": {
+    "description": "Title for initial health assessment screen"
+  },
+
+  "failedToInitializeVideoCall": "Failed to initialize video call",
+  "@failedToInitializeVideoCall": {
+    "description": "Error message when video call fails to initialize"
+  },
+
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Text for try again button"
+  },
+
+  "accountCreated": "Account Created",
+  "@accountCreated": {
+    "description": "Title for account created dialog"
+  },
+
+  "accountCreatedSuccessfully": "Your account has been created successfully!",
+  "@accountCreatedSuccessfully": {
+    "description": "Message for successful account creation"
+  },
+
+  "continueButton": "Continue",
+  "@continueButton": {
+    "description": "Text for continue button"
+  },
+
+  "completeProfilePersonalizedHealth": "Complete your profile to get started with personalized health recommendations.",
+  "@completeProfilePersonalizedHealth": {
+    "description": "Subtitle for finalize account screen"
+  },
+
+  "stepXofY": "Step {step} of {total}",
+  "@stepXofY": {
+    "description": "Step indicator",
+    "placeholders": {
+      "step": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+
+  "enterNameAndEmail": "Please enter your name and email address",
+  "@enterNameAndEmail": {
+    "description": "Instruction to enter name and email"
+  },
+
+  "createSecurePassword": "Create a secure password for your account",
+  "@createSecurePassword": {
+    "description": "Instruction to create a secure password"
+  },
+
+  "selectAllThatApply": "Select all that apply",
+  "@selectAllThatApply": {
+    "description": "Help text shown for multi-select questions"
+  },
+
+  "ageRangeQuestion": "What is your age range?",
+  "@ageRangeQuestion": {
+    "description": "Age range question in medical quiz"
+  },
+
+  "ageRange18to25": "18-25",
+  "@ageRange18to25": {
+    "description": "Age range option 18-25"
+  },
+
+  "ageRange26to35": "26-35",
+  "@ageRange26to35": {
+    "description": "Age range option 26-35"
+  },
+
+  "ageRange36to45": "36-45",
+  "@ageRange36to45": {
+    "description": "Age range option 36-45"
+  },
+
+  "ageRange46to55": "46-55",
+  "@ageRange46to55": {
+    "description": "Age range option 46-55"
+  },
+
+  "ageRange56plus": "56+",
+  "@ageRange56plus": {
+    "description": "Age range option 56+"
+  },
+
+  "genderIdentityQuestion": "What gender do you identify with?",
+  "@genderIdentityQuestion": {
+    "description": "Gender identity question in medical quiz"
+  },
+
+  "genderMale": "Male",
+  "@genderMale": {
+    "description": "Gender option male"
+  },
+
+  "genderFemale": "Female",
+  "@genderFemale": {
+    "description": "Gender option female"
+  },
+
+  "genderOther": "Other",
+  "@genderOther": {
+    "description": "Gender option other"
+  },
+
+  "genderPreferNotToSay": "Prefer not to say",
+  "@genderPreferNotToSay": {
+    "description": "Gender option prefer not to say"
+  },
+
+  "activityLevelQuestion": "What is your typical activity level?",
+  "@activityLevelQuestion": {
+    "description": "Activity level question in medical quiz"
+  },
+
+  "activityLevelSedentary": "Sedentary (little to no exercise)",
+  "@activityLevelSedentary": {
+    "description": "Activity level option sedentary"
+  },
+
+  "activityLevelLightlyActive": "Lightly active (light exercise/sports 1-3 days a week)",
+  "@activityLevelLightlyActive": {
+    "description": "Activity level option lightly active"
+  },
+
+  "activityLevelModeratelyActive": "Moderately active (moderate exercise/sports 3-5 days a week)",
+  "@activityLevelModeratelyActive": {
+    "description": "Activity level option moderately active"
+  },
+
+  "activityLevelVeryActive": "Very active (hard exercise/sports 6-7 days a week)",
+  "@activityLevelVeryActive": {
+    "description": "Activity level option very active"
+  },
+
+  "activityLevelExtraActive": "Extra active (physical job or twice daily training)",
+  "@activityLevelExtraActive": {
+    "description": "Activity level option extra active"
+  },
+
+  "dietaryPreferencesQuestion": "What dietary preferences do you have?",
+  "@dietaryPreferencesQuestion": {
+    "description": "Dietary preferences question in medical quiz"
+  },
+
+  "dietOmnivore": "Omnivore (meat and vegetables)",
+  "@dietOmnivore": {
+    "description": "Diet option omnivore"
+  },
+
+  "dietVegetarian": "Vegetarian",
+  "@dietVegetarian": {
+    "description": "Diet option vegetarian"
+  },
+
+  "dietVegan": "Vegan",
+  "@dietVegan": {
+    "description": "Diet option vegan"
+  },
+
+  "dietKetoLowCarb": "Keto/Low-carb",
+  "@dietKetoLowCarb": {
+    "description": "Diet option keto/low-carb"
+  },
+
+  "dietPaleo": "Paleo",
+  "@dietPaleo": {
+    "description": "Diet option paleo"
+  },
+
+  "dietGlutenFree": "Gluten-free",
+  "@dietGlutenFree": {
+    "description": "Diet option gluten-free"
+  },
+
+  "dietNoPreference": "No specific preference",
+  "@dietNoPreference": {
+    "description": "Diet option no specific preference"
+  },
+
+  "healthConditionsQuestion": "What health conditions or challenges are you managing?",
+  "@healthConditionsQuestion": {
+    "description": "Health conditions question in medical quiz"
+  },
+
+  "conditionHighBloodPressure": "High blood pressure",
+  "@conditionHighBloodPressure": {
+    "description": "Health condition option high blood pressure"
+  },
+
+  "conditionDiabetes": "Diabetes",
+  "@conditionDiabetes": {
+    "description": "Health condition option diabetes"
+  },
+
+  "conditionThyroidIssues": "Thyroid issues",
+  "@conditionThyroidIssues": {
+    "description": "Health condition option thyroid issues"
+  },
+
+  "conditionHeartConditions": "Heart conditions",
+  "@conditionHeartConditions": {
+    "description": "Health condition option heart conditions"
+  },
+
+  "conditionDigestiveIssues": "Digestive issues",
+  "@conditionDigestiveIssues": {
+    "description": "Health condition option digestive issues"
+  },
+
+  "conditionAnxietyDepression": "Anxiety/Depression",
+  "@conditionAnxietyDepression": {
+    "description": "Health condition option anxiety/depression"
+  },
+
+  "conditionSleepDisorders": "Sleep disorders",
+  "@conditionSleepDisorders": {
+    "description": "Health condition option sleep disorders"
+  },
+
+  "conditionJointPain": "Joint pain/Arthritis",
+  "@conditionJointPain": {
+    "description": "Health condition option joint pain/arthritis"
+  },
+
+  "conditionNone": "None of the above",
+  "@conditionNone": {
+    "description": "Health condition option none of the above"
+  },
+
+  "featureLockedTitle": "Feature Locked",
+  "@featureLockedTitle": {
+    "description": "Title shown when a feature is locked"
+  },
+
+  "or": "or",
+  "@or": {
+    "description": "The word 'or' used when listing supplement alternatives"
+  },
+
+  "unlockedBy": "Unlocked by: {supplements}",
+  "@unlockedBy": {
+    "description": "Text showing which supplements unlock a feature",
+    "placeholders": {
+      "supplements": {
+        "type": "String",
+        "example": "REVERSE or RESTORE"
+      }
+    }
+  },
+
+  "activeSupplements": "Active Supplements",
+  "@activeSupplements": {
+    "description": "Label for showing active supplements"
+  },
+
+  "supplementInfluence": "Supplement Influence",
+  "@supplementInfluence": {
+    "description": "Label for supplement influence on scores"
+  },
+
+  "selectUserProfile": "Select User Profile",
+  "@selectUserProfile": {
+    "description": "Title for user profile selection"
+  },
+
+  "memoryMaster": "Memory Master",
+  "@memoryMaster": {
+    "description": "Name of the Memory Master profile"
+  },
+
+  "energyEnthusiast": "Energy Enthusiast",
+  "@energyEnthusiast": {
+    "description": "Name of the Energy Enthusiast profile"
+  },
+
+  "memoryFocus": "Memory & Stress Relief",
+  "@memoryFocus": {
+    "description": "Focus areas for Memory Master profile"
+  },
+
+  "energyFocus": "Cognitive Function & Energy",
+  "@energyFocus": {
+    "description": "Focus areas for Energy Enthusiast profile"
+  },
+
+  "includesSupplements": "Includes: {supplements}",
+  "@includesSupplements": {
+    "description": "Text showing which supplements are included",
+    "placeholders": {
+      "supplements": {
+        "type": "String",
+        "example": "REVERSE, RELAX"
+      }
+    }
+  },
+
+  "selectProfile": "Select this Profile",
+  "@selectProfile": {
+    "description": "Button to select a user profile"
+  },
+
+  "lastUpdated": "Last updated: {date}",
+  "@lastUpdated": {
+    "description": "Indicates when the information was last updated",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "editButton": "Edit",
+  "@editButton": {
+    "description": "Generic edit button text"
+  },
+  "meetingTime": "{date} at {time}",
+  "@meetingTime": {
+    "description": "Formats the date and time of a meeting",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "reviews": "{count} reviews",
+  "@reviews": {
+    "description": "Displays the number of reviews",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
-} 
+}

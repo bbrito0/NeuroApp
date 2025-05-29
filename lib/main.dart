@@ -1,29 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_sficon/flutter_sficon.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
-import 'package:flutter/material.dart' as material show ThemeMode;
-import 'screens/home_screen.dart';
-import 'screens/my_hub_screen.dart';
-import 'screens/ai_coach_screen.dart';
-import 'screens/medical_screen.dart';
-import 'screens/activities_screen.dart';
-import 'screens/onboarding_screen.dart';
-import 'screens/onboarding_features_slideshow.dart';
-import 'theme/app_colors.dart';
-import 'utils/logging.dart';
-import 'services/theme_service.dart';
+
+import 'config/theme/app_colors.dart';
+import 'core/utils/logging.dart';
+import 'core/services/theme_service.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // Import for Android features.
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 // Import for iOS features.
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
-import 'package:flutter/material.dart' show Colors, MaterialLocalizations;
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'services/language_service.dart';
+import 'core/services/language_service.dart';
+// Import our new services
+import 'core/services/user_profile_service.dart';
+import 'core/services/feature_access_service.dart';
+import 'core/services/wellness_score_service.dart';
+// Import our clean app router
+import 'app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +32,9 @@ void main() async {
   // Initialize language service
   final languageService = LanguageService();
   await languageService.initialize();
+  
+  // Initialize user profile service
+  final userProfileService = UserProfileService();
   
   // Update system UI based on theme
   SystemChrome.setSystemUIOverlayStyle(
@@ -69,20 +68,28 @@ void main() async {
       providers: [
         ChangeNotifierProvider.value(value: themeService),
         ChangeNotifierProvider.value(value: languageService),
+        // Add our new services
+        ChangeNotifierProvider.value(value: userProfileService),
+        ProxyProvider<UserProfileService, FeatureAccessService>(
+          update: (_, userService, __) => FeatureAccessService(userService),
+        ),
+        ProxyProvider<UserProfileService, WellnessScoreService>(
+          update: (_, userService, __) => WellnessScoreService(userService),
+        ),
       ],
-      child: const NeuralApp(),
+      child: const ChronoWellApp(),
     ),
   );
 }
 
-class NeuralApp extends StatefulWidget {
-  const NeuralApp({super.key});
+class ChronoWellApp extends StatefulWidget {
+  const ChronoWellApp({super.key});
 
   @override
-  State<NeuralApp> createState() => _NeuralAppState();
+  State<ChronoWellApp> createState() => _ChronoWellAppState();
 }
 
-class _NeuralAppState extends State<NeuralApp> {
+class _ChronoWellAppState extends State<ChronoWellApp> {
   final ThemeService _themeService = ThemeService();
   
   @override
@@ -113,14 +120,14 @@ class _NeuralAppState extends State<NeuralApp> {
   @override
   Widget build(BuildContext context) {
     // Determine brightness based on theme
-    final brightness = AppColors.currentTheme == material.ThemeMode.dark 
+    final brightness = AppColors.currentTheme == ThemeMode.dark 
         ? Brightness.dark 
         : Brightness.light;
     
     // Get the language service
     final languageService = Provider.of<LanguageService>(context);
     
-    return CupertinoApp(
+    return CupertinoApp.router(
       title: 'ChronoWell',
       debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
@@ -142,121 +149,8 @@ class _NeuralAppState extends State<NeuralApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: languageService.supportedLocales,
-      home: const OnboardingScreen(),
+      // Use our clean GoRouter configuration
+      routerConfig: AppRouter.router,
     );
-  }
-}
-
-class MainScreen extends StatefulWidget {
-  final bool isLimitedMode;
-  
-  const MainScreen({super.key, this.isLimitedMode = false});
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  late final CupertinoTabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = CupertinoTabController(initialIndex: 0);
-    // Ensure HomeScreen is built after the MainScreen is fully initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  
-  Widget build(BuildContext context) {
-  return CupertinoTabScaffold(
-    controller: _tabController,
-    tabBar: CupertinoTabBar(
-      height: 50,
-      iconSize: 20,
-      backgroundColor: AppColors.getSurfaceWithOpacity(0.8),
-      activeColor: AppColors.primary,
-      inactiveColor: AppColors.inactive.withOpacity(AppColors.inactiveOpacity),
-      border: null,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 7.0),
-              child: Icon(SFIcons.sf_house_fill),
-            ),
-          ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 2.0),
-              child: Icon(SFIcons.sf_square_grid_2x2_fill),
-            ),
-          ),
-          label: 'My Hub',
-        ),
-        BottomNavigationBarItem(
-          icon: Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Icon(SFIcons.sf_brain_head_profile),
-            ),
-          ),
-          label: 'AI Coach',
-        ),
-        BottomNavigationBarItem(
-          icon: Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 4.0),
-              child: Icon(SFIcons.sf_square_stack_3d_up_fill),
-            ),
-          ),
-          label: 'Activities',
-        ),
-        BottomNavigationBarItem(
-          icon: Center(
-            child: Padding(
-              padding: EdgeInsets.only(right: 5.0),
-              child: Icon(SFIcons.sf_cross_case),
-            ),
-          ),
-          label: 'Medical',
-        ),
-      ],
-    ),
-    tabBuilder: (context, index) {
-      return CupertinoTabView(
-        builder: (context) {
-          switch (index) {
-            case 0:
-              return HomeScreen(tabController: _tabController);
-            case 1:
-              return MyHubScreen(tabController: _tabController);
-            case 2:
-              return AICoachScreen(tabController: _tabController);
-            case 3:
-              return ActivitiesScreen(tabController: _tabController);
-            case 4:
-              return MedicalScreen(tabController: _tabController);
-            default:
-              return HomeScreen(tabController: _tabController);
-          }
-        },
-      );
-    },
-  );
   }
 }

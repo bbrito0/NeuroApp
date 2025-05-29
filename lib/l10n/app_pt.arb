@@ -151,7 +151,13 @@
   "caregiverPortal": "Portal do Cuidador",
   "upcomingMeetings": "Próximas Consultas",
   "medicalHistory": "Histórico Médico",
-  "medicalHistoryInfo": "Este questionário visa recolher informações de saúde para identificar condições médicas, garantir cuidados adequados e promover o bem-estar.",
+  "@medicalHistory": {
+    "description": "Título para a seção ou tela de histórico médico"
+  },
+  "medicalHistoryInfo": "Forneça seu histórico médico para personalizar sua experiência.",
+  "@medicalHistoryInfo": {
+    "description": "Subtítulo explicando o propósito do formulário de histórico médico"
+  },
   "incompleteInformation": "Informação Incompleta",
   "fillAllFields": "Por favor, preencha todos os campos para continuar.",
   "ok": "OK",
@@ -430,8 +436,44 @@
   "scheduleButton": "Agendar",
   "joinButton": "Participar",
   "familyMedicalHistory": "Histórico Médico Familiar",
-  "lastUpdated": "Última actualização: {date}",
+  "@familyMedicalHistory": {
+    "description": "Título para a seção ou tela de histórico médico familiar"
+  },
+  "familyMedicalHistoryDesc": "Atualize condições médicas familiares relevantes.",
+  "@familyMedicalHistoryDesc": {
+    "description": "Subtítulo/descrição para o formulário de histórico médico familiar"
+  },
+  "knownConditions": "Condições Conhecidas",
+  "@knownConditions": {
+    "description": "Rótulo para o campo de entrada de condições conhecidas da família"
+  },
+  "familyConditionsPlaceholder": "Ex: Diabetes (Mãe), Pressão Alta (Pai)",
+  "@familyConditionsPlaceholder": {
+    "description": "Texto de placeholder para o campo de entrada de condições conhecidas da família"
+  },
+  "knownAllergies": "Alergias Conhecidas",
+  "@knownAllergies": {
+    "description": "Rótulo para o campo de entrada de alergias conhecidas da família"
+  },
+  "familyAllergiesPlaceholder": "Ex: Penicilina (Irmã)",
+  "@familyAllergiesPlaceholder": {
+    "description": "Texto de placeholder para o campo de entrada de alergias conhecidas da família"
+  },
+  "relevantMedications": "Medicamentos/Sensibilidades Relevantes",
+  "@relevantMedications": {
+    "description": "Rótulo para o campo de entrada de medicamentos relevantes da família"
+  },
+  "familyMedicationsPlaceholder": "Ex: Sensibilidades hereditárias específicas a medicamentos",
+  "@familyMedicationsPlaceholder": {
+    "description": "Texto de placeholder para o campo de entrada de medicamentos relevantes da família"
+  },
+  "save": "Salvar",
+  "@save": {
+    "description": "Texto genérico para o botão salvar"
+  },
+  "lastUpdated": "Última atualização: {date}",
   "@lastUpdated": {
+    "description": "Indica quando a informação foi atualizada pela última vez",
     "placeholders": {
       "date": {
         "type": "String"
@@ -439,8 +481,12 @@
     }
   },
   "editButton": "Editar",
+  "@editButton": {
+    "description": "Texto genérico para o botão editar"
+  },
   "meetingTime": "{date} às {time}",
   "@meetingTime": {
+    "description": "Formata a data e a hora de uma consulta",
     "placeholders": {
       "date": {
         "type": "String"
@@ -452,9 +498,22 @@
   },
   "reviews": "{count} avaliações",
   "@reviews": {
+    "description": "Exibe o número de avaliações",
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "stepCount": "Passo {currentStep} de {totalSteps}",
+  "@stepCount": {
+    "description": "Indica o passo atual em um processo de múltiplos passos",
+    "placeholders": {
+      "currentStep": {
+        "type": "String"
+      },
+      "totalSteps": {
+        "type": "String"
       }
     }
   },
@@ -531,8 +590,8 @@
   "restart": "Reiniciar",
   
   "scanSupplementCode": "Digitalizar Código do Suplemento",
-  "scanBarcodeSubtitle": "Digitalize o código de barras no frasco do suplemento para\nadicioná-lo automaticamente à sua lista.",
-  "pointCameraBarcode": "Aponte a câmara para o código de barras na embalagem do suplemento",
+  "scanBarcodeSubtitle": "Digitalize o código no frasco do suplemento para\nadicioná-lo automaticamente à sua lista.",
+  "pointCameraBarcode": "Aponte a câmara para o código na embalagem do suplemento",
   "enterCodeManually": "Inserir Código Manualmente",
   "noProductCode": "Não tenho código de produto",
   "enterSupplementCode": "Introduzir Código do Suplemento",
@@ -601,5 +660,67 @@
   "tipVitaminD3Content": "A vitamina D3 presente nos nossos suplementos ajuda a manter a função cognitiva e reduz o risco de declínio cognitivo.",
   "tipSleepContent": "Combinar suplementos ChronoWell com 7-8 horas de sono de qualidade maximiza os benefícios cognitivos.",
   "tipBacopaContent": "A Bacopa Monnieri, ingrediente chave no REVITA, demonstrou melhorar a formação e recuperação da memória.",
-  "tipPersonalizedContent": "A nossa abordagem personalizada combina as suas necessidades cognitivas com formulações de suplementos direccionadas."
+  "tipPersonalizedContent": "A nossa abordagem personalizada combina as suas necessidades cognitivas com formulações de suplementos direccionadas.",
+  "initialHealthAssessment": "Avaliação Inicial de Saúde",
+  "failedToInitializeVideoCall": "Falha ao inicializar a videochamada",
+  "accountCreated": "Conta Criada",
+  "accountCreatedSuccessfully": "Sua conta foi criada com sucesso!",
+  "continueButton": "Continuar",
+  "completeProfilePersonalizedHealth": "Complete seu perfil para começar a receber recomendações de saúde personalizadas.",
+  "stepXofY": "Passo {step} de {total}",
+  "enterNameAndEmail": "Por favor, digite seu nome e endereço de email",
+  "createSecurePassword": "Crie uma senha segura para sua conta",
+  "selectAllThatApply": "Selecione todas as opções aplicáveis",
+  "ageRangeQuestion": "Qual é a sua faixa etária?",
+  "ageRange18to25": "18-25",
+  "ageRange26to35": "26-35",
+  "ageRange36to45": "36-45",
+  "ageRange46to55": "46-55",
+  "ageRange56plus": "56+",
+  
+  "genderIdentityQuestion": "Com qual género se identifica?",
+  "genderMale": "Masculino",
+  "genderFemale": "Feminino",
+  "genderOther": "Outro",
+  "genderPreferNotToSay": "Prefiro não dizer",
+  
+  "activityLevelQuestion": "Qual é o seu nível típico de atividade?",
+  "activityLevelSedentary": "Sedentário (pouco ou nenhum exercício)",
+  "activityLevelLightlyActive": "Levemente ativo (exercício leve 1-3 dias por semana)",
+  "activityLevelModeratelyActive": "Moderadamente ativo (exercício moderado 3-5 dias por semana)",
+  "activityLevelVeryActive": "Muito ativo (exercício intenso 6-7 dias por semana)",
+  "activityLevelExtraActive": "Extremamente ativo (trabalho físico ou treino duas vezes ao dia)",
+  
+  "dietaryPreferencesQuestion": "Quais preferências alimentares você tem?",
+  "dietOmnivore": "Onívoro (carne e vegetais)",
+  "dietVegetarian": "Vegetariano",
+  "dietVegan": "Vegano",
+  "dietKetoLowCarb": "Keto/Baixo carboidrato",
+  "dietPaleo": "Paleo",
+  "dietGlutenFree": "Sem glúten",
+  "dietNoPreference": "Sem preferência específica",
+  
+  "healthConditionsQuestion": "Quais condições de saúde ou desafios você está administrando?",
+  "conditionHighBloodPressure": "Pressão alta",
+  "conditionDiabetes": "Diabetes",
+  "conditionThyroidIssues": "Problemas de tireoide",
+  "conditionHeartConditions": "Condições cardíacas",
+  "conditionDigestiveIssues": "Problemas digestivos",
+  "conditionAnxietyDepression": "Ansiedade/Depressão",
+  "conditionSleepDisorders": "Distúrbios do sono",
+  "conditionJointPain": "Dor nas articulações/Artrite",
+  "conditionNone": "Nenhuma das opções acima",
+
+  "featureLockedTitle": "Recurso Bloqueado",
+  "or": "ou",
+  "unlockedBy": "Desbloqueado por: {supplements}",
+  "activeSupplements": "Suplementos Ativos",
+  "supplementInfluence": "Influência do Suplemento",
+  "selectUserProfile": "Selecione o Perfil de Usuário",
+  "memoryMaster": "Mestre da Memória",
+  "energyEnthusiast": "Entusiasta de Energia",
+  "memoryFocus": "Memória & Alívio de Estresse",
+  "energyFocus": "Função Cognitiva & Energia",
+  "includesSupplements": "Inclui: {supplements}",
+  "selectProfile": "Selecionar este Perfil"
 }

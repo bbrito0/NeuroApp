@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 When adding any new text to the ChronoWell app:
 Never use hardcoded strings directly in the UI
-Always define translations in both app_en.arb and app_es.arb files
+Always define translations in both app_en.arb and app_pt.arb files
 Use descriptive keys with proper documentation in the ARB files
 Access text via AppLocalizations.of(context)!.keyName
 Run flutter gen-l10n after adding new translation keys
