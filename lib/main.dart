@@ -3,6 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io' show Platform;
 
+// Firebase imports
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 import 'config/theme/app_colors.dart';
 import 'core/utils/logging.dart';
 import 'core/services/theme_service.dart';
@@ -18,12 +22,18 @@ import 'core/services/language_service.dart';
 import 'core/services/user_profile_service.dart';
 import 'core/services/feature_access_service.dart';
 import 'core/services/wellness_score_service.dart';
+import 'features/auth/data/services/auth_service.dart';
 // Import our clean app router
 import 'app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initLogging();  // Initialize logging
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   
   // Initialize services
   final themeService = ThemeService();
@@ -35,6 +45,9 @@ void main() async {
   
   // Initialize user profile service
   final userProfileService = UserProfileService();
+  
+  // Initialize auth service
+  final authService = AuthService();
   
   // Update system UI based on theme
   SystemChrome.setSystemUIOverlayStyle(
@@ -70,6 +83,7 @@ void main() async {
         ChangeNotifierProvider.value(value: languageService),
         // Add our new services
         ChangeNotifierProvider.value(value: userProfileService),
+        ChangeNotifierProvider.value(value: authService),
         ProxyProvider<UserProfileService, FeatureAccessService>(
           update: (_, userService, __) => FeatureAccessService(userService),
         ),

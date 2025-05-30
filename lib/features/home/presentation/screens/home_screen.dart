@@ -15,6 +15,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // GoRouter imports
 import 'package:go_router/go_router.dart';
+import '../../../../app_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -227,21 +228,8 @@ class _HomeScreenState extends State<HomeScreen>
                                   textColor: AppColors.surface,
                                   isFullWidth: false,
                                   height: 36,
-                                  onPressed: () async {
-                                    // TODO: Implement check-in functionality
-                                    showCupertinoDialog(
-                                      context: context,
-                                      builder: (context) => CupertinoAlertDialog(
-                                        title: Text(AppLocalizations.of(context).checkInButton),
-                                        content: const Text('Check-in functionality will be available soon.'),
-                                        actions: [
-                                          CupertinoDialogAction(
-                                            child: Text(AppLocalizations.of(context).ok),
-                                            onPressed: () => Navigator.pop(context),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                  onPressed: () {
+                                    context.pushNamed(AppRoutes.apiTest);
                                   },
                                 ),
                               ],

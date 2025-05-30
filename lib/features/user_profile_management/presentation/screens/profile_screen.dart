@@ -6,6 +6,8 @@ import '../../../../config/theme/app_colors.dart';
 import '../../../../config/theme/app_text_styles.dart';
 import '../../../../core/services/tutorial_service.dart';
 import '../../../../core/widgets/widgets.dart';
+import '../../../../features/auth/data/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 // GoRouter imports
 import 'package:go_router/go_router.dart';
@@ -261,9 +263,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Sign Out Button
             CupertinoButton(
               padding: EdgeInsets.zero,
-              onPressed: () {
-                // Sign out and navigate to onboarding screen
-                context.go('/onboarding');
+              onPressed: () async {
+                try {
+                  // Show loading state
+                  showCupertinoDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const CupertinoAlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CupertinoActivityIndicator(),
+                          SizedBox(height: 16),
+                          Text('Signing out...'),
+                        ],
+                      ),
+                    ),
+                  );
+
+                  // Actually sign out from Firebase
+                  final authService = Provider.of<AuthService>(context, listen: false);
+                  print('DEBUG Profile: Starting sign out process');
+                  
+                  await authService.signOut();
+                  
+                  print('DEBUG Profile: Sign out completed, auth status: ${authService.isAuthenticated}');
+                  
+                  // Close loading dialog
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  
+                  // Force navigation to onboarding after successful sign out
+                  if (mounted) {
+                    print('DEBUG Profile: Navigating to onboarding');
+                    context.go('/onboarding');
+                  }
+                  
+                } catch (e) {
+                  print('DEBUG Profile: Error during sign out: $e');
+                  
+                  // Close loading dialog if it's open
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  
+                  // Show error dialog
+                  if (mounted) {
+                    showCupertinoDialog(
+                      context: context,
+                      builder: (context) => CupertinoAlertDialog(
+                        title: const Text('Sign Out Error'),
+                        content: Text('Failed to sign out: $e'),
+                        actions: [
+                          CupertinoDialogAction(
+                            child: const Text('OK'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }
               },
               child: Container(
                 width: double.infinity,

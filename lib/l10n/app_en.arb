@@ -422,25 +422,14 @@
     }
   },
 
-  "aiHealthAssistant": "AI. Health Assistant APP",
+  "aiHealthAssistant": "AI Health Assistant",
   "@aiHealthAssistant": {
     "description": "Subtitle for the app on login screen"
   },
 
   "login": "Login",
-  "@login": {
-    "description": "Label for login button"
-  },
-
-  "newUser": "New User",
-  "@newUser": {
-    "description": "Label for new user button"
-  },
-
-  "forgotPassword": "Forgot password?",
-  "@forgotPassword": {
-    "description": "Label for forgot password option"
-  },
+  "newUser": "New User? Start Here",
+  "forgotPassword": "Forgot Password?",
 
   "completeSetup": "Complete Setup",
   "@completeSetup": {
@@ -1607,5 +1596,7 @@
         "type": "int"
       }
     }
-  }
+  },
+  "username": "Username",
+  "loginAction": "Login"
 }

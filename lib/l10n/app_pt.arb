@@ -98,10 +98,12 @@
     }
   },
   
-  "aiHealthAssistant": "App de Assistente de Saúde com IA",
+  "aiHealthAssistant": "Assistente de Saúde IA",
   "login": "Iniciar Sessão",
-  "newUser": "Novo Utilizador",
+  "newUser": "Novo usuário? Comece aqui",
   "forgotPassword": "Esqueceu-se da palavra-passe?",
+  "username": "Nome de usuário",
+  "loginAction": "Entrar",
   
   "completeSetup": "Concluir Configuração",
   "chooseHowToProceed": "Escolha como pretende continuar com o ChronoWell",
@@ -722,5 +724,6 @@
   "memoryFocus": "Memória & Alívio de Estresse",
   "energyFocus": "Função Cognitiva & Energia",
   "includesSupplements": "Inclui: {supplements}",
-  "selectProfile": "Selecionar este Perfil"
+  "selectProfile": "Selecionar este Perfil",
+  "loginAction": "Entrar"
 }

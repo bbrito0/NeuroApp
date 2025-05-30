@@ -393,9 +393,9 @@ class _ArticleCard extends StatelessWidget {
         onPressed: hasAccess ? () {
           AppNavigation.toArticleDetail(
             context,
-            title: title,
-            description: description,
-            readTime: readTime,
+                title: title,
+                description: description,
+                readTime: readTime,
           );
         } : null,
         child: cardContent,

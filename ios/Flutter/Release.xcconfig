@@ -2,7 +2,7 @@
 #include "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
 
 // Add development team configuration
-DEVELOPMENT_TEAM=ASG84FF448
-CODE_SIGN_IDENTITY=iPhone Developer
+DEVELOPMENT_TEAM=YY5CT53ZDV
+CODE_SIGN_IDENTITY=bruno.brito@upgraide.ai
 CODE_SIGN_STYLE=Automatic
 PROVISIONING_PROFILE_SPECIFIER=

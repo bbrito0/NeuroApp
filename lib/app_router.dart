@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+// Services
+import 'features/auth/data/services/auth_service.dart';
 
 // Screens imports
 import 'features/onboarding/presentation/screens/onboarding_screen.dart';
@@ -35,6 +39,7 @@ import 'features/article_detail/presentation/screens/article_detail_screen.dart'
 import 'features/community/presentation/screens/community_screen.dart';
 import 'features/user_profile_management/presentation/screens/profile_screen.dart';
 import 'features/progress/presentation/screens/progress_screen.dart';
+import 'features/auth/presentation/screens/api_test_screen.dart';
 
 // Configuration
 import 'config/theme/app_colors.dart';
@@ -97,6 +102,13 @@ class AppRouter {
           path: '/progress',
           name: AppRoutes.progress,
           builder: (context, state) => const ProgressScreen(),
+        ),
+        
+        // Debug/Test routes
+        GoRoute(
+          path: '/api-test',
+          name: AppRoutes.apiTest,
+          builder: (context, state) => const ApiTestScreen(),
         ),
       ];
 
@@ -291,32 +303,39 @@ class AppRouter {
 
   /// Global redirect logic - single source of truth for navigation guards
   static String? _handleGlobalRedirects(BuildContext context, GoRouterState state) {
-    // Allow navigation to main app routes
-    // Only redirect to onboarding for the root path or if explicitly needed
-    
     final currentPath = state.matchedLocation;
     
-    // If trying to access root, redirect to onboarding
+    // Get auth service (will be null during app initialization)
+    final authService = context.read<AuthService?>();
+    
+    // If auth service is not available yet, allow navigation to proceed
+    if (authService == null) {
+      if (currentPath == '/') {
+        return '/onboarding';
+      }
+      return null;
+    }
+    
+    final isAuthenticated = authService.isAuthenticated;
+    final isOnboardingRoute = currentPath.startsWith('/onboarding');
+    
+    // Root path handling
     if (currentPath == '/') {
+      return isAuthenticated ? '/home' : '/onboarding';
+    }
+    
+    // If user is authenticated but on onboarding screens, redirect to home
+    if (isAuthenticated && isOnboardingRoute) {
+      return '/home';
+    }
+    
+    // If user is not authenticated and trying to access protected routes, redirect to onboarding
+    if (!isAuthenticated && !isOnboardingRoute) {
       return '/onboarding';
     }
     
-    // Allow all other routes to proceed normally
-    // This allows login completion to redirect to /home
-    
-    // TODO: Implement proper user state persistence for production
-    // Future implementation will check:
-    // - SharedPreferences for onboarding completion
-    // - User authentication status
-    // - First-time user detection
-    // Example:
-    // final prefs = await SharedPreferences.getInstance();
-    // final hasCompletedOnboarding = prefs.getBool('onboarding_complete') ?? false;
-    // if (!hasCompletedOnboarding && !currentPath.startsWith('/onboarding')) {
-    //   return '/onboarding';
-    // }
-    
-    return null; // No redirect needed
+    // Allow navigation to proceed
+    return null;
   }
 
   /// Error screen builder
@@ -533,6 +552,9 @@ class AppRoutes {
   static const String setupLoading = 'setup-loading';
   static const String postMedicalDecision = 'post-medical-decision';
   static const String finalizeAccount = 'finalize-account';
+  
+  // Debug/Test routes
+  static const String apiTest = 'api-test';
 }
 
 /// Clean navigation helper - single way to navigate programmatically
@@ -597,4 +619,7 @@ class AppNavigation {
   
   // Login completion
   static void onLoginComplete(BuildContext context) => context.goNamed(AppRoutes.home);
+  
+  // Debug/Test routes
+  static void toApiTest(BuildContext context) => context.pushNamed(AppRoutes.apiTest);
 } 
