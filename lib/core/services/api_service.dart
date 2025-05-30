@@ -34,31 +34,55 @@ class ApiService {
     
     final url = Uri.parse('${ApiEndpoints.getBaseUrlForPlatform()}$endpoint');
     
-    switch (method.toUpperCase()) {
-      case 'GET':
-        return await http.get(url, headers: headers);
-      case 'POST':
-        return await http.post(
-          url,
-          headers: headers,
-          body: body != null ? json.encode(body) : null,
-        );
-      case 'PUT':
-        return await http.put(
-          url,
-          headers: headers,
-          body: body != null ? json.encode(body) : null,
-        );
-      case 'PATCH':
-        return await http.patch(
-          url,
-          headers: headers,
-          body: body != null ? json.encode(body) : null,
-        );
-      case 'DELETE':
-        return await http.delete(url, headers: headers);
-      default:
-        throw Exception('Unsupported HTTP method: $method');
+    // Debug logging
+    print('DEBUG API: Making $method request to: $url');
+    print('DEBUG API: Headers: $headers');
+    if (body != null) {
+      print('DEBUG API: Body: ${json.encode(body)}');
+    }
+    
+    http.Response response;
+    
+    try {
+      switch (method.toUpperCase()) {
+        case 'GET':
+          response = await http.get(url, headers: headers);
+          break;
+        case 'POST':
+          response = await http.post(
+            url,
+            headers: headers,
+            body: body != null ? json.encode(body) : null,
+          );
+          break;
+        case 'PUT':
+          response = await http.put(
+            url,
+            headers: headers,
+            body: body != null ? json.encode(body) : null,
+          );
+          break;
+        case 'PATCH':
+          response = await http.patch(
+            url,
+            headers: headers,
+            body: body != null ? json.encode(body) : null,
+          );
+          break;
+        case 'DELETE':
+          response = await http.delete(url, headers: headers);
+          break;
+        default:
+          throw ApiException('Unsupported HTTP method: $method');
+      }
+      
+      print('DEBUG API: Response status: ${response.statusCode}');
+      print('DEBUG API: Response body: ${response.body}');
+      
+      return response;
+    } catch (e) {
+      print('DEBUG API: Request failed with error: $e');
+      throw NetworkException('Network request failed: $e');
     }
   }
   
@@ -88,17 +112,11 @@ class ApiService {
       'firebase_uid': firebaseUid,
     };
     
-    print('DEBUG API: Sending signup request to ${ApiEndpoints.getBaseUrlForPlatform()}${ApiEndpoints.signup}');
-    print('DEBUG API: Request body: ${json.encode(requestBody)}');
-    
     final response = await _makeAuthenticatedRequest(
       'POST',
       ApiEndpoints.signup,
       body: requestBody,
     );
-    
-    print('DEBUG API: Response status: ${response.statusCode}');
-    print('DEBUG API: Response body: ${response.body}');
     
     if (response.statusCode == 201) {
       return json.decode(response.body);
@@ -111,7 +129,7 @@ class ApiService {
   
   /// Get current authenticated user's profile
   Future<Map<String, dynamic>> getCurrentUser() async {
-    final response = await _makeAuthenticatedRequest('GET', '${ApiEndpoints.users}/');
+    final response = await _makeAuthenticatedRequest('GET', ApiEndpoints.users);
     
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -133,7 +151,7 @@ class ApiService {
     
     final response = await _makeAuthenticatedRequest(
       'PATCH',
-      '${ApiEndpoints.users}/',
+      ApiEndpoints.users,
       body: body,
     );
     
